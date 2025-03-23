@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_clinica_medica/db_connection/database_connection.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  var dbConnection = DatabaseConection();
-
-  try {
-    await dbConnection.connectAndQuery();
-    print('Conexão com o banco de dados estabelecida com sucesso.');
-  } catch (e) {
-    print('Erro ao conectar ao banco de dados: $e');
-  }
-
+void main() {
   runApp(const MyApp());
 }
 
