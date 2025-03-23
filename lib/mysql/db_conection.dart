@@ -7,7 +7,7 @@ void main() async {
       port: 3306,
       userName: "root",
       password: "password",
-      databaseName: "banco2",
+      databaseName: "teste",
     );
 
     await conn.connect();
