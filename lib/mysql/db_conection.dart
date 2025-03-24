@@ -15,7 +15,6 @@ void main() async {
 
     // Criar o schema app_flutter se não existir
     await conn.execute("CREATE SCHEMA IF NOT EXISTS app_flutter");
-    print("✅ Schema app_flutter criado ou já existente!");
 
     // Mostrar todos os databases
     var result = await conn.execute("SHOW DATABASES");
@@ -31,7 +30,6 @@ void main() async {
         email VARCHAR(255)
       )
     """);
-    print("✅ Tabela users criada ou já existente!");
 
     // // Deletar tabela users
     // await conn.execute("DROP TABLE IF EXISTS users");
@@ -44,7 +42,6 @@ void main() async {
     }
 
     await conn.close();
-    print("🔒 Conexão encerrada.");
   } catch (e) {
     print("❌ Erro ao conectar ou executar consulta: $e");
   }
