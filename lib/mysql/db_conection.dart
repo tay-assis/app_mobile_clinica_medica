@@ -14,7 +14,7 @@ void main() async {
     print("✅ Conectado com sucesso!");
 
     // Criar o schema app_flutter se não existir
-    await conn.execute("CREATE SCHEMA IF NOT EXISTS app_flutter");
+    await conn.execute("CREATE DATABASE IF NOT EXISTS app_flutter");
 
     // Mostrar todos os databases
     var result = await conn.execute("SHOW DATABASES");
