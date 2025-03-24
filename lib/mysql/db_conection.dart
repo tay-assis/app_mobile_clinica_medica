@@ -7,13 +7,38 @@ void main() async {
       port: 3306,
       userName: "root",
       password: "password",
-      databaseName: "teste",
+      databaseName: "app_flutter",
     );
 
     await conn.connect();
     print("✅ Conectado com sucesso!");
 
-    var result = await conn.execute("SHOW TABLES");
+    // Criar o schema app_flutter se não existir
+    await conn.execute("CREATE SCHEMA IF NOT EXISTS app_flutter");
+    print("✅ Schema app_flutter criado ou já existente!");
+
+    // Mostrar todos os databases
+    var result = await conn.execute("SHOW DATABASES");
+    for (final row in result.rows) {
+      print("Banco de Dados: ${row.colAt(0)}");
+    }
+
+    // Criar a tabela users se não existir
+    await conn.execute("""
+      CREATE TABLE IF NOT EXISTS users (
+        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255),
+        email VARCHAR(255)
+      )
+    """);
+    print("✅ Tabela users criada ou já existente!");
+
+    // // Deletar tabela users
+    // await conn.execute("DROP TABLE IF EXISTS users");
+    // print("✅ Tabela users deletada!");
+
+    // Mostrar todas as tabelas
+    result = await conn.execute("SHOW TABLES");
     for (final row in result.rows) {
       print("Tabela: ${row.colAt(0)}");
     }
