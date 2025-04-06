@@ -1,4 +1,13 @@
+import 'package:app_mobile_clinica_medica/mysql/models/address.dart';
+import 'package:app_mobile_clinica_medica/mysql/models/clinic.dart';
+import 'package:app_mobile_clinica_medica/mysql/models/doctor.dart';
+import 'package:app_mobile_clinica_medica/mysql/models/doctorInsurance.dart';
+import 'package:app_mobile_clinica_medica/mysql/models/doctorSchedule.dart';
+import 'package:app_mobile_clinica_medica/mysql/models/insurance.dart';
+import 'package:app_mobile_clinica_medica/mysql/models/pacient.dart';
 import 'package:mysql_client/mysql_client.dart';
+import 'package:drift/drift.dart';
+
 
 void main() async {
   try {
@@ -18,6 +27,18 @@ void main() async {
 
     // Usar o banco de dados
     await conn.execute("USE app_flutter");
+
+    // Configuração do banco de dados
+    @DriftDatabase(
+      tables: [Addresses, Clinics, Doctors, Insurances, Patients, DoctorInsurances, Doctorschedule],
+    ) 
+
+    class AppDatabase extends _$AppDatabase {
+      AppDatabase(QueryExecutor e) : super(e);
+
+  @override
+  int get schemaVersion => 1;
+}
 
     // Mostrar todos os databases
     //var result = await conn.execute("SHOW DATABASES");
