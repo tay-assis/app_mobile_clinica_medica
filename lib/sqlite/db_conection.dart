@@ -1,4 +1,4 @@
-import 'package:app_mobile_clinica_medica/mysql/database.dart'; // esse arquivo possui os imports das tabelas
+import 'package:app_mobile_clinica_medica/sqlite/database.dart'; // esse arquivo possui os imports das tabelas
 import 'package:drift/drift.dart';
 
 

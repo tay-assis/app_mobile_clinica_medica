@@ -1,5 +1,5 @@
-import 'package:app_mobile_clinica_medica/mysql/models/address.dart';
-import 'package:app_mobile_clinica_medica/mysql/models/insurance.dart';
+import 'package:app_mobile_clinica_medica/sqlite/models/address.dart';
+import 'package:app_mobile_clinica_medica/sqlite/models/insurance.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName('Patient')

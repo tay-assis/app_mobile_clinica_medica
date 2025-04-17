@@ -1,4 +1,4 @@
-import 'package:app_mobile_clinica_medica/mysql/models/doctor.dart';
+import 'package:app_mobile_clinica_medica/sqlite/models/doctor.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName('DoctorSchedule')
