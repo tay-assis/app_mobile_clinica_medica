@@ -15,7 +15,7 @@ class AddressDao extends DatabaseAccessor<AppDatabase> with _$AddressDaoMixin {
 
   // Addresses RUD
   // SELECT * FROM ADDRESSES
-  Future<List<Address>> selectAddress() {
+  Future<List<Address>> selectAddresses() {
     return select(addresses).get();
   }
 
@@ -25,7 +25,7 @@ class AddressDao extends DatabaseAccessor<AppDatabase> with _$AddressDaoMixin {
   }
 
   // SELECT COUNT(*) FROM ADDRESSES
-  Future<int> lengthAddress() async {
+  Future<int> lengthAddresses() async {
     final query = selectOnly(addresses)
       ..addColumns([addresses.id.count()]);
     final row = await query.getSingle();

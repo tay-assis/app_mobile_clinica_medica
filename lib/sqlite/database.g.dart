@@ -1979,12 +1979,12 @@ class DoctorInsurancesCompanion extends UpdateCompanion<DoctorInsurance> {
   }
 }
 
-class $DoctorscheduleTable extends Doctorschedule
-    with TableInfo<$DoctorscheduleTable, DoctorSchedule> {
+class $DoctorSchedulesTable extends DoctorSchedules
+    with TableInfo<$DoctorSchedulesTable, DoctorSchedule> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $DoctorscheduleTable(this.attachedDatabase, [this._alias]);
+  $DoctorSchedulesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _doctorIdMeta = const VerificationMeta(
     'doctorId',
   );
@@ -2010,7 +2010,7 @@ class $DoctorscheduleTable extends Doctorschedule
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     $customConstraints:
-        'CHECK(weekday IN (\'MON\', \'TUE\', \'WED\', \'THU\', \'FRI\', \'SAT\', \'SUN\'))',
+        'NOT NULL CHECK(weekday IN (\'MON\', \'TUE\', \'WED\', \'THU\', \'FRI\', \'SAT\', \'SUN\'))',
   );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
@@ -2038,7 +2038,8 @@ class $DoctorscheduleTable extends Doctorschedule
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-    $customConstraints: 'CHECK(status IN (\'available\', \'unavailable\'))',
+    $customConstraints:
+        'NOT NULL CHECK(status IN (\'available\', \'unavailable\'))',
   );
   @override
   List<GeneratedColumn> get $columns => [doctorId, weekday, date, time, status];
@@ -2046,7 +2047,7 @@ class $DoctorscheduleTable extends Doctorschedule
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'doctorschedule';
+  static const String $name = 'doctor_schedules';
   @override
   VerificationContext validateIntegrity(
     Insertable<DoctorSchedule> instance, {
@@ -2132,8 +2133,8 @@ class $DoctorscheduleTable extends Doctorschedule
   }
 
   @override
-  $DoctorscheduleTable createAlias(String alias) {
-    return $DoctorscheduleTable(attachedDatabase, alias);
+  $DoctorSchedulesTable createAlias(String alias) {
+    return $DoctorSchedulesTable(attachedDatabase, alias);
   }
 }
 
@@ -2161,8 +2162,8 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
     return map;
   }
 
-  DoctorscheduleCompanion toCompanion(bool nullToAbsent) {
-    return DoctorscheduleCompanion(
+  DoctorSchedulesCompanion toCompanion(bool nullToAbsent) {
+    return DoctorSchedulesCompanion(
       doctorId: Value(doctorId),
       weekday: Value(weekday),
       date: Value(date),
@@ -2209,7 +2210,7 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
     time: time ?? this.time,
     status: status ?? this.status,
   );
-  DoctorSchedule copyWithCompanion(DoctorscheduleCompanion data) {
+  DoctorSchedule copyWithCompanion(DoctorSchedulesCompanion data) {
     return DoctorSchedule(
       doctorId: data.doctorId.present ? data.doctorId.value : this.doctorId,
       weekday: data.weekday.present ? data.weekday.value : this.weekday,
@@ -2244,14 +2245,14 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
           other.status == this.status);
 }
 
-class DoctorscheduleCompanion extends UpdateCompanion<DoctorSchedule> {
+class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
   final Value<int> doctorId;
   final Value<String> weekday;
   final Value<DateTime> date;
   final Value<String> time;
   final Value<String> status;
   final Value<int> rowid;
-  const DoctorscheduleCompanion({
+  const DoctorSchedulesCompanion({
     this.doctorId = const Value.absent(),
     this.weekday = const Value.absent(),
     this.date = const Value.absent(),
@@ -2259,7 +2260,7 @@ class DoctorscheduleCompanion extends UpdateCompanion<DoctorSchedule> {
     this.status = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  DoctorscheduleCompanion.insert({
+  DoctorSchedulesCompanion.insert({
     required int doctorId,
     required String weekday,
     required DateTime date,
@@ -2289,7 +2290,7 @@ class DoctorscheduleCompanion extends UpdateCompanion<DoctorSchedule> {
     });
   }
 
-  DoctorscheduleCompanion copyWith({
+  DoctorSchedulesCompanion copyWith({
     Value<int>? doctorId,
     Value<String>? weekday,
     Value<DateTime>? date,
@@ -2297,7 +2298,7 @@ class DoctorscheduleCompanion extends UpdateCompanion<DoctorSchedule> {
     Value<String>? status,
     Value<int>? rowid,
   }) {
-    return DoctorscheduleCompanion(
+    return DoctorSchedulesCompanion(
       doctorId: doctorId ?? this.doctorId,
       weekday: weekday ?? this.weekday,
       date: date ?? this.date,
@@ -2333,7 +2334,7 @@ class DoctorscheduleCompanion extends UpdateCompanion<DoctorSchedule> {
 
   @override
   String toString() {
-    return (StringBuffer('DoctorscheduleCompanion(')
+    return (StringBuffer('DoctorSchedulesCompanion(')
           ..write('doctorId: $doctorId, ')
           ..write('weekday: $weekday, ')
           ..write('date: $date, ')
@@ -2356,9 +2357,15 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DoctorInsurancesTable doctorInsurances = $DoctorInsurancesTable(
     this,
   );
-  late final $DoctorscheduleTable doctorschedule = $DoctorscheduleTable(this);
+  late final $DoctorSchedulesTable doctorSchedules = $DoctorSchedulesTable(
+    this,
+  );
   late final AddressDao addressDao = AddressDao(this as AppDatabase);
   late final DoctorDao doctorDao = DoctorDao(this as AppDatabase);
+  late final PatientDao patientDao = PatientDao(this as AppDatabase);
+  late final DoctorScheduleDao doctorScheduleDao = DoctorScheduleDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2370,7 +2377,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     insurances,
     patients,
     doctorInsurances,
-    doctorschedule,
+    doctorSchedules,
   ];
 }
 
@@ -3226,19 +3233,24 @@ final class $$DoctorsTableReferences
     );
   }
 
-  static MultiTypedResultKey<$DoctorscheduleTable, List<DoctorSchedule>>
-  _doctorscheduleRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.doctorschedule,
-    aliasName: $_aliasNameGenerator(db.doctors.crm, db.doctorschedule.doctorId),
+  static MultiTypedResultKey<$DoctorSchedulesTable, List<DoctorSchedule>>
+  _doctorSchedulesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.doctorSchedules,
+    aliasName: $_aliasNameGenerator(
+      db.doctors.crm,
+      db.doctorSchedules.doctorId,
+    ),
   );
 
-  $$DoctorscheduleTableProcessedTableManager get doctorscheduleRefs {
-    final manager = $$DoctorscheduleTableTableManager(
+  $$DoctorSchedulesTableProcessedTableManager get doctorSchedulesRefs {
+    final manager = $$DoctorSchedulesTableTableManager(
       $_db,
-      $_db.doctorschedule,
+      $_db.doctorSchedules,
     ).filter((f) => f.doctorId.crm.sqlEquals($_itemColumn<int>('crm')!));
 
-    final cache = $_typedResult.readTableOrNull(_doctorscheduleRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _doctorSchedulesRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -3327,22 +3339,22 @@ class $$DoctorsTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> doctorscheduleRefs(
-    Expression<bool> Function($$DoctorscheduleTableFilterComposer f) f,
+  Expression<bool> doctorSchedulesRefs(
+    Expression<bool> Function($$DoctorSchedulesTableFilterComposer f) f,
   ) {
-    final $$DoctorscheduleTableFilterComposer composer = $composerBuilder(
+    final $$DoctorSchedulesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.crm,
-      referencedTable: $db.doctorschedule,
+      referencedTable: $db.doctorSchedules,
       getReferencedColumn: (t) => t.doctorId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$DoctorscheduleTableFilterComposer(
+          }) => $$DoctorSchedulesTableFilterComposer(
             $db: $db,
-            $table: $db.doctorschedule,
+            $table: $db.doctorSchedules,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3483,22 +3495,22 @@ class $$DoctorsTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> doctorscheduleRefs<T extends Object>(
-    Expression<T> Function($$DoctorscheduleTableAnnotationComposer a) f,
+  Expression<T> doctorSchedulesRefs<T extends Object>(
+    Expression<T> Function($$DoctorSchedulesTableAnnotationComposer a) f,
   ) {
-    final $$DoctorscheduleTableAnnotationComposer composer = $composerBuilder(
+    final $$DoctorSchedulesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.crm,
-      referencedTable: $db.doctorschedule,
+      referencedTable: $db.doctorSchedules,
       getReferencedColumn: (t) => t.doctorId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$DoctorscheduleTableAnnotationComposer(
+          }) => $$DoctorSchedulesTableAnnotationComposer(
             $db: $db,
-            $table: $db.doctorschedule,
+            $table: $db.doctorSchedules,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3525,7 +3537,7 @@ class $$DoctorsTableTableManager
           PrefetchHooks Function({
             bool clinicId,
             bool doctorInsurancesRefs,
-            bool doctorscheduleRefs,
+            bool doctorSchedulesRefs,
           })
         > {
   $$DoctorsTableTableManager(_$AppDatabase db, $DoctorsTable table)
@@ -3584,13 +3596,13 @@ class $$DoctorsTableTableManager
           prefetchHooksCallback: ({
             clinicId = false,
             doctorInsurancesRefs = false,
-            doctorscheduleRefs = false,
+            doctorSchedulesRefs = false,
           }) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (doctorInsurancesRefs) db.doctorInsurances,
-                if (doctorscheduleRefs) db.doctorschedule,
+                if (doctorSchedulesRefs) db.doctorSchedules,
               ],
               addJoins: <
                 T extends TableManagerState<
@@ -3645,7 +3657,7 @@ class $$DoctorsTableTableManager
                               referencedItems.where((e) => e.crm == item.crm),
                       typedResults: items,
                     ),
-                  if (doctorscheduleRefs)
+                  if (doctorSchedulesRefs)
                     await $_getPrefetchedData<
                       Doctor,
                       $DoctorsTable,
@@ -3653,14 +3665,14 @@ class $$DoctorsTableTableManager
                     >(
                       currentTable: table,
                       referencedTable: $$DoctorsTableReferences
-                          ._doctorscheduleRefsTable(db),
+                          ._doctorSchedulesRefsTable(db),
                       managerFromTypedResult:
                           (p0) =>
                               $$DoctorsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).doctorscheduleRefs,
+                              ).doctorSchedulesRefs,
                       referencedItemsForCurrentItem:
                           (item, referencedItems) => referencedItems.where(
                             (e) => e.doctorId == item.crm,
@@ -3690,7 +3702,7 @@ typedef $$DoctorsTableProcessedTableManager =
       PrefetchHooks Function({
         bool clinicId,
         bool doctorInsurancesRefs,
-        bool doctorscheduleRefs,
+        bool doctorSchedulesRefs,
       })
     >;
 typedef $$InsurancesTableCreateCompanionBuilder =
@@ -4813,8 +4825,8 @@ typedef $$DoctorInsurancesTableProcessedTableManager =
       DoctorInsurance,
       PrefetchHooks Function({bool crm, bool insuranceId})
     >;
-typedef $$DoctorscheduleTableCreateCompanionBuilder =
-    DoctorscheduleCompanion Function({
+typedef $$DoctorSchedulesTableCreateCompanionBuilder =
+    DoctorSchedulesCompanion Function({
       required int doctorId,
       required String weekday,
       required DateTime date,
@@ -4822,8 +4834,8 @@ typedef $$DoctorscheduleTableCreateCompanionBuilder =
       required String status,
       Value<int> rowid,
     });
-typedef $$DoctorscheduleTableUpdateCompanionBuilder =
-    DoctorscheduleCompanion Function({
+typedef $$DoctorSchedulesTableUpdateCompanionBuilder =
+    DoctorSchedulesCompanion Function({
       Value<int> doctorId,
       Value<String> weekday,
       Value<DateTime> date,
@@ -4832,10 +4844,10 @@ typedef $$DoctorscheduleTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$DoctorscheduleTableReferences
+final class $$DoctorSchedulesTableReferences
     extends
-        BaseReferences<_$AppDatabase, $DoctorscheduleTable, DoctorSchedule> {
-  $$DoctorscheduleTableReferences(
+        BaseReferences<_$AppDatabase, $DoctorSchedulesTable, DoctorSchedule> {
+  $$DoctorSchedulesTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
@@ -4843,7 +4855,7 @@ final class $$DoctorscheduleTableReferences
 
   static $DoctorsTable _doctorIdTable(_$AppDatabase db) =>
       db.doctors.createAlias(
-        $_aliasNameGenerator(db.doctorschedule.doctorId, db.doctors.crm),
+        $_aliasNameGenerator(db.doctorSchedules.doctorId, db.doctors.crm),
       );
 
   $$DoctorsTableProcessedTableManager get doctorId {
@@ -4861,9 +4873,9 @@ final class $$DoctorscheduleTableReferences
   }
 }
 
-class $$DoctorscheduleTableFilterComposer
-    extends Composer<_$AppDatabase, $DoctorscheduleTable> {
-  $$DoctorscheduleTableFilterComposer({
+class $$DoctorSchedulesTableFilterComposer
+    extends Composer<_$AppDatabase, $DoctorSchedulesTable> {
+  $$DoctorSchedulesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4914,9 +4926,9 @@ class $$DoctorscheduleTableFilterComposer
   }
 }
 
-class $$DoctorscheduleTableOrderingComposer
-    extends Composer<_$AppDatabase, $DoctorscheduleTable> {
-  $$DoctorscheduleTableOrderingComposer({
+class $$DoctorSchedulesTableOrderingComposer
+    extends Composer<_$AppDatabase, $DoctorSchedulesTable> {
+  $$DoctorSchedulesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4967,9 +4979,9 @@ class $$DoctorscheduleTableOrderingComposer
   }
 }
 
-class $$DoctorscheduleTableAnnotationComposer
-    extends Composer<_$AppDatabase, $DoctorscheduleTable> {
-  $$DoctorscheduleTableAnnotationComposer({
+class $$DoctorSchedulesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DoctorSchedulesTable> {
+  $$DoctorSchedulesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -5012,35 +5024,38 @@ class $$DoctorscheduleTableAnnotationComposer
   }
 }
 
-class $$DoctorscheduleTableTableManager
+class $$DoctorSchedulesTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $DoctorscheduleTable,
+          $DoctorSchedulesTable,
           DoctorSchedule,
-          $$DoctorscheduleTableFilterComposer,
-          $$DoctorscheduleTableOrderingComposer,
-          $$DoctorscheduleTableAnnotationComposer,
-          $$DoctorscheduleTableCreateCompanionBuilder,
-          $$DoctorscheduleTableUpdateCompanionBuilder,
-          (DoctorSchedule, $$DoctorscheduleTableReferences),
+          $$DoctorSchedulesTableFilterComposer,
+          $$DoctorSchedulesTableOrderingComposer,
+          $$DoctorSchedulesTableAnnotationComposer,
+          $$DoctorSchedulesTableCreateCompanionBuilder,
+          $$DoctorSchedulesTableUpdateCompanionBuilder,
+          (DoctorSchedule, $$DoctorSchedulesTableReferences),
           DoctorSchedule,
           PrefetchHooks Function({bool doctorId})
         > {
-  $$DoctorscheduleTableTableManager(
+  $$DoctorSchedulesTableTableManager(
     _$AppDatabase db,
-    $DoctorscheduleTable table,
+    $DoctorSchedulesTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer:
-              () => $$DoctorscheduleTableFilterComposer($db: db, $table: table),
-          createOrderingComposer:
               () =>
-                  $$DoctorscheduleTableOrderingComposer($db: db, $table: table),
+                  $$DoctorSchedulesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () => $$DoctorSchedulesTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
           createComputedFieldComposer:
-              () => $$DoctorscheduleTableAnnotationComposer(
+              () => $$DoctorSchedulesTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -5052,7 +5067,7 @@ class $$DoctorscheduleTableTableManager
                 Value<String> time = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => DoctorscheduleCompanion(
+              }) => DoctorSchedulesCompanion(
                 doctorId: doctorId,
                 weekday: weekday,
                 date: date,
@@ -5068,7 +5083,7 @@ class $$DoctorscheduleTableTableManager
                 required String time,
                 required String status,
                 Value<int> rowid = const Value.absent(),
-              }) => DoctorscheduleCompanion.insert(
+              }) => DoctorSchedulesCompanion.insert(
                 doctorId: doctorId,
                 weekday: weekday,
                 date: date,
@@ -5082,7 +5097,7 @@ class $$DoctorscheduleTableTableManager
                       .map(
                         (e) => (
                           e.readTable(table),
-                          $$DoctorscheduleTableReferences(db, table, e),
+                          $$DoctorSchedulesTableReferences(db, table, e),
                         ),
                       )
                       .toList(),
@@ -5110,10 +5125,10 @@ class $$DoctorscheduleTableTableManager
                       state.withJoin(
                             currentTable: table,
                             currentColumn: table.doctorId,
-                            referencedTable: $$DoctorscheduleTableReferences
+                            referencedTable: $$DoctorSchedulesTableReferences
                                 ._doctorIdTable(db),
                             referencedColumn:
-                                $$DoctorscheduleTableReferences
+                                $$DoctorSchedulesTableReferences
                                     ._doctorIdTable(db)
                                     .crm,
                           )
@@ -5131,17 +5146,17 @@ class $$DoctorscheduleTableTableManager
       );
 }
 
-typedef $$DoctorscheduleTableProcessedTableManager =
+typedef $$DoctorSchedulesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $DoctorscheduleTable,
+      $DoctorSchedulesTable,
       DoctorSchedule,
-      $$DoctorscheduleTableFilterComposer,
-      $$DoctorscheduleTableOrderingComposer,
-      $$DoctorscheduleTableAnnotationComposer,
-      $$DoctorscheduleTableCreateCompanionBuilder,
-      $$DoctorscheduleTableUpdateCompanionBuilder,
-      (DoctorSchedule, $$DoctorscheduleTableReferences),
+      $$DoctorSchedulesTableFilterComposer,
+      $$DoctorSchedulesTableOrderingComposer,
+      $$DoctorSchedulesTableAnnotationComposer,
+      $$DoctorSchedulesTableCreateCompanionBuilder,
+      $$DoctorSchedulesTableUpdateCompanionBuilder,
+      (DoctorSchedule, $$DoctorSchedulesTableReferences),
       DoctorSchedule,
       PrefetchHooks Function({bool doctorId})
     >;
@@ -5161,6 +5176,6 @@ class $AppDatabaseManager {
       $$PatientsTableTableManager(_db, _db.patients);
   $$DoctorInsurancesTableTableManager get doctorInsurances =>
       $$DoctorInsurancesTableTableManager(_db, _db.doctorInsurances);
-  $$DoctorscheduleTableTableManager get doctorschedule =>
-      $$DoctorscheduleTableTableManager(_db, _db.doctorschedule);
+  $$DoctorSchedulesTableTableManager get doctorSchedules =>
+      $$DoctorSchedulesTableTableManager(_db, _db.doctorSchedules);
 }

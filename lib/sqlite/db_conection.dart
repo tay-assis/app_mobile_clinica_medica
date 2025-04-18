@@ -14,14 +14,14 @@ void main() async {
     await db.addressDao.insertAddress('Demosthenes Berbert de Castro', 'Sapetinga', 'Ilheus', 'BA', 28657);
 
     // Query para receber todos os dados da tabela de enderecos e imprimir
-    final addresses1 = await db.addressDao.selectAddress();
+    final addresses1 = await db.addressDao.selectAddresses();
     for (final i in addresses1) {
       print('ID: ${i.id}, Street: ${i.street}, Neighborhood: ${i.neighborhood}, City: ${i.city}, State: ${i.state}, ZipCode: ${i.zipCode}');
     }
     print('\n');
 
 
-    int n = await db.addressDao.lengthAddress();
+    int n = await db.addressDao.lengthAddresses();
     print('Modificando um segundo elemento ($n elementos):');
     // modifica um elemento
     await db.addressDao.modifyAddress(2, 'Estância', 'Águas de Olivença', '', '', 12167, 0x11001);
@@ -36,10 +36,10 @@ void main() async {
     // delete baseado no id
     await db.addressDao.deleteAddressByID(1);
 
-    n = await db.addressDao.lengthAddress();
+    n = await db.addressDao.lengthAddresses();
     print('Elementos sobrando: $n');
 
-    final addresses2 = await db.addressDao.selectAddress();
+    final addresses2 = await db.addressDao.selectAddresses();
     for (final i in addresses2) {
       print('ID: ${i.id}, Street: ${i.street}, Neighborhood: ${i.neighborhood}, City: ${i.city}, State: ${i.state}, ZipCode: ${i.zipCode}');
     }

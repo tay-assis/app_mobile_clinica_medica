@@ -12,18 +12,26 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
 
   // doctor RUD #UNTESTED
   // SELECT * FROM DOCTORS
-  Future<List<Doctor>> selectDoctor(){
+  Future<List<Doctor>> selectDoctors(){
     return select(doctors).get();
   }
 
-  // SELECT * FROM ADDRESSES WHERE(clinicID == CLINICID)
+  // SELECT * FROM DOCTORS WHERE(clinicID == CLINICID)
   Future<List<Doctor>> selectDoctorByClinicID(int CLINICID){
     return (select(doctors)..where((t) => t.clinicId.isValue(CLINICID))).get();
   }
 
-  // SELECT * FROM ADDRESSES WHERE(crm == CRM)
+  // SELECT * FROM DOCTORS WHERE(crm == CRM)
   Future<Doctor> selectDoctorByCRM(int CRM){
     return (select(doctors)..where((t) => t.crm.isValue(CRM))).getSingle();
+  }
+
+  // SELECT COUNT(*) FROM DOCTORS
+  Future<int> lengthDoctors() async {
+    final query = selectOnly(doctors)
+      ..addColumns([doctors.crm.count()]);
+    final row = await query.getSingle();
+    return row.read(doctors.crm.count()) ?? 0; // default value is 0
   }
 
   // INSERT INTO DOCTORS (...) VALUES()
@@ -56,13 +64,13 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
   // DELETE FROM DOCTORS
   Future<void> deleteDoctors() async{
     delete(doctors).go();
+    await customStatement("DELETE FROM sqlite_sequence WHERE name = 'doctors';");
     return;
   }
 
   // DELETE FROM DOCTORS WHERE(crm == CRM)
   Future<void> deleteDoctorByCRM(int CRM) async{
     (delete(doctors)..where((t) => t.crm.isValue(CRM))).go();
-    await customStatement("DELETE FROM sqlite_sequence WHERE name = 'doctors';");
     return;
   }
 }
