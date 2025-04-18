@@ -1,5 +1,7 @@
-import 'package:app_mobile_clinica_medica/pages/components/rectangule_top.dart';
+import 'package:app_mobile_clinica_medica/pages/components/main_retangle.dart';
+import 'package:app_mobile_clinica_medica/pages/components/user_header.dart';
 import 'package:flutter/material.dart';
+import 'components/bottom_nav_bar.dart';
 
 class DashboardUser extends StatelessWidget {
   const DashboardUser({super.key});
@@ -7,10 +9,22 @@ class DashboardUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(), // move 100px do topo
-        child: GradientRectangleTop(widthPercentage: 1, heightPercentage: 0.3),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              UserHeader(),
+              SizedBox(height: 20),
+              MainRetangle(width: 373, height: 250),
+              // outros componentes abaixo, se necessário
+            ],
+          ),
+        ),
       ),
+      bottomNavigationBar: BottomNavBar(),
     );
   }
 }
