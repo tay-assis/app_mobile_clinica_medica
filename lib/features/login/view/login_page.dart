@@ -6,7 +6,7 @@ import 'widgets/email_field.dart';
 import 'widgets/password_field.dart';
 import 'widgets/fild_label.dart';
 import 'widgets/custom_button.dart';
-import 'widgets/curved_header.dart';
+import '../../shered/widgets/curved_header.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
