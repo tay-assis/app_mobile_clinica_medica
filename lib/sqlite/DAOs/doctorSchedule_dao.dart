@@ -52,8 +52,8 @@ class DoctorScheduleDao extends DatabaseAccessor<AppDatabase> with _$DoctorSched
 
   // SELECT * FROM DOCTORSCHEDULES WHERE(doctorId == DOCTORID && date == DATE && time >= TIME1 && time <= TIME2)
   Future<List<DoctorSchedule>> selectDoctorSchedulesByRangeOfTime(int DOCTORID, DateTime DATE, String TIME1, String TIME2){
-    return (select(doctorSchedules)..where((t) => t.doctorId.isValue(DOCTORID) & t.date.isValue(DATE) & t.time.isBiggerOrEqualValue(TIME1) & t.time.isSmallerOrEqualValue(TIME2))).get();
-  }
+    return (select(doctorSchedules)..where((t) => t.doctorId.isValue(DOCTORID) & t.date.isValue(DATE) & ((timeToMinutes(t.time as String) >= timeToMinutes(TIME1)) as Expression<bool>) & ((timeToMinutes(t.time as String) <= timeToMinutes(TIME2)) as Expression<bool>))).get();
+  } // Não tenho certeza se a lógica acima funciona, mas é pra isso q servem os testes, né
 
   // SELECT COUNT(*) FROM DOCTORSCHEDULES
   Future<int> lengthDoctorSchedules() async {
