@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/login/controller/login_controller.dart';
 import 'widgets/welcome_title.dart';
-import 'widgets/logo_text.dart';
-import 'widgets/email_field.dart';
-import 'widgets/password_field.dart';
-import 'widgets/fild_label.dart';
+import '../../shered/widgets/logo_text.dart';
+import 'widgets/field_label.dart';
 import 'widgets/custom_button.dart';
 import '../../shered/widgets/curved_header.dart';
+import '../../shered/widgets/custom_text_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -73,8 +72,10 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: height * 0.1),
                     const FieldLabel(text: 'E-mail'),
                     Center(
-                      child: EmailField(
+                      child: CustomInputField(
                         controller: _controller.emailController,
+                        hintText: 'Digite seu e-mail',
+                        keyboardType: TextInputType.emailAddress,
                       ),
                     ),
 
@@ -82,8 +83,10 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: height * 0.025),
                     const FieldLabel(text: 'Senha'),
                     Center(
-                      child: PasswordField(
+                      child: CustomInputField(
                         controller: _controller.passwordController,
+                        hintText: 'Digite sua senha',
+                        obscureText: true,
                       ),
                     ),
 

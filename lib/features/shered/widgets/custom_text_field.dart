@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 
-class EmailField extends StatelessWidget {
+class CustomInputField extends StatelessWidget {
   final TextEditingController controller;
+  final String hintText;
+  final bool obscureText;
+  final TextInputType keyboardType;
 
-  const EmailField({super.key, required this.controller});
+  const CustomInputField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    this.obscureText = false,
+    this.keyboardType = TextInputType.text,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +26,7 @@ class EmailField extends StatelessWidget {
         SizedBox(height: height * 0.005),
         Container(
           width: width * 0.8,
-          height: height * 0.055, // <-- Corrigido aqui
+          height: height * 0.055,
           padding: EdgeInsets.symmetric(horizontal: width * 0.04),
           decoration: BoxDecoration(
             color: const Color(0xFF00B0FF),
@@ -33,16 +42,18 @@ class EmailField extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: TextField(
             controller: controller,
+            obscureText: obscureText,
+            keyboardType: keyboardType,
             style: TextStyle(
               color: Colors.white,
               fontSize: width * 0.026,
               fontFamily: 'Nunito',
               fontWeight: FontWeight.w600,
             ),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Digite seu e-mail',
-              hintStyle: TextStyle(color: Colors.white54),
+              hintText: hintText,
+              hintStyle: const TextStyle(color: Colors.white54),
             ),
             cursorColor: Colors.white,
           ),
