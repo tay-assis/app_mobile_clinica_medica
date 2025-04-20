@@ -8,7 +8,7 @@ part 'doctorInsurance_dao.g.dart';
 class DoctorInsuranceDao extends DatabaseAccessor<AppDatabase>
     with _$DoctorInsuranceDaoMixin {
   // instance of AppDatabase to DAO
-  DoctorInsuranceDao(AppDatabase db) : super(db);
+  DoctorInsuranceDao(super.db);
 
   //SELECT * FROM DOCTORINSURANCES
   Future<List<DoctorInsurance>> selectDoctorInsurances() {

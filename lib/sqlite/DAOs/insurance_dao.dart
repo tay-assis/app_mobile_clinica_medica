@@ -8,7 +8,7 @@ part 'insurance_dao.g.dart';
 class InsuranceDao extends DatabaseAccessor<AppDatabase>
     with _$InsuranceDaoMixin {
   // You must pass an instance of AppDatabase to the DAO.
-  InsuranceDao(AppDatabase db) : super(db);
+  InsuranceDao(super.db);
 
   // É recomendada a leitura da documentação do drift para entendimento dos métodos
   // No C in CRUD, because the tables were already created

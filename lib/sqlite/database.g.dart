@@ -2316,6 +2316,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final AddressDao addressDao = AddressDao(this as AppDatabase);
+  late final ClinicDao clinicDao = ClinicDao(this as AppDatabase);
   late final DoctorDao doctorDao = DoctorDao(this as AppDatabase);
   late final PatientDao patientDao = PatientDao(this as AppDatabase);
   late final DoctorScheduleDao doctorScheduleDao = DoctorScheduleDao(

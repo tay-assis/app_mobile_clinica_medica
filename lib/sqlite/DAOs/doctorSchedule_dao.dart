@@ -7,7 +7,7 @@ part 'doctorSchedule_dao.g.dart';
 @DriftAccessor(tables: [DoctorSchedules])
 class DoctorScheduleDao extends DatabaseAccessor<AppDatabase> with _$DoctorScheduleDaoMixin {
   // You must pass an instance of AppDatabase to the DAO.
-  DoctorScheduleDao(AppDatabase db) : super(db);
+  DoctorScheduleDao(super.db);
 
   // doctorSchedule RUD #UNTESTED
   // SELECT * FROM DOCTORSCHEDULES

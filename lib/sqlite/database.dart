@@ -14,6 +14,7 @@ import 'models/doctorSchedule.dart';
 
 // DAOs:
 import 'DAOs/address_dao.dart';
+import 'DAOs/clinic_dao.dart';
 import 'DAOs/doctor_dao.dart';
 import 'DAOs/patient_dao.dart';
 import 'DAOs/doctorSchedule_dao.dart';
@@ -22,7 +23,7 @@ part 'database.g.dart';
 
 @DriftDatabase(
   tables: [Addresses, Clinics, Doctors, Insurances, Patients, DoctorInsurances, DoctorSchedules],
-  daos: [AddressDao, DoctorDao, PatientDao, DoctorScheduleDao]
+  daos: [AddressDao, ClinicDao ,DoctorDao, PatientDao, DoctorScheduleDao]
 )
 
 // persistent storage

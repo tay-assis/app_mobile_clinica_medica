@@ -7,7 +7,7 @@ part 'patient_dao.g.dart';
 @DriftAccessor(tables: [Patients])
 class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
   // You must pass an instance of AppDatabase to the DAO.
-  PatientDao(AppDatabase db) : super(db);
+  PatientDao(super.db);
 
 
   // patient RUD #UNTESTED

@@ -5,9 +5,9 @@ void main() async {
   final db = AppDatabase();
 
   try {
-    int choice_test = 4;
+    int choiceTest = 7;
 
-    switch (choice_test) {
+    switch (choiceTest) {
       // TESTE ADDRESS
       case 0:
         print('Criando 2 elementos iguais:');
@@ -262,7 +262,7 @@ void main() async {
         final patients1 = await db.patientDao.selectPatients();
         for (final i in patients1) {
           print(
-            'InsuranceID: ${i.insuranceId}, AddressID: ${i.addressId}, Name: ${i.name}, Phone: ${i.phone != null ? i.phone : "No phone"}',
+            'InsuranceID: ${i.insuranceId}, AddressID: ${i.addressId}, Name: ${i.name}, Phone: ${i.phone ?? "No phone"}',
           );
         }
         print('\n');
@@ -281,11 +281,11 @@ void main() async {
         );
         final pat1 = await db.patientDao.selectPatientByID(1);
         print(
-          'InsuranceID: ${pat1.insuranceId}, AddressID: ${pat1.addressId}, Name: ${pat1.name}, Phone: ${pat1.phone != null ? pat1.phone : "No phone"}',
+          'InsuranceID: ${pat1.insuranceId}, AddressID: ${pat1.addressId}, Name: ${pat1.name}, Phone: ${pat1.phone ?? "No phone"}',
         );
         final pat2 = await db.patientDao.selectPatientByID(2);
         print(
-          'InsuranceID: ${pat2.insuranceId}, AddressID: ${pat2.addressId}, Name: ${pat2.name}, Phone: ${pat2.phone != null ? pat2.phone : "No phone"}',
+          'InsuranceID: ${pat2.insuranceId}, AddressID: ${pat2.addressId}, Name: ${pat2.name}, Phone: ${pat2.phone ?? "No phone"}',
         );
         print('\n');
 
@@ -299,7 +299,7 @@ void main() async {
         final patients2 = await db.patientDao.selectPatients();
         for (final i in patients2) {
           print(
-            'InsuranceID: ${i.insuranceId}, AddressID: ${i.addressId}, Name: ${i.name}, Phone: ${i.phone != null ? i.phone : "No phone"}',
+            'InsuranceID: ${i.insuranceId}, AddressID: ${i.addressId}, Name: ${i.name}, Phone: ${i.phone ?? "No phone"}',
           );
         }
 
@@ -307,6 +307,80 @@ void main() async {
         await db.patientDao.deletePatients();
 
         break;
+            // TESTE CLINIC
+      case 7:
+        print('Criando 2 clínicas com o mesmo endereço:');
+
+        // Primeiro, precisamos inserir um endereço
+        await db.addressDao.insertAddress(
+          'Rua das Palmeiras',
+          'Centro',
+          'São Paulo',
+          'SP',
+          12345678,
+        );
+
+        // Insere 2 clínicas ligadas a esse endereço (ID = 1)
+        await db.clinicDao.insertClinic(
+          1,
+          'Clínica São Judas',
+          'https://link-da-imagem.com/1.jpg',
+        );
+        await db.clinicDao.insertClinic(
+          1,
+          'Clínica São Judas',
+          'https://link-da-imagem.com/1.jpg',
+        );
+
+        // Lista todas as clínicas
+        final clinics1 = await db.clinicDao.selectClinics();
+        for (final c in clinics1) {
+          print(
+            'ID: ${c.id}, AddressID: ${c.addressId}, Name: ${c.name}, ImageURL: ${c.imageUrl ?? "No image"}',
+          );
+        }
+        print('\n');
+
+        // Modifica a clínica com ID = 2
+        int total = await db.clinicDao.lengthClinics();
+        print('Modificando segunda clínica ($total clínicas no total):');
+
+        await db.clinicDao.modifyAddress(
+          2,
+          1,
+          'Clínica São João',
+          'https://link-novo.com/2.jpg',
+          0x111,
+        );
+
+        final cl1 = await db.clinicDao.selectClinicByID(1);
+        final cl2 = await db.clinicDao.selectClinicByID(2);
+        print(
+            'ID: ${cl1.id}, AddressID: ${cl1.addressId}, Name: ${cl1.name}, ImageURL: ${cl1.imageUrl ?? "No image"}');
+        print(
+            'ID: ${cl2.id}, AddressID: ${cl2.addressId}, Name: ${cl2.name}, ImageURL: ${cl2.imageUrl ?? "No image"}');
+        print('\n');
+
+        print('Deletando clínica com ID = 1:');
+        await db.clinicDao.deleteClinicByID(1);
+
+        int remaining = await db.clinicDao.lengthClinics();
+        print('Clínicas restantes: $remaining');
+
+        final clinics2 = await db.clinicDao.selectClinics();
+        for (final c in clinics2) {
+          print(
+            'ID: ${c.id}, AddressID: ${c.addressId}, Name: ${c.name}, ImageURL: ${c.imageUrl ?? "No image"}',
+          );
+        }
+
+        // Resetar para garantir repetibilidade
+        await db.clinicDao.deleteClincs();
+        await db.addressDao.deleteAddresses();
+        break;
+
+      
+      // TESTE 
       default:
         break;
     }
