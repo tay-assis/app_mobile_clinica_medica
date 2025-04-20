@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'rectangle.dart';
+import '../../../shered/widgets/rectangle.dart';
 import 'circle_icon.dart';
 import 'search_bar.dart';
 
@@ -23,7 +23,7 @@ class MainRetangle extends StatelessWidget {
                 width: 276,
                 height: 84,
                 child: const Text(
-                  'Let’s Find Your\nDoctor',
+                  'Encontre seu \nMédico',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 30,
@@ -32,22 +32,42 @@ class MainRetangle extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
 
-              // ⬅️ Linha com componentes de ícones
+              // Linha com componentes de ícones
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  CircleIcon(icon: Icons.favorite),
-                  CircleIcon(icon: Icons.monitor_heart),
-                  CircleIcon(icon: Icons.medical_services),
-                  CircleIcon(icon: Icons.vaccines),
+                children: [
+                  IconButton(
+                    icon: const CircleIcon(icon: Icons.favorite),
+                    onPressed: () {
+                      // Ação ao pressionar o botão de favorito
+                    },
+                  ),
+                  IconButton(
+                    icon: const CircleIcon(icon: Icons.monitor_heart),
+                    onPressed: () {
+                      // Ação ao pressionar o botão de monitor cardíaco
+                    },
+                  ),
+                  IconButton(
+                    icon: const CircleIcon(icon: Icons.medical_services),
+                    onPressed: () {
+                      // Ação ao pressionar o botão de serviços médicos
+                    },
+                  ),
+                  IconButton(
+                    icon: const CircleIcon(icon: Icons.vaccines),
+                    onPressed: () {
+                      // Ação ao pressionar o botão de vacinas
+                    },
+                  ),
                 ],
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
 
-              // ⬅️ Componente de barra de busca
+              // Componente de barra de busca
               const SearchBarComponent(),
             ],
           ),
