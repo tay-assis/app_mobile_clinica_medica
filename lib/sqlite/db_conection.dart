@@ -5,7 +5,7 @@ void main() async {
   final db = AppDatabase();
 
   try {
-    int choiceTest = 8;
+    int choiceTest = 9;
 
     switch (choiceTest) {
       // TESTE ADDRESS
@@ -307,8 +307,10 @@ void main() async {
         await db.patientDao.deletePatients();
 
         break;
-            // TESTE CLINIC
+
+      // TESTE CLINIC
       case 7:
+        //await db.clinicDao.deleteClinics();
         print('Criando 2 clínicas com o mesmo endereço:');
 
         // Primeiro, precisamos inserir um endereço
@@ -375,7 +377,7 @@ void main() async {
         }
 
         // Resetar para garantir repetibilidade
-        await db.clinicDao.deleteClincs();
+        await db.clinicDao.deleteClinics();
         await db.addressDao.deleteAddresses();
         break;
 
@@ -433,6 +435,88 @@ void main() async {
         // Resetar para garantir repetibilidade
         await db.insuranceDao.deleteInsurances();
         break;
+
+      case 9: 
+        final doctorDao = db.doctorDao;
+        final insuranceDao = db.insuranceDao;
+        final doctorInsuranceDao = db.doctorInsuranceDao;
+
+        //await db.doctorDao.deleteDoctors();
+        //await db.clinicDao.deleteClinics();
+        //await db.insuranceDao.deleteInsurances();
+        //await db.doctorInsuranceDao.deleteDoctorInsurances();
+
+        await db.clinicDao.insertClinic(
+          1,
+          'Clinica Esperanca',
+          'https://link-da-imagem.com/1.jpg',
+        );
+        await db.clinicDao.insertClinic(
+          2,
+          'Clinica Fe',
+          'https://link-da-imagem.com/2.jpg',
+        );
+
+       // Inserir médicos
+        await doctorDao.insertDoctor(
+            1,
+            "Dr. Alice Santos",
+            1121,
+            "Cardiologista",
+            null,
+        );
+
+        await doctorDao.insertDoctor(
+            2,
+            "Dr. Bruno Oliveira",
+            1188,
+            "Dermatologista",
+            null,
+        );
+
+        await doctorDao.insertDoctor(
+            2,
+            "Dr. Carla Souza",
+            1177,
+            "Pediatra",
+            null,
+        );
+
+
+        // Inserir convênios
+        await insuranceDao.insertInsurance("SaúdePlus");
+        await insuranceDao.insertInsurance("VidaBem");
+        await insuranceDao.insertInsurance("MedTotal");
+
+        // Criar relações
+        await doctorInsuranceDao.insertDoctorInsuranceByNames("Dr. Alice Santos", "SaúdePlus");
+        await doctorInsuranceDao.insertDoctorInsuranceByNames("Dr. Alice Santos", "VidaBem");
+
+        await doctorInsuranceDao.insertDoctorInsuranceByNames("Dr. Bruno Oliveira", "MedTotal");
+
+        await doctorInsuranceDao.insertDoctorInsuranceByNames("Dr. Carla Souza", "SaúdePlus");
+        await doctorInsuranceDao.insertDoctorInsuranceByNames("Dr. Carla Souza", "MedTotal");
+
+        // Testar leitura
+        final aliceInsurances = await doctorInsuranceDao.selectInsurancesByDoctor('Dr. Alice Santos');
+        print("Convênios da Dr. Alice: $aliceInsurances\n");
+
+        final medtotalDoctors = await doctorInsuranceDao.selectDoctorsByInsurance('MedTotal'); 
+        print("Médicos atendidos por MedTotal: $medtotalDoctors");
+
+
+        // Testar deleção por nome
+        await doctorInsuranceDao.deleteDoctorInsuranceByDoctorsName("Dr. Bruno Oliveira");
+
+        // Confirmar deleção
+        final afterDelete = await doctorInsuranceDao.selectDoctorInsurances();
+        print("Vínculos após remover Dr. Bruno: $afterDelete\n");
+
+        // Resetar para garantir repetibilidade
+        await db.doctorDao.deleteDoctors();
+        await db.clinicDao.deleteClinics();
+        await db.insuranceDao.deleteInsurances();
+        await db.doctorInsuranceDao.deleteDoctorInsurances();
 
       // TESTE 
       default:

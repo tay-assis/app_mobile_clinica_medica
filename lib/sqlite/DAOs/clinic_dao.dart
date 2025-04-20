@@ -67,7 +67,7 @@ class ClinicDao extends DatabaseAccessor<AppDatabase> with _$ClinicDaoMixin {
   }
 
   // DELETE FROM CLINICS
-  Future<void> deleteClincs() async {
+  Future<void> deleteClinics() async {
     delete(clinics).go();
     await customStatement(
       "DELETE FROM sqlite_sequence WHERE name = 'clinics';",
