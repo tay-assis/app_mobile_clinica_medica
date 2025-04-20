@@ -17,7 +17,7 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
   }
 
   // SELECT * FROM DOCTORS WHERE(clinicID == CLINICID)
-  Future<List<Doctor>> selectDoctorByClinicID(int CLINICID){
+  Future<List<Doctor>> selectDoctorsByClinicID(int CLINICID){
     return (select(doctors)..where((t) => t.clinicId.isValue(CLINICID))).get();
   }
 
@@ -35,7 +35,7 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
   }
 
   // INSERT INTO DOCTORS (...) VALUES()
-  Future<void> insertDoctor(int CLINICID, String NAME, int PHONE, String SPECIALTY, String IMAGEURL) async{
+  Future<void> insertDoctor(int CLINICID, String? NAME, int? PHONE, String SPECIALTY, String? IMAGEURL) async{
     into(doctors).insert(DoctorsCompanion(
       clinicId: Value(CLINICID),
       name: Value(NAME),
@@ -47,7 +47,7 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
   }
 
   // UPDATE DOCTORS clinicID=CLINICID, ... WHERE (crm == CRM)
-  Future<void> modifyDoctor(int CRM, int CLINICID, String NAME, int PHONE, String SPECIALTY, String IMAGEURL, int targets) async{
+  Future<void> modifyDoctor(int CRM, int CLINICID, String? NAME, int? PHONE, String SPECIALTY, String? IMAGEURL, int targets) async{
     final companion = DoctorsCompanion(
       clinicId: ((targets & 0x10000) != 0) ? Value(CLINICID) : Value.absent(),
       name: ((targets & 0x01000) != 0) ? Value(NAME) : Value.absent(),

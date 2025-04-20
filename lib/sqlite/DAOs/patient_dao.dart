@@ -30,7 +30,7 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
   }
 
   // INSERT INTO PATIENTS (...) VALUES(...)
-  Future<void> insertPatient(int INSURANCEID, int ADDRESSID, String NAME, String EMAIL, int PHONE) async{
+  Future<void> insertPatient(int INSURANCEID, int ADDRESSID, String NAME, String EMAIL, int? PHONE) async{
     into(patients).insert(PatientsCompanion(
       insuranceId: Value(INSURANCEID),
       addressId: Value(ADDRESSID),
@@ -42,7 +42,7 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
   }
 
   // UPDATE PATIENTS clinicID=CLINICID, ... WHERE (crm == CRM)
-  Future<void> modifyPatient(int ID, int INSURANCEID, int ADDRESSID, String NAME, String EMAIL, int PHONE, int targets) async{
+  Future<void> modifyPatient(int ID, int INSURANCEID, int ADDRESSID, String NAME, String EMAIL, int? PHONE, int targets) async{
     final companion = PatientsCompanion(
       insuranceId: ((targets & 0x10000) != 0) ? Value(INSURANCEID) : Value.absent(),
       addressId: ((targets & 0x01000) != 0) ? Value(ADDRESSID) : Value.absent(),

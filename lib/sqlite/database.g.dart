@@ -2021,15 +2021,6 @@ class $DoctorSchedulesTable extends DoctorSchedules
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _timeMeta = const VerificationMeta('time');
-  @override
-  late final GeneratedColumn<String> time = GeneratedColumn<String>(
-    'time',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
@@ -2042,7 +2033,7 @@ class $DoctorSchedulesTable extends DoctorSchedules
         'NOT NULL CHECK(status IN (\'available\', \'unavailable\'))',
   );
   @override
-  List<GeneratedColumn> get $columns => [doctorId, weekday, date, time, status];
+  List<GeneratedColumn> get $columns => [doctorId, weekday, date, status];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2079,14 +2070,6 @@ class $DoctorSchedulesTable extends DoctorSchedules
     } else if (isInserting) {
       context.missing(_dateMeta);
     }
-    if (data.containsKey('time')) {
-      context.handle(
-        _timeMeta,
-        time.isAcceptableOrUnknown(data['time']!, _timeMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_timeMeta);
-    }
     if (data.containsKey('status')) {
       context.handle(
         _statusMeta,
@@ -2099,7 +2082,7 @@ class $DoctorSchedulesTable extends DoctorSchedules
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {doctorId, date, time};
+  Set<GeneratedColumn> get $primaryKey => {doctorId, date};
   @override
   DoctorSchedule map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -2119,11 +2102,6 @@ class $DoctorSchedulesTable extends DoctorSchedules
             DriftSqlType.dateTime,
             data['${effectivePrefix}date'],
           )!,
-      time:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}time'],
-          )!,
       status:
           attachedDatabase.typeMapping.read(
             DriftSqlType.string,
@@ -2142,13 +2120,11 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
   final int doctorId;
   final String weekday;
   final DateTime date;
-  final String time;
   final String status;
   const DoctorSchedule({
     required this.doctorId,
     required this.weekday,
     required this.date,
-    required this.time,
     required this.status,
   });
   @override
@@ -2157,7 +2133,6 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
     map['doctor_id'] = Variable<int>(doctorId);
     map['weekday'] = Variable<String>(weekday);
     map['date'] = Variable<DateTime>(date);
-    map['time'] = Variable<String>(time);
     map['status'] = Variable<String>(status);
     return map;
   }
@@ -2167,7 +2142,6 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
       doctorId: Value(doctorId),
       weekday: Value(weekday),
       date: Value(date),
-      time: Value(time),
       status: Value(status),
     );
   }
@@ -2181,7 +2155,6 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
       doctorId: serializer.fromJson<int>(json['doctorId']),
       weekday: serializer.fromJson<String>(json['weekday']),
       date: serializer.fromJson<DateTime>(json['date']),
-      time: serializer.fromJson<String>(json['time']),
       status: serializer.fromJson<String>(json['status']),
     );
   }
@@ -2192,7 +2165,6 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
       'doctorId': serializer.toJson<int>(doctorId),
       'weekday': serializer.toJson<String>(weekday),
       'date': serializer.toJson<DateTime>(date),
-      'time': serializer.toJson<String>(time),
       'status': serializer.toJson<String>(status),
     };
   }
@@ -2201,13 +2173,11 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
     int? doctorId,
     String? weekday,
     DateTime? date,
-    String? time,
     String? status,
   }) => DoctorSchedule(
     doctorId: doctorId ?? this.doctorId,
     weekday: weekday ?? this.weekday,
     date: date ?? this.date,
-    time: time ?? this.time,
     status: status ?? this.status,
   );
   DoctorSchedule copyWithCompanion(DoctorSchedulesCompanion data) {
@@ -2215,7 +2185,6 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
       doctorId: data.doctorId.present ? data.doctorId.value : this.doctorId,
       weekday: data.weekday.present ? data.weekday.value : this.weekday,
       date: data.date.present ? data.date.value : this.date,
-      time: data.time.present ? data.time.value : this.time,
       status: data.status.present ? data.status.value : this.status,
     );
   }
@@ -2226,14 +2195,13 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
           ..write('doctorId: $doctorId, ')
           ..write('weekday: $weekday, ')
           ..write('date: $date, ')
-          ..write('time: $time, ')
           ..write('status: $status')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(doctorId, weekday, date, time, status);
+  int get hashCode => Object.hash(doctorId, weekday, date, status);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2241,7 +2209,6 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
           other.doctorId == this.doctorId &&
           other.weekday == this.weekday &&
           other.date == this.date &&
-          other.time == this.time &&
           other.status == this.status);
 }
 
@@ -2249,14 +2216,12 @@ class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
   final Value<int> doctorId;
   final Value<String> weekday;
   final Value<DateTime> date;
-  final Value<String> time;
   final Value<String> status;
   final Value<int> rowid;
   const DoctorSchedulesCompanion({
     this.doctorId = const Value.absent(),
     this.weekday = const Value.absent(),
     this.date = const Value.absent(),
-    this.time = const Value.absent(),
     this.status = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -2264,19 +2229,16 @@ class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
     required int doctorId,
     required String weekday,
     required DateTime date,
-    required String time,
     required String status,
     this.rowid = const Value.absent(),
   }) : doctorId = Value(doctorId),
        weekday = Value(weekday),
        date = Value(date),
-       time = Value(time),
        status = Value(status);
   static Insertable<DoctorSchedule> custom({
     Expression<int>? doctorId,
     Expression<String>? weekday,
     Expression<DateTime>? date,
-    Expression<String>? time,
     Expression<String>? status,
     Expression<int>? rowid,
   }) {
@@ -2284,7 +2246,6 @@ class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
       if (doctorId != null) 'doctor_id': doctorId,
       if (weekday != null) 'weekday': weekday,
       if (date != null) 'date': date,
-      if (time != null) 'time': time,
       if (status != null) 'status': status,
       if (rowid != null) 'rowid': rowid,
     });
@@ -2294,7 +2255,6 @@ class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
     Value<int>? doctorId,
     Value<String>? weekday,
     Value<DateTime>? date,
-    Value<String>? time,
     Value<String>? status,
     Value<int>? rowid,
   }) {
@@ -2302,7 +2262,6 @@ class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
       doctorId: doctorId ?? this.doctorId,
       weekday: weekday ?? this.weekday,
       date: date ?? this.date,
-      time: time ?? this.time,
       status: status ?? this.status,
       rowid: rowid ?? this.rowid,
     );
@@ -2320,9 +2279,6 @@ class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
     }
-    if (time.present) {
-      map['time'] = Variable<String>(time.value);
-    }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
     }
@@ -2338,7 +2294,6 @@ class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
           ..write('doctorId: $doctorId, ')
           ..write('weekday: $weekday, ')
           ..write('date: $date, ')
-          ..write('time: $time, ')
           ..write('status: $status, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -4830,7 +4785,6 @@ typedef $$DoctorSchedulesTableCreateCompanionBuilder =
       required int doctorId,
       required String weekday,
       required DateTime date,
-      required String time,
       required String status,
       Value<int> rowid,
     });
@@ -4839,7 +4793,6 @@ typedef $$DoctorSchedulesTableUpdateCompanionBuilder =
       Value<int> doctorId,
       Value<String> weekday,
       Value<DateTime> date,
-      Value<String> time,
       Value<String> status,
       Value<int> rowid,
     });
@@ -4892,11 +4845,6 @@ class $$DoctorSchedulesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get time => $composableBuilder(
-    column: $table.time,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get status => $composableBuilder(
     column: $table.status,
     builder: (column) => ColumnFilters(column),
@@ -4945,11 +4893,6 @@ class $$DoctorSchedulesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get time => $composableBuilder(
-    column: $table.time,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get status => $composableBuilder(
     column: $table.status,
     builder: (column) => ColumnOrderings(column),
@@ -4993,9 +4936,6 @@ class $$DoctorSchedulesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
-
-  GeneratedColumn<String> get time =>
-      $composableBuilder(column: $table.time, builder: (column) => column);
 
   GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
@@ -5064,14 +5004,12 @@ class $$DoctorSchedulesTableTableManager
                 Value<int> doctorId = const Value.absent(),
                 Value<String> weekday = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
-                Value<String> time = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DoctorSchedulesCompanion(
                 doctorId: doctorId,
                 weekday: weekday,
                 date: date,
-                time: time,
                 status: status,
                 rowid: rowid,
               ),
@@ -5080,14 +5018,12 @@ class $$DoctorSchedulesTableTableManager
                 required int doctorId,
                 required String weekday,
                 required DateTime date,
-                required String time,
                 required String status,
                 Value<int> rowid = const Value.absent(),
               }) => DoctorSchedulesCompanion.insert(
                 doctorId: doctorId,
                 weekday: weekday,
                 date: date,
-                time: time,
                 status: status,
                 rowid: rowid,
               ),

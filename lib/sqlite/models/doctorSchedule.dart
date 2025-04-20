@@ -9,11 +9,10 @@ class DoctorSchedules extends Table {
         "NOT NULL CHECK(weekday IN ('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'))",
       )();
   DateTimeColumn get date => dateTime()();
-  TextColumn get time => text()();
   TextColumn get status =>
       text().customConstraint(
         "NOT NULL CHECK(status IN ('available', 'unavailable'))",
       )();
   @override
-  Set<Column> get primaryKey => {doctorId, date, time};
+  Set<Column> get primaryKey => {doctorId, date};
 }
