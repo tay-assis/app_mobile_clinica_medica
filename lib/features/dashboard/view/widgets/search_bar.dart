@@ -16,7 +16,7 @@ class SearchBarComponent extends StatelessWidget {
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Tente “Dermatololista”',
+                hintText: 'Tente “Dermatologista”',
                 border: InputBorder.none,
               ),
             ),
