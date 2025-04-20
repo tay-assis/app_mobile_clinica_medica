@@ -7,7 +7,7 @@ part 'address_dao.g.dart';
 @DriftAccessor(tables: [Addresses])
 class AddressDao extends DatabaseAccessor<AppDatabase> with _$AddressDaoMixin {
   // You must pass an instance of AppDatabase to the DAO.
-  AddressDao(AppDatabase db) : super(db);
+  AddressDao(super.db);
 
 
   // É recomendada a leitura da documentação do drift para entendimento dos métodos

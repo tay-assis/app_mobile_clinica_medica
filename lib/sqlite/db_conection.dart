@@ -5,7 +5,7 @@ void main() async {
   final db = AppDatabase();
 
   try {
-    int choiceTest = 7;
+    int choiceTest = 8;
 
     switch (choiceTest) {
       // TESTE ADDRESS
@@ -379,7 +379,61 @@ void main() async {
         await db.addressDao.deleteAddresses();
         break;
 
-      
+      case 8:
+        print('Criando 2 insurances com o mesmo endereço:');
+
+        // Insere 2 insurances ligadas 
+        await db.insuranceDao.insertInsurance(
+          'Unimed',
+        );
+        await db.insuranceDao.insertInsurance(
+          'Unimed',
+        );
+
+        // Lista todas as insurances
+        final insurance1 = await db.insuranceDao.selectInsurances();
+        for (final c in insurance1) {
+          print(
+            'ID: ${c.id}, Name: ${c.name}',
+          );
+        }
+        print('\n');
+
+        // Modifica a insurance com ID = 2
+        int total = await db.insuranceDao.lengthInsurances();
+        print('Modificando segunda insurance ($total insurances no total):');
+
+        await db.insuranceDao.modifyName(
+          2,
+          'Amil',
+          0x1,
+        );
+
+        final i1 = await db.insuranceDao.selectInsuranceByID(1);
+        final i2 = await db.insuranceDao.selectInsuranceByID(2);
+        print(
+            'ID: ${i1.id}, Name: ${i1.name}');
+        print(
+            'ID: ${i2.id}, Name: ${i2.name}');
+        print('\n');
+
+        print('Deletando clínica com ID = 1:');
+        await db.insuranceDao.deleteInsuranceByID(1);
+
+        int remaining = await db.insuranceDao.lengthInsurances();
+        print('Clínicas restantes: $remaining');
+
+        final insurances2 = await db.insuranceDao.selectInsurances();
+        for (final c in insurances2) {
+          print(
+            'ID: ${c.id}, Name: ${c.name}',
+          );
+        }
+
+        // Resetar para garantir repetibilidade
+        await db.insuranceDao.deleteInsurances();
+        break;
+
       // TESTE 
       default:
         break;

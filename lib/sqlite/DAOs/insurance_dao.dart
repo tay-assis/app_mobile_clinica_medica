@@ -40,7 +40,7 @@ class InsuranceDao extends DatabaseAccessor<AppDatabase>
   }
 
   // UPDATE INSURANCES name=NAME ... WHERE (id ==ID)
-  Future<void> modifyAddress(int ID, String NAME, int targets) async {
+  Future<void> modifyName(int ID, String NAME, int targets) async {
     // finds the element with id==ID
     // 'targets' represents flags used to know which values will be modified
     // example: targets = 0x110 means only address and name will be modified
@@ -54,7 +54,7 @@ class InsuranceDao extends DatabaseAccessor<AppDatabase>
   }
 
   // DELETE FROM INSURANCES
-  Future<void> deleteClincs() async {
+  Future<void> deleteInsurances() async {
     delete(insurances).go();
     await customStatement(
       "DELETE FROM sqlite_sequence WHERE name = 'insurances';",
