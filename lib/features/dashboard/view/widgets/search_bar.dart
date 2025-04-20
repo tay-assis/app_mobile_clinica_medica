@@ -12,16 +12,21 @@ class SearchBarComponent extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
-        children: const [
+        children: [
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Try “Dermatologist”',
+                hintText: 'Tente “Dermatologista”',
                 border: InputBorder.none,
               ),
             ),
           ),
-          Icon(Icons.search_rounded, color: Color(0xFF0089FF)),
+          IconButton(
+            icon: const Icon(Icons.search_rounded, color: Color(0xFF0089FF)),
+            onPressed: () {
+              // Ação ao pressionar o botão de pesquisa
+            },
+          ),
         ],
       ),
     );
