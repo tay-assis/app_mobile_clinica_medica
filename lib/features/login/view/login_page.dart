@@ -3,9 +3,10 @@ import 'package:app_mobile_clinica_medica/features/login/controller/login_contro
 import 'widgets/welcome_title.dart';
 import '../../shered/widgets/logo_text.dart';
 import 'widgets/field_label.dart';
-import 'widgets/custom_button.dart';
+import '../../shered/widgets/custom_button.dart'; // Botao de login
 import '../../shered/widgets/curved_header.dart';
 import '../../shered/widgets/custom_text_field.dart';
+import '../../sing_up/view/sing_up_choose.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -100,14 +101,36 @@ class _LoginPageState extends State<LoginPage> {
                         text: 'Cadastre-se agora',
                         isLink: true,
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text(
-                                'Você clicou em "Cadastre-se agora"!',
-                              ),
-                              duration: const Duration(seconds: 2),
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.blueAccent,
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      SignUpChoose(),
+                              transitionsBuilder: (
+                                context,
+                                animation,
+                                secondaryAnimation,
+                                child,
+                              ) {
+                                const begin = Offset(
+                                  1.0,
+                                  0.0,
+                                ); // Tela entra da direita
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
+
+                                var tween = Tween(
+                                  begin: begin,
+                                  end: end,
+                                ).chain(CurveTween(curve: curve));
+                                var offsetAnimation = animation.drive(tween);
+
+                                return SlideTransition(
+                                  position: offsetAnimation,
+                                  child: child,
+                                );
+                              },
                             ),
                           );
                         },
