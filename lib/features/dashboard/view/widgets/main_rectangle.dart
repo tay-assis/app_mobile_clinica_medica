@@ -3,11 +3,11 @@ import '../../../shered/widgets/rectangle.dart';
 import 'circle_icon.dart';
 import 'search_bar.dart';
 
-class MainRetangle extends StatelessWidget {
+class MainRectangle extends StatelessWidget {
   final double width;
   final double height;
 
-  const MainRetangle({super.key, required this.width, required this.height});
+  const MainRectangle({super.key, required this.width, required this.height});
 
   @override
   Widget build(BuildContext context) {
