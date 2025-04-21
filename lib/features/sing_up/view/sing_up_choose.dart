@@ -1,12 +1,13 @@
+import 'package:app_mobile_clinica_medica/features/shered/widgets/back_icon.dart';
 import 'package:flutter/material.dart';
 import '../../login/view/login_page.dart';
 import '../../shered/widgets/curved_header.dart';
-import '../../shered/widgets/logo_text.dart';
 import '../../shered/widgets/custom_button.dart'; // Botao cliente/usuario
-import 'dart:io';
+import '../../shered/widgets/slide_transition.dart';
+import '../view/sing_up_client.dart';
 
-class SignUpChoose extends StatelessWidget {
-  const SignUpChoose({super.key});
+class SingUpChoose extends StatelessWidget {
+  const SingUpChoose({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +21,6 @@ class SignUpChoose extends StatelessWidget {
         height: height,
         child: Stack(
           children: [
-            // Header no topo
-            const CurvedHeader(),
-
             // Footer espelhado
             Align(
               alignment: Alignment.bottomCenter,
@@ -43,13 +41,27 @@ class SignUpChoose extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Espaço para a curva do header
-                    SizedBox(height: height * 0.045),
+                    SizedBox(height: height * 0.05),
 
-                    // Logo por cima do header
-                    const LogoText(),
+                    // Seta para voltar
+                    Align(
+                      alignment: Alignment.centerRight * 0.7,
+                      child: BackIcon(
+                        onTap: () {
+                          navigateWithSlideTransition(
+                            context: context,
+                            destination: const LoginPage(),
+                            beginOffset: const Offset(
+                              -1.0,
+                              0.0,
+                            ), // entrada da direita
+                          );
+                        },
+                      ),
+                    ),
 
                     // Texto 1
-                    SizedBox(height: height * 0.07),
+                    SizedBox(height: height * 0.03),
                     Text(
                       'Bem vindo ao\nDoctor On',
                       style: TextStyle(
@@ -90,18 +102,18 @@ class SignUpChoose extends StatelessWidget {
                             width: 170,
                             height: 50,
                             onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text('Login'),
-                                  duration: const Duration(seconds: 2),
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.blueAccent,
-                                ),
+                              navigateWithSlideTransition(
+                                context: context,
+                                destination: const SingUpClient(),
+                                beginOffset: const Offset(
+                                  1.0,
+                                  0.0,
+                                ), // entrada da direita
                               );
                             },
                           ),
                           SizedBox(
-                            width: 20,
+                            width: width * 0.014,
                           ), // Espaçamento horizontal entre os botões
                           //.
                           //.
@@ -127,61 +139,13 @@ class SignUpChoose extends StatelessWidget {
                     ),
 
                     // Imagem
-                    //SizedBox(height: height * 0.0005),
+                    SizedBox(height: height * 0.03),
                     Center(
                       child: Image.asset(
                         'lib/images/sing_up_choose_image.png',
-                        width: 350,
-                        height: 350,
+                        width: width * 0.8,
+                        height: height * 0.3,
                         //fit: BoxFit.cover,
-                      ),
-                    ),
-
-                    // Botao da volta
-                    //SizedBox(height: height * 0.005),
-                    Align(
-                      alignment:
-                          Alignment.centerRight *
-                          0.95, // ou topRight, bottomRight
-                      child: CustomButton(
-                        text: 'Voltar',
-                        width: 137,
-                        height: 40,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      LoginPage(),
-                              transitionsBuilder: (
-                                context,
-                                animation,
-                                secondaryAnimation,
-                                child,
-                              ) {
-                                const begin = Offset(
-                                  -1.0,
-                                  0.0,
-                                ); // Tela entra da direita
-                                const end = Offset.zero;
-                                const curve = Curves.easeInOut;
-
-                                var tween = Tween(
-                                  begin: begin,
-                                  end: end,
-                                ).chain(CurveTween(curve: curve));
-                                var offsetAnimation = animation.drive(tween);
-
-                                return SlideTransition(
-                                  position: offsetAnimation,
-                                  child: child,
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        styleType: ButtonStyleType.outlined,
                       ),
                     ),
                   ],

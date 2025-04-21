@@ -8,6 +8,7 @@ class CustomButton extends StatelessWidget {
   final double height;
   final VoidCallback onPressed;
   final ButtonStyleType styleType;
+  final double? fontSize; // novo parâmetro
 
   const CustomButton({
     super.key,
@@ -15,13 +16,16 @@ class CustomButton extends StatelessWidget {
     required this.width,
     required this.height,
     required this.onPressed,
-    this.styleType = ButtonStyleType.filled, // Estilo padrão
+    this.styleType = ButtonStyleType.filled,
+    this.fontSize,
   });
 
   @override
   Widget build(BuildContext context) {
+    final double defaultFontSize =
+        styleType == ButtonStyleType.filled ? 18 : 12;
+
     if (styleType == ButtonStyleType.filled) {
-      // Estilo preenchido (original)
       return GestureDetector(
         onTap: onPressed,
         child: Container(
@@ -36,9 +40,9 @@ class CustomButton extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             text,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: fontSize ?? defaultFontSize,
               fontFamily: 'Nunito',
               fontWeight: FontWeight.w800,
             ),
@@ -46,7 +50,6 @@ class CustomButton extends StatelessWidget {
         ),
       );
     } else {
-      // Estilo contornado (novo)
       return GestureDetector(
         onTap: onPressed,
         child: Container(
@@ -54,7 +57,7 @@ class CustomButton extends StatelessWidget {
           height: height,
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
-              side: BorderSide(width: 1, color: const Color(0xFF0089FF)),
+              side: const BorderSide(width: 1, color: Color(0xFF0089FF)),
               borderRadius: BorderRadius.circular(50),
             ),
           ),
@@ -62,9 +65,9 @@ class CustomButton extends StatelessWidget {
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Color(0xFF0089FF),
-              fontSize: 12,
+            style: TextStyle(
+              color: const Color(0xFF0089FF),
+              fontSize: fontSize ?? defaultFontSize,
               fontFamily: 'Nunito',
               fontWeight: FontWeight.w700,
             ),
