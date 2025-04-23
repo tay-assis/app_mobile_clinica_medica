@@ -248,14 +248,14 @@ void main() async {
           3,
           'Elijah Glass',
           'Elijah@glass.com',
-          null,
+          12131514,
         );
         await db.patientDao.insertPatient(
           1,
           3,
           'Elijah Glass',
           'Elijah@glass.com',
-          null,
+          12131514,
         );
 
         // Query para receber todos os dados da tabela de enderecos e imprimir
@@ -358,9 +358,11 @@ void main() async {
         final cl1 = await db.clinicDao.selectClinicByID(1);
         final cl2 = await db.clinicDao.selectClinicByID(2);
         print(
-            'ID: ${cl1.id}, AddressID: ${cl1.addressId}, Name: ${cl1.name}, ImageURL: ${cl1.imageUrl ?? "No image"}');
+          'ID: ${cl1.id}, AddressID: ${cl1.addressId}, Name: ${cl1.name}, ImageURL: ${cl1.imageUrl ?? "No image"}',
+        );
         print(
-            'ID: ${cl2.id}, AddressID: ${cl2.addressId}, Name: ${cl2.name}, ImageURL: ${cl2.imageUrl ?? "No image"}');
+          'ID: ${cl2.id}, AddressID: ${cl2.addressId}, Name: ${cl2.name}, ImageURL: ${cl2.imageUrl ?? "No image"}',
+        );
         print('\n');
 
         print('Deletando clínica com ID = 1:');
@@ -384,20 +386,14 @@ void main() async {
       case 8:
         print('Criando 2 insurances com o mesmo endereço:');
 
-        // Insere 2 insurances ligadas 
-        await db.insuranceDao.insertInsurance(
-          'Unimed',
-        );
-        await db.insuranceDao.insertInsurance(
-          'Unimed',
-        );
+        // Insere 2 insurances ligadas
+        await db.insuranceDao.insertInsurance('Unimed');
+        await db.insuranceDao.insertInsurance('Unimed');
 
         // Lista todas as insurances
         final insurance1 = await db.insuranceDao.selectInsurances();
         for (final c in insurance1) {
-          print(
-            'ID: ${c.id}, Name: ${c.name}',
-          );
+          print('ID: ${c.id}, Name: ${c.name}');
         }
         print('\n');
 
@@ -405,18 +401,12 @@ void main() async {
         int total = await db.insuranceDao.lengthInsurances();
         print('Modificando segunda insurance ($total insurances no total):');
 
-        await db.insuranceDao.modifyName(
-          2,
-          'Amil',
-          0x1,
-        );
+        await db.insuranceDao.modifyName(2, 'Amil', 0x1);
 
         final i1 = await db.insuranceDao.selectInsuranceByID(1);
         final i2 = await db.insuranceDao.selectInsuranceByID(2);
-        print(
-            'ID: ${i1.id}, Name: ${i1.name}');
-        print(
-            'ID: ${i2.id}, Name: ${i2.name}');
+        print('ID: ${i1.id}, Name: ${i1.name}');
+        print('ID: ${i2.id}, Name: ${i2.name}');
         print('\n');
 
         print('Deletando clínica com ID = 1:');
@@ -427,16 +417,14 @@ void main() async {
 
         final insurances2 = await db.insuranceDao.selectInsurances();
         for (final c in insurances2) {
-          print(
-            'ID: ${c.id}, Name: ${c.name}',
-          );
+          print('ID: ${c.id}, Name: ${c.name}');
         }
 
         // Resetar para garantir repetibilidade
         await db.insuranceDao.deleteInsurances();
         break;
 
-      case 9: 
+      case 9:
         final doctorDao = db.doctorDao;
         final insuranceDao = db.insuranceDao;
         final doctorInsuranceDao = db.doctorInsuranceDao;
@@ -457,31 +445,30 @@ void main() async {
           'https://link-da-imagem.com/2.jpg',
         );
 
-       // Inserir médicos
+        // Inserir médicos
         await doctorDao.insertDoctor(
-            1,
-            "Dr. Alice Santos",
-            1121,
-            "Cardiologista",
-            null,
+          1,
+          "Dr. Alice Santos",
+          1121,
+          "Cardiologista",
+          null,
         );
 
         await doctorDao.insertDoctor(
-            2,
-            "Dr. Bruno Oliveira",
-            1188,
-            "Dermatologista",
-            null,
+          2,
+          "Dr. Bruno Oliveira",
+          1188,
+          "Dermatologista",
+          null,
         );
 
         await doctorDao.insertDoctor(
-            2,
-            "Dr. Carla Souza",
-            1177,
-            "Pediatra",
-            null,
+          2,
+          "Dr. Carla Souza",
+          1177,
+          "Pediatra",
+          null,
         );
-
 
         // Inserir convênios
         await insuranceDao.insertInsurance("SaúdePlus");
@@ -489,24 +476,42 @@ void main() async {
         await insuranceDao.insertInsurance("MedTotal");
 
         // Criar relações
-        await doctorInsuranceDao.insertDoctorInsuranceByNames("Dr. Alice Santos", "SaúdePlus");
-        await doctorInsuranceDao.insertDoctorInsuranceByNames("Dr. Alice Santos", "VidaBem");
+        await doctorInsuranceDao.insertDoctorInsuranceByNames(
+          "Dr. Alice Santos",
+          "SaúdePlus",
+        );
+        await doctorInsuranceDao.insertDoctorInsuranceByNames(
+          "Dr. Alice Santos",
+          "VidaBem",
+        );
 
-        await doctorInsuranceDao.insertDoctorInsuranceByNames("Dr. Bruno Oliveira", "MedTotal");
+        await doctorInsuranceDao.insertDoctorInsuranceByNames(
+          "Dr. Bruno Oliveira",
+          "MedTotal",
+        );
 
-        await doctorInsuranceDao.insertDoctorInsuranceByNames("Dr. Carla Souza", "SaúdePlus");
-        await doctorInsuranceDao.insertDoctorInsuranceByNames("Dr. Carla Souza", "MedTotal");
+        await doctorInsuranceDao.insertDoctorInsuranceByNames(
+          "Dr. Carla Souza",
+          "SaúdePlus",
+        );
+        await doctorInsuranceDao.insertDoctorInsuranceByNames(
+          "Dr. Carla Souza",
+          "MedTotal",
+        );
 
         // Testar leitura
-        final aliceInsurances = await doctorInsuranceDao.selectInsurancesByDoctor('Dr. Alice Santos');
+        final aliceInsurances = await doctorInsuranceDao
+            .selectInsurancesByDoctor('Dr. Alice Santos');
         print("Convênios da Dr. Alice: $aliceInsurances\n");
 
-        final medtotalDoctors = await doctorInsuranceDao.selectDoctorsByInsurance('MedTotal'); 
+        final medtotalDoctors = await doctorInsuranceDao
+            .selectDoctorsByInsurance('MedTotal');
         print("Médicos atendidos por MedTotal: $medtotalDoctors");
 
-
         // Testar deleção por nome
-        await doctorInsuranceDao.deleteDoctorInsuranceByDoctorsName("Dr. Bruno Oliveira");
+        await doctorInsuranceDao.deleteDoctorInsuranceByDoctorsName(
+          "Dr. Bruno Oliveira",
+        );
 
         // Confirmar deleção
         final afterDelete = await doctorInsuranceDao.selectDoctorInsurances();
@@ -518,7 +523,7 @@ void main() async {
         await db.insuranceDao.deleteInsurances();
         await db.doctorInsuranceDao.deleteDoctorInsurances();
 
-      // TESTE 
+      // TESTE
       default:
         break;
     }
