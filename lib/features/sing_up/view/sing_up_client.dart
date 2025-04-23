@@ -6,6 +6,7 @@ import '../view/sing_up_choose.dart';
 import '../../shered/widgets/field_label.dart';
 import '../../shered/widgets/sing_up_client_register.dart';
 import '../../login/view/login_page.dart';
+import '../controller/sing_up_controller.dart';
 
 class SingUpClient extends StatefulWidget {
   const SingUpClient({super.key});
@@ -15,14 +16,34 @@ class SingUpClient extends StatefulWidget {
 }
 
 class _SingUpClientState extends State<SingUpClient> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController nomeController = TextEditingController();
+  final SingUpController _controller = SingUpController();
 
   @override
   void dispose() {
-    emailController.dispose();
-    nomeController.dispose();
+    _controller.dispose();
     super.dispose();
+  }
+
+  Widget buildInputField({
+    required String label,
+    required TextEditingController controller,
+    required String hint,
+    required TextInputType keyboardType,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FieldLabel(text: label),
+        Center(
+          child: SingUpClientRegister(
+            controller: controller,
+            hintText: hint,
+            keyboardType: keyboardType,
+          ),
+        ),
+        SizedBox(height: 16),
+      ],
+    );
   }
 
   @override
@@ -32,141 +53,135 @@ class _SingUpClientState extends State<SingUpClient> {
     final height = size.height;
 
     return Scaffold(
-      body: SizedBox(
-        width: width,
-        height: height,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: height * 0.045),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+        child: ListView(
+          children: [
+            // Seta para
+            SizedBox(height: height * 0.001),
+            Align(
+              alignment: Alignment.centerRight * 0.7,
+              child: BackIcon(
+                onTap: () {
+                  navigateWithSlideTransition(
+                    context: context,
+                    destination: const SingUpChoose(),
+                    beginOffset: const Offset(-1.0, 0.0),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: height * 0.03),
+            const Text(
+              'Quase lá...',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 30,
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w700,
+                height: 1.24,
+              ),
+            ),
+            SizedBox(height: height * 0.01),
+            Text(
+              'Preencha as informações necessárias para completarmos seu cadastro',
+              style: TextStyle(
+                color: Colors.black.withAlpha(153),
+                fontSize: 17,
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            SizedBox(height: height * 0.05),
 
-              Align(
-                alignment: Alignment.centerRight * 0.7,
-                child: BackIcon(
-                  onTap: () {
-                    navigateWithSlideTransition(
-                      context: context,
-                      destination: const SingUpChoose(),
-                      beginOffset: const Offset(-1.0, 0.0),
-                    );
-                  },
-                ),
+            // Nome
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'Nome'),
+            ),
+            Center(
+              child: SingUpClientRegister(
+                controller: _controller.nomeController,
+                hintText: 'Digite seu nome completo',
+                keyboardType: TextInputType.name,
               ),
+            ),
 
-              SizedBox(height: height * 0.03),
-              const Text(
-                'Quase lá...',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 30,
-                  fontFamily: 'Nunito',
-                  fontWeight: FontWeight.w700,
-                  height: 1.24,
-                ),
+            // CPF
+            SizedBox(height: height * 0.03),
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'CPF'),
+            ),
+            Center(
+              child: SingUpClientRegister(
+                controller: _controller.cpfController,
+                hintText: 'Digite seu CPF',
+                keyboardType: TextInputType.number,
               ),
+            ),
 
-              SizedBox(height: height * 0.01),
-              Text(
-                'Preencha as informações necessárias para completarmos seu cadastro',
-                style: TextStyle(
-                  color: Colors.black.withAlpha(153),
-                  fontSize: 17,
-                  fontFamily: 'Nunito',
-                  fontWeight: FontWeight.w400,
-                ),
+            // Senha
+            SizedBox(height: height * 0.03),
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'Senha'),
+            ),
+            Center(
+              child: SingUpClientRegister(
+                controller: _controller.senhaController,
+                hintText: 'Digite sua senha',
+                keyboardType: TextInputType.visiblePassword,
               ),
+            ),
 
-              // Nome
-              SizedBox(height: height * 0.05),
-              Align(
-                alignment: Alignment.centerLeft * 1.2,
-                child: FieldLabel(text: 'Nome'),
+            // Email
+            SizedBox(height: height * 0.03),
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'Email'),
+            ),
+            Center(
+              child: SingUpClientRegister(
+                controller: _controller.emailController,
+                hintText: 'Digite seu e-mail',
+                keyboardType: TextInputType.emailAddress,
               ),
-              Center(
-                child: SingUpClientRegister(
-                  controller: nomeController,
-                  hintText: 'Digite seu nome completo',
-                  keyboardType: TextInputType.name,
-                ),
-              ),
+            ),
 
-              // CPF
-              SizedBox(height: height * 0.02),
-              Align(
-                alignment: Alignment.centerLeft * 1.2,
-                child: FieldLabel(text: 'CPF'),
+            // Convênio
+            SizedBox(height: height * 0.03),
+            Align(
+              alignment: Alignment.centerLeft * 1.22,
+              child: const FieldLabel(text: 'Convênio'),
+            ),
+            Center(
+              child: SingUpClientRegister(
+                controller: _controller.convenioController,
+                hintText: 'Digite seu Convênio',
+                keyboardType: TextInputType.name,
               ),
-              Center(
-                child: SingUpClientRegister(
-                  controller: emailController,
-                  hintText: 'Digite seu CPF',
-                  keyboardType: TextInputType.number,
-                ),
-              ),
+            ),
 
-              // Senha
-              SizedBox(height: height * 0.02),
-              Align(
-                alignment: Alignment.centerLeft * 1.2,
-                child: FieldLabel(text: 'Senha'),
+            SizedBox(height: height * 0.05),
+            Align(
+              alignment: Alignment.centerRight,
+              child: CustomButton(
+                text: 'Submeter',
+                width: width * 0.25,
+                height: height * 0.04,
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                styleType: ButtonStyleType.outlined,
+                fontSize: 14,
               ),
-              Center(
-                child: SingUpClientRegister(
-                  controller: emailController,
-                  hintText: 'Digite sua senha',
-                  keyboardType: TextInputType.visiblePassword,
-                ),
-              ),
-
-              // Email
-              SizedBox(height: height * 0.02),
-              Align(
-                alignment: Alignment.centerLeft * 1.2,
-                child: FieldLabel(text: 'Email'),
-              ),
-              Center(
-                child: SingUpClientRegister(
-                  controller: emailController,
-                  hintText: 'Digite seu e-mail',
-                  keyboardType: TextInputType.emailAddress,
-                ),
-              ),
-
-              // Convenio
-              SizedBox(height: height * 0.02),
-              Align(
-                alignment: Alignment.centerLeft * 1.2,
-                child: FieldLabel(text: 'Convênio'),
-              ),
-              Center(
-                child: SingUpClientRegister(
-                  controller: emailController,
-                  hintText: 'Digite seu Convênio',
-                  keyboardType: TextInputType.name,
-                ),
-              ),
-
-              SizedBox(height: height * 0.03),
-              Align(
-                alignment: Alignment.centerRight,
-                child: CustomButton(
-                  text: 'Submeter',
-                  width: 100,
-                  height: 35,
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
-                  },
-                  styleType: ButtonStyleType.outlined, // modelo 2
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: 24),
+          ],
         ),
       ),
     );

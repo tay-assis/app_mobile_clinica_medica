@@ -33,6 +33,8 @@ class _LoginPageState extends State<LoginPage> {
     final height = size.height;
 
     return Scaffold(
+      resizeToAvoidBottomInset:
+          false, // Tira a resposividade ao ativar o telcado
       body: SizedBox(
         width: width,
         height: height,

@@ -41,7 +41,7 @@ class SingUpChoose extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Espaço para a curva do header
-                    SizedBox(height: height * 0.05),
+                    SizedBox(height: height * 0.03),
 
                     // Seta para voltar
                     Align(
@@ -98,7 +98,7 @@ class SingUpChoose extends StatelessWidget {
                           //.
                           // Botão de Cliente
                           CustomButton(
-                            text: 'Cliente',
+                            text: 'Paciente',
                             width: 170,
                             height: 50,
                             onPressed: () {

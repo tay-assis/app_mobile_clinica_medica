@@ -20,7 +20,7 @@ class SingUpClientRegister extends StatelessWidget {
     final width = size.width;
 
     return Container(
-      width: width * 0.88,
+      width: width * 0.885,
       decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(width: 0.8, color: Color(0xFF0089FF)),
@@ -37,13 +37,17 @@ class SingUpClientRegister extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
         decoration: InputDecoration(
+          isDense: true, // importante! reduz o espaço interno total
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 7.5,
+            horizontal: 0,
+          ), // padding bem pequeno
           border: InputBorder.none,
           hintText: hintText,
           hintStyle: TextStyle(
             color: Colors.grey.shade600,
             fontFamily: 'Nunito',
           ),
-          contentPadding: const EdgeInsets.only(bottom: 1),
         ),
         cursorColor: const Color(0xFF0089FF),
       ),

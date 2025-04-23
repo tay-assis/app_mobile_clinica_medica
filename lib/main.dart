@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Meu App',
       debugShowCheckedModeBanner: false,
       //home: const LoginPage(), // <-- Aqui você define a tela que vai abrir
-      home: const SingUpClient(), // <-- Aqui você define a tela que vai abrir
+      home: const LoginPage(), // <-- Aqui você define a tela que vai abrir
     );
   }
 }
