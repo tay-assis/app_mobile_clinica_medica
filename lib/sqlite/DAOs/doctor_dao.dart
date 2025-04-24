@@ -34,6 +34,7 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
 
   // INSERT INTO DOCTORS (...) VALUES()
   Future<void> insertDoctor(
+    int CRM,
     int CLINICID,
     String NAME,
     int PHONE,
@@ -42,6 +43,7 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
   ) async {
     into(doctors).insert(
       DoctorsCompanion(
+        crm: Value(CRM),
         clinicId: Value(CLINICID),
         name: Value(NAME),
         phone: Value(PHONE),
