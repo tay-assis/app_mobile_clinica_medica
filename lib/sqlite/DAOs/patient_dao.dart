@@ -20,6 +20,18 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
     return (select(patients)..where((t) => t.id.isValue(ID))).getSingle();
   }
 
+  // SELECT * FROM PATIENTS WHERE(name == NAME)
+  Future<String> selectInsuranceByPatientName(String NAME) async {
+    // gets the insurance ID
+    Patient vari = await (select(patients)..where((t) => t.name.equals(NAME))).getSingle();
+
+    // gets the insurance row based on ID
+    Insurance ins = await db.insuranceDao.selectInsuranceByID(vari.insuranceId);
+
+    // returns the insurance name
+    return ins.name;
+  }
+
   // SELECT COUNT(*) FROM PATIENTS
   Future<int> lengthPatients() async {
     final query = selectOnly(patients)..addColumns([patients.id.count()]);

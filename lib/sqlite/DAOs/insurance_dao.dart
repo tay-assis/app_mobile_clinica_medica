@@ -10,10 +10,7 @@ class InsuranceDao extends DatabaseAccessor<AppDatabase>
   // You must pass an instance of AppDatabase to the DAO.
   InsuranceDao(super.db);
 
-  // É recomendada a leitura da documentação do drift para entendimento dos métodos
-  // No C in CRUD, because the tables were already created
-
-  // Clinics RUD
+  // Clinics CRUD
   // SELECT * FROM INSURANCES
   Future<List<Insurance>> selectInsurances() {
     return select(insurances).get();

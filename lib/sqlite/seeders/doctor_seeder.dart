@@ -43,7 +43,7 @@ class DoctorSeeder {
         567,
         3,
         'Dr. Cooper Freedman',
-        21345634,
+        21345635,
         'Pediatria',
         'https://static.wikia.nocookie.net/greysanatomy/images/c/c9/CooperFreedmanS1-1.jpg/revision/latest?cb=20081227104023',
       );
@@ -51,7 +51,7 @@ class DoctorSeeder {
         678,
         3,
         'Dra. Addison Montgomery',
-        21345634,
+        21345636,
         'Obstetrícia',
         'https://i.pinimg.com/474x/fb/01/88/fb0188d3b4e31bd1e88d1caa097a2d9f.jpg',
       );
