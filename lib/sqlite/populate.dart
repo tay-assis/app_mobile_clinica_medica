@@ -1,5 +1,6 @@
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 
+import 'seeders/address_seeder.dart';
 import 'seeders/clinic_seeder.dart';
 import 'seeders/doctor_seeder.dart';
 import 'seeders/doctorInsurance_seeder.dart';
@@ -11,6 +12,15 @@ void main() async {
   final db = AppDatabase();
 
   //populating addresses
+  await db.addressDao.deleteAddresses();
+
+  await AddressSeeder.run(db);
+  final addresses = await db.addressDao.selectAddresses();
+  for (final i in addresses) {
+    print(
+      'Street: ${i.street}, Neighborhood: ${i.neighborhood}, City: ${i.city}, State: ${i.state}, ZIP: ${i.zipCode}',
+    );
+  }
 
   //populating insurnances
 
