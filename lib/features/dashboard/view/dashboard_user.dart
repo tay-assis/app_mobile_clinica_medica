@@ -1,4 +1,4 @@
-import 'package:app_mobile_clinica_medica/features/dashboard/view/widgets/main_retangle.dart';
+import 'package:app_mobile_clinica_medica/features/dashboard/view/widgets/main_rectangle.dart';
 import 'package:app_mobile_clinica_medica/features/shered/widgets/user_header.dart';
 import 'package:flutter/material.dart';
 import '../../shered/widgets/bottom_nav_bar.dart';
@@ -18,7 +18,7 @@ class DashboardUser extends StatelessWidget {
             children: const [
               UserHeader(),
               SizedBox(height: 20),
-              MainRetangle(width: 373, height: 250),
+              MainRectangle(width: 373, height: 250),
               // outros componentes abaixo, se necessário
             ],
           ),
