@@ -41,7 +41,7 @@ class SingUpChoose extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Espaço para a curva do header
-                    SizedBox(height: height * 0.03),
+                    SizedBox(height: height * 0.045),
 
                     // Seta para voltar
                     Align(
