@@ -1,42 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_clinica_medica/features/filter/view/filtro_page.dart';
+import 'package:app_mobile_clinica_medica/features/filtro/view/filter_page.dart';
 
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _SearchBarWidgetState createState() => _SearchBarWidgetState();
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
-  int filtrosAplicados = 0;
+  int appliedFilters = 0;
 
-  void _abrirFiltros() async {
-    final resultado = await showModalBottomSheet<Map<String, String?>>(
+  // Function to open the filter page and get the selected filters
+  void _openFilters() async {
+    final result = await showModalBottomSheet<Map<String, String?>>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => const FiltroPage(),
+      builder: (_) => const FilterPage(),
     );
 
-    int quantidade = 0;
+    int quantity = 0;
 
-    if (resultado != null) {
-      resultado.forEach((key, value) {
+    // Check if the result is not null and count the number of applied filters
+    if (result != null) {
+      result.forEach((key, value) {
         if (value != null && value.trim().isNotEmpty) {
-          quantidade++;
+          quantity++;
         }
       });
     }
 
+    // Update the state with the number of applied filters
     setState(() {
-      filtrosAplicados = quantidade;
+      appliedFilters = quantity;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      // Container with text field and filter icon
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -46,18 +49,21 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         children: [
           Expanded(
             child: TextField(
+              // Text field to display the number of applied filters
               decoration: InputDecoration(
+                // Logic input decoration to show the number of applied filters
                 hintText:
-                    filtrosAplicados > 0
-                        ? '$filtrosAplicados filtro${filtrosAplicados > 1 ? 's' : ''} aplicado${filtrosAplicados > 1 ? 's' : ''}'
+                    appliedFilters > 0
+                        ? '$appliedFilters filtro${appliedFilters > 1 ? 's' : ''} aplicados'
                         : 'Nenhum filtro aplicado',
                 border: InputBorder.none,
               ),
             ),
           ),
           IconButton(
+            // Icon to open the filter page
             icon: const Icon(Icons.tune, color: Color(0xFF0089FF)),
-            onPressed: _abrirFiltros,
+            onPressed: _openFilters,
           ),
         ],
       ),

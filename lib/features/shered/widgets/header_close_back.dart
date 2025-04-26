@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomHeader extends StatelessWidget {
-  final bool isCloseButton; // true para botão X, false para botão <
-  final Color iconColor; // cor do ícone
+  final bool
+  isCloseButton; // true for the close button, false for the back button
+  final Color iconColor; // Icon color, default is black
 
   const CustomHeader({
     super.key,
     required this.isCloseButton,
-    this.iconColor = Colors.black, // cor padrão preta, se não passar
+    this.iconColor = Colors.black,
   });
 
   @override
@@ -23,7 +24,7 @@ class CustomHeader extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             )
           else
-            const SizedBox(width: 48), // espaço para alinhar
+            const SizedBox(width: 48), // Placeholder for back button space
 
           if (isCloseButton)
             IconButton(
@@ -31,7 +32,7 @@ class CustomHeader extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             )
           else
-            const SizedBox(width: 48),
+            const SizedBox(width: 48), // Placeholder for close button space
         ],
       ),
     );

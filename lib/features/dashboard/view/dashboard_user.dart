@@ -16,10 +16,13 @@ class DashboardUser extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              UserHeader(),
+              UserHeader(), // Header with user information like name and profile picture
               SizedBox(height: 20),
-              MainRectangle(width: 373, height: 250),
-              // outros componentes abaixo, se necessário
+              MainRectangle(
+                width: 373,
+                height: 250,
+              ), // Main rectangle with gradient background and icons
+              // others widgets can be added here, example images, health tips, etc.
             ],
           ),
         ),
