@@ -1,7 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:app_mobile_clinica_medica/features/filter/view/filtro_page.dart';
 
-class SearchBarComponent extends StatelessWidget {
-  const SearchBarComponent({super.key});
+class SearchBarWidget extends StatefulWidget {
+  const SearchBarWidget({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _SearchBarWidgetState createState() => _SearchBarWidgetState();
+}
+
+class _SearchBarWidgetState extends State<SearchBarWidget> {
+  int filtrosAplicados = 0;
+
+  void _abrirFiltros() async {
+    final resultado = await showModalBottomSheet<Map<String, String?>>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => const FiltroPage(),
+    );
+
+    int quantidade = 0;
+
+    if (resultado != null) {
+      resultado.forEach((key, value) {
+        if (value != null && value.trim().isNotEmpty) {
+          quantidade++;
+        }
+      });
+    }
+
+    setState(() {
+      filtrosAplicados = quantidade;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +47,17 @@ class SearchBarComponent extends StatelessWidget {
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Tente “Dermatologista”',
+                hintText:
+                    filtrosAplicados > 0
+                        ? '$filtrosAplicados filtro${filtrosAplicados > 1 ? 's' : ''} aplicado${filtrosAplicados > 1 ? 's' : ''}'
+                        : 'Nenhum filtro aplicado',
                 border: InputBorder.none,
               ),
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.search_rounded, color: Color(0xFF0089FF)),
-            onPressed: () {
-              // Ação ao pressionar o botão de pesquisa
-            },
+            icon: const Icon(Icons.tune, color: Color(0xFF0089FF)),
+            onPressed: _abrirFiltros,
           ),
         ],
       ),
