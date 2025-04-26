@@ -108,7 +108,7 @@ class _FilterPageState extends State<FilterPage> {
             CustomAutocompleteInput(
               // Autocomplete input for clinic name
               title: 'Clínica',
-              label: 'a clínica do médico',
+              label: 'a clínica do Médico',
               options: clinics,
               selectedValue: selectedClinic,
               onChanged: (value) {

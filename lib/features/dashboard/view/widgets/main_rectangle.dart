@@ -40,25 +40,37 @@ class MainRectangle extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: const CircleIcon(icon: Icons.favorite),
+                    icon: const CircleIcon(
+                      icon: Icons.favorite,
+                      color: Color(0xFF0089FF),
+                    ),
                     onPressed: () {
                       // Action when the favorite button is pressed
                     },
                   ),
                   IconButton(
-                    icon: const CircleIcon(icon: Icons.monitor_heart),
+                    icon: const CircleIcon(
+                      icon: Icons.monitor_heart,
+                      color: Color(0xFF0089FF),
+                    ),
                     onPressed: () {
                       // Action when the heart monitor button is pressed
                     },
                   ),
                   IconButton(
-                    icon: const CircleIcon(icon: Icons.medical_services),
+                    icon: const CircleIcon(
+                      icon: Icons.medical_services,
+                      color: Color(0xFF0089FF),
+                    ),
                     onPressed: () {
                       // Action when the medical services button is pressed
                     },
                   ),
                   IconButton(
-                    icon: const CircleIcon(icon: Icons.vaccines),
+                    icon: const CircleIcon(
+                      icon: Icons.vaccines,
+                      color: Color(0xFF0089FF),
+                    ),
                     onPressed: () {
                       // Action when the vaccines button is pressed
                     },

@@ -1,3 +1,4 @@
+import 'package:app_mobile_clinica_medica/features/dashboard/view/widgets/circle_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/filtro/view/filter_page.dart';
 
@@ -62,7 +63,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           ),
           IconButton(
             // Icon to open the filter page
-            icon: const Icon(Icons.tune, color: Color(0xFF0089FF)),
+            icon: const CircleIcon(icon: Icons.tune, color: Color(0xFF0089FF)),
             onPressed: _openFilters,
           ),
         ],
