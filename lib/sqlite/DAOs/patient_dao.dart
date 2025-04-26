@@ -20,6 +20,8 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
     return (select(patients)..where((t) => t.id.isValue(ID))).getSingle();
   }
 
+  // AVISO!!!
+  // o metodo abaixo assume que não existem mais de uma pessoa com o mesmo nome
   // SELECT * FROM PATIENTS WHERE(name == NAME)
   Future<String> selectInsuranceByPatientName(String NAME) async {
     // gets the insurance ID

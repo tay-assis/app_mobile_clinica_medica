@@ -19,7 +19,7 @@ class DoctorSeeder {
         234,
         2,
         'Dra. Meredith Grey',
-        21345634,
+        21345637,
         'Cirurgia Geral',
         'https://upload.wikimedia.org/wikipedia/pt/3/36/Meredith_Grey_foto_promocional.webp',
       );

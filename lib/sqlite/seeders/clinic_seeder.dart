@@ -10,17 +10,17 @@ class ClinicSeeder {
       await db.clinicDao.insertClinic(
           1,
           'Princeton-Plainsboro Teaching Clinic',
-          'IMAGEURL');
+          'https://upload.wikimedia.org/wikipedia/commons/8/8b/Princeton_Frist_Campus_Center_back.jpg');
 
       await db.clinicDao.insertClinic(
           2,
           'Grey Sloan Memorial Clinic',
-          'IMAGEURL');
+          'https://static.wikia.nocookie.net/greysanatomy/images/2/2e/Grey%2BSloan-Memorial-Entrance.png/revision/latest?cb=20151012205425');
 
       await db.clinicDao.insertClinic(
           3,
           'Seaside Health & Wellness',
-          'IMAGEURL');
+          'https://static.wikia.nocookie.net/greysanatomy/images/8/8c/SeasideEntrance.png/revision/latest?cb=20200831200324');
     }
   }
 }
