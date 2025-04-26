@@ -68,7 +68,7 @@ class MainRectangle extends StatelessWidget {
               const SizedBox(height: 5),
 
               // Componente de barra de busca
-              const SearchBarComponent(),
+              SearchBarWidget(),
             ],
           ),
         ),

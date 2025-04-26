@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
 
 class GradientRectangleTop extends StatelessWidget {
-  final double widthPercentage;
-  final double heightPercentage;
+  final double width;
+  final double height;
+  final Widget? child;
 
   const GradientRectangleTop({
     super.key,
-    required this.widthPercentage,
-    required this.heightPercentage,
+    required this.width,
+    required this.height,
+    this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    //final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      width: screenWidth * widthPercentage,
-      height: screenHeight * heightPercentage,
+      width: screenWidth,
+      height: height,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: ShapeDecoration(
         gradient: LinearGradient(
-          begin: Alignment(0.07, -0.10),
-          end: Alignment(1.13, 1.47),
+          begin: const Alignment(0.07, -0.10),
+          end: const Alignment(1.13, 1.47),
           colors: [const Color(0xFF0089FF), const Color(0xFF5BCCFF)],
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-        shadows: [
+        shadows: const [
           BoxShadow(
             color: Color(0x0A000000),
             blurRadius: 1,
@@ -46,35 +49,7 @@ class GradientRectangleTop extends StatelessWidget {
           ),
         ],
       ),
+      child: child,
     );
   }
 }
-
-// class GradientRectangle2 extends StatelessWidget {
-//   final double widthPercentage;
-//   final double heightPercentage;
-
-//   const GradientRectangle2({
-//     super.key,
-//     required this.widthPercentage,
-//     required this.heightPercentage,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final screenWidth = MediaQuery.of(context).size.width;
-//     final screenHeight = MediaQuery.of(context).size.height;
-
-//     return Container(
-//       width: screenWidth * widthPercentage,
-//       height: screenHeight * heightPercentage,
-//       decoration: BoxDecoration(
-//         gradient: const LinearGradient(
-//           colors: [Color(0xFF0089FF), Color(0xFF5CCCFF)],
-//           begin: Alignment.topLeft,
-//           end: Alignment.bottomRight,
-//         ),
-//       ),
-//     );
-//   }
-// }
