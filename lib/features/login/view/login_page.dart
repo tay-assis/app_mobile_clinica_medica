@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/login/controller/login_controller.dart';
 import 'widgets/welcome_title.dart';
 import '../../shered/widgets/logo_text.dart';
-import 'widgets/field_label.dart';
-import 'widgets/custom_button.dart';
+import '../../shered/widgets/field_label.dart';
+import '../../shered/widgets/custom_button.dart'; // Botao de login
 import '../../shered/widgets/curved_header.dart';
 import '../../shered/widgets/custom_text_field.dart';
+import '../../sing_up/view/sing_up_choose.dart';
+import '../../shered/widgets/slide_transition.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -31,6 +33,8 @@ class _LoginPageState extends State<LoginPage> {
     final height = size.height;
 
     return Scaffold(
+      resizeToAvoidBottomInset:
+          false, // Tira a resposividade ao ativar o telcado
       body: SizedBox(
         width: width,
         height: height,
@@ -100,15 +104,13 @@ class _LoginPageState extends State<LoginPage> {
                         text: 'Cadastre-se agora',
                         isLink: true,
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text(
-                                'Você clicou em "Cadastre-se agora"!',
-                              ),
-                              duration: const Duration(seconds: 2),
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.blueAccent,
-                            ),
+                          navigateWithSlideTransition(
+                            context: context,
+                            destination: const SingUpChoose(),
+                            beginOffset: const Offset(
+                              1.0,
+                              0.0,
+                            ), // entrada da direita
                           );
                         },
                       ),
