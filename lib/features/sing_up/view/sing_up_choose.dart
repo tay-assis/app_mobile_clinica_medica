@@ -5,6 +5,7 @@ import '../../shered/widgets/curved_header.dart';
 import '../../shered/widgets/custom_button.dart'; // Botao cliente/usuario
 import '../../shered/widgets/slide_transition.dart';
 import '../view/sing_up_client.dart';
+import '../view/sing_up_clinic.dart';
 
 class SingUpChoose extends StatelessWidget {
   const SingUpChoose({super.key});
@@ -124,13 +125,13 @@ class SingUpChoose extends StatelessWidget {
                             width: 170,
                             height: 50,
                             onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text('Login'),
-                                  duration: const Duration(seconds: 2),
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.blueAccent,
-                                ),
+                              navigateWithSlideTransition(
+                                context: context,
+                                destination: const SingUpClinic(),
+                                beginOffset: const Offset(
+                                  1.0,
+                                  0.0,
+                                ), // entrada da direita
                               );
                             },
                           ),

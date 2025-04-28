@@ -8,14 +8,14 @@ import '../../shered/widgets/sing_up_client_register.dart';
 import '../../login/view/login_page.dart';
 import '../controller/sing_up_controller.dart';
 
-class SingUpClient extends StatefulWidget {
-  const SingUpClient({super.key});
+class SingUpClinic extends StatefulWidget {
+  const SingUpClinic({super.key});
 
   @override
-  State<SingUpClient> createState() => _SingUpClientState();
+  State<SingUpClinic> createState() => _SingUpClientState();
 }
 
-class _SingUpClientState extends State<SingUpClient> {
+class _SingUpClientState extends State<SingUpClinic> {
   final SingUpController _controller = SingUpController();
 
   @override
@@ -107,16 +107,16 @@ class _SingUpClientState extends State<SingUpClient> {
               ),
             ),
 
-            // CPF
+            // CNPJ
             SizedBox(height: height * 0.03),
             Align(
               alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'CPF'),
+              child: const FieldLabel(text: 'CNPJ'),
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.cpfController,
-                hintText: 'Digite seu CPF',
+                controller: _controller.cnpjController,
+                hintText: 'Digite seu CNPJ',
                 keyboardType: TextInputType.number,
               ),
             ),

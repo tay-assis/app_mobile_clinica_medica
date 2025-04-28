@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Meu App',
       debugShowCheckedModeBanner: false,
-      //home: const LoginPage(), // <-- Aqui você define a tela que vai abrir
+      //home: const LoginPage(),  // <-- Aqui você define a tela que vai abrir
       home: const LoginPage(), // <-- Aqui você define a tela que vai abrir
     );
   }
