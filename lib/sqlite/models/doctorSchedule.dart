@@ -3,10 +3,10 @@ import 'package:drift/drift.dart';
 
 @DataClassName('DoctorSchedule')
 class DoctorSchedules extends Table {
-  IntColumn get doctorId => integer().references(Doctors, #crm)();
+  IntColumn get doctorCrm => integer().references(Doctors, #crm)();
   TextColumn get weekday =>
       text().customConstraint(
-        "NOT NULL CHECK(weekday IN ('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'))",
+        "NOT NULL CHECK(weekday IN ('SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'))",
       )();
   DateTimeColumn get date => dateTime()();
   TextColumn get status =>
@@ -14,5 +14,5 @@ class DoctorSchedules extends Table {
         "NOT NULL CHECK(status IN ('available', 'unavailable'))",
       )();
   @override
-  Set<Column> get primaryKey => {doctorId, date};
+  Set<Column> get primaryKey => {doctorCrm, date};
 }

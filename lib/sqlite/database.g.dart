@@ -469,6 +469,7 @@ class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
     ),
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
@@ -745,12 +746,9 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
     'crm',
     aliasedName,
     false,
-    hasAutoIncrement: true,
     type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
   static const VerificationMeta _clinicIdMeta = const VerificationMeta(
     'clinicId',
@@ -771,18 +769,19 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
     'name',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
   @override
   late final GeneratedColumn<int> phone = GeneratedColumn<int>(
     'phone',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.int,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
   static const VerificationMeta _specialtyMeta = const VerificationMeta(
     'specialty',
@@ -836,6 +835,8 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
         _crmMeta,
         crm.isAcceptableOrUnknown(data['crm']!, _crmMeta),
       );
+    } else if (isInserting) {
+      context.missing(_crmMeta);
     }
     if (data.containsKey('clinic_id')) {
       context.handle(
@@ -850,12 +851,16 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
         _nameMeta,
         name.isAcceptableOrUnknown(data['name']!, _nameMeta),
       );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
     }
     if (data.containsKey('phone')) {
       context.handle(
         _phoneMeta,
         phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
       );
+    } else if (isInserting) {
+      context.missing(_phoneMeta);
     }
     if (data.containsKey('specialty')) {
       context.handle(
@@ -875,7 +880,7 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {crm};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   Doctor map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -890,14 +895,16 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
             DriftSqlType.int,
             data['${effectivePrefix}clinic_id'],
           )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      ),
-      phone: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}phone'],
-      ),
+      name:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}name'],
+          )!,
+      phone:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}phone'],
+          )!,
       specialty:
           attachedDatabase.typeMapping.read(
             DriftSqlType.string,
@@ -919,15 +926,15 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
 class Doctor extends DataClass implements Insertable<Doctor> {
   final int crm;
   final int clinicId;
-  final String? name;
-  final int? phone;
+  final String name;
+  final int phone;
   final String specialty;
   final String? imageUrl;
   const Doctor({
     required this.crm,
     required this.clinicId,
-    this.name,
-    this.phone,
+    required this.name,
+    required this.phone,
     required this.specialty,
     this.imageUrl,
   });
@@ -936,12 +943,8 @@ class Doctor extends DataClass implements Insertable<Doctor> {
     final map = <String, Expression>{};
     map['crm'] = Variable<int>(crm);
     map['clinic_id'] = Variable<int>(clinicId);
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    if (!nullToAbsent || phone != null) {
-      map['phone'] = Variable<int>(phone);
-    }
+    map['name'] = Variable<String>(name);
+    map['phone'] = Variable<int>(phone);
     map['specialty'] = Variable<String>(specialty);
     if (!nullToAbsent || imageUrl != null) {
       map['image_url'] = Variable<String>(imageUrl);
@@ -953,9 +956,8 @@ class Doctor extends DataClass implements Insertable<Doctor> {
     return DoctorsCompanion(
       crm: Value(crm),
       clinicId: Value(clinicId),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      phone:
-          phone == null && nullToAbsent ? const Value.absent() : Value(phone),
+      name: Value(name),
+      phone: Value(phone),
       specialty: Value(specialty),
       imageUrl:
           imageUrl == null && nullToAbsent
@@ -972,8 +974,8 @@ class Doctor extends DataClass implements Insertable<Doctor> {
     return Doctor(
       crm: serializer.fromJson<int>(json['crm']),
       clinicId: serializer.fromJson<int>(json['clinicId']),
-      name: serializer.fromJson<String?>(json['name']),
-      phone: serializer.fromJson<int?>(json['phone']),
+      name: serializer.fromJson<String>(json['name']),
+      phone: serializer.fromJson<int>(json['phone']),
       specialty: serializer.fromJson<String>(json['specialty']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
     );
@@ -984,8 +986,8 @@ class Doctor extends DataClass implements Insertable<Doctor> {
     return <String, dynamic>{
       'crm': serializer.toJson<int>(crm),
       'clinicId': serializer.toJson<int>(clinicId),
-      'name': serializer.toJson<String?>(name),
-      'phone': serializer.toJson<int?>(phone),
+      'name': serializer.toJson<String>(name),
+      'phone': serializer.toJson<int>(phone),
       'specialty': serializer.toJson<String>(specialty),
       'imageUrl': serializer.toJson<String?>(imageUrl),
     };
@@ -994,15 +996,15 @@ class Doctor extends DataClass implements Insertable<Doctor> {
   Doctor copyWith({
     int? crm,
     int? clinicId,
-    Value<String?> name = const Value.absent(),
-    Value<int?> phone = const Value.absent(),
+    String? name,
+    int? phone,
     String? specialty,
     Value<String?> imageUrl = const Value.absent(),
   }) => Doctor(
     crm: crm ?? this.crm,
     clinicId: clinicId ?? this.clinicId,
-    name: name.present ? name.value : this.name,
-    phone: phone.present ? phone.value : this.phone,
+    name: name ?? this.name,
+    phone: phone ?? this.phone,
     specialty: specialty ?? this.specialty,
     imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
   );
@@ -1048,10 +1050,11 @@ class Doctor extends DataClass implements Insertable<Doctor> {
 class DoctorsCompanion extends UpdateCompanion<Doctor> {
   final Value<int> crm;
   final Value<int> clinicId;
-  final Value<String?> name;
-  final Value<int?> phone;
+  final Value<String> name;
+  final Value<int> phone;
   final Value<String> specialty;
   final Value<String?> imageUrl;
+  final Value<int> rowid;
   const DoctorsCompanion({
     this.crm = const Value.absent(),
     this.clinicId = const Value.absent(),
@@ -1059,15 +1062,20 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
     this.phone = const Value.absent(),
     this.specialty = const Value.absent(),
     this.imageUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   DoctorsCompanion.insert({
-    this.crm = const Value.absent(),
+    required int crm,
     required int clinicId,
-    this.name = const Value.absent(),
-    this.phone = const Value.absent(),
+    required String name,
+    required int phone,
     required String specialty,
     this.imageUrl = const Value.absent(),
-  }) : clinicId = Value(clinicId),
+    this.rowid = const Value.absent(),
+  }) : crm = Value(crm),
+       clinicId = Value(clinicId),
+       name = Value(name),
+       phone = Value(phone),
        specialty = Value(specialty);
   static Insertable<Doctor> custom({
     Expression<int>? crm,
@@ -1076,6 +1084,7 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
     Expression<int>? phone,
     Expression<String>? specialty,
     Expression<String>? imageUrl,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (crm != null) 'crm': crm,
@@ -1084,16 +1093,18 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
       if (phone != null) 'phone': phone,
       if (specialty != null) 'specialty': specialty,
       if (imageUrl != null) 'image_url': imageUrl,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   DoctorsCompanion copyWith({
     Value<int>? crm,
     Value<int>? clinicId,
-    Value<String?>? name,
-    Value<int?>? phone,
+    Value<String>? name,
+    Value<int>? phone,
     Value<String>? specialty,
     Value<String?>? imageUrl,
+    Value<int>? rowid,
   }) {
     return DoctorsCompanion(
       crm: crm ?? this.crm,
@@ -1102,6 +1113,7 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
       phone: phone ?? this.phone,
       specialty: specialty ?? this.specialty,
       imageUrl: imageUrl ?? this.imageUrl,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -1126,6 +1138,9 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -1137,7 +1152,8 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
           ..write('name: $name, ')
           ..write('phone: $phone, ')
           ..write('specialty: $specialty, ')
-          ..write('imageUrl: $imageUrl')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -1174,6 +1190,7 @@ class $InsurancesTable extends Insurances
     ),
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
   @override
   List<GeneratedColumn> get $columns => [id, name];
@@ -1413,9 +1430,10 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
   late final GeneratedColumn<int> phone = GeneratedColumn<int>(
     'phone',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.int,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -1481,6 +1499,8 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
         _phoneMeta,
         phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
       );
+    } else if (isInserting) {
+      context.missing(_phoneMeta);
     }
     return context;
   }
@@ -1516,10 +1536,11 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
             DriftSqlType.string,
             data['${effectivePrefix}email'],
           )!,
-      phone: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}phone'],
-      ),
+      phone:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}phone'],
+          )!,
     );
   }
 
@@ -1535,14 +1556,14 @@ class Patient extends DataClass implements Insertable<Patient> {
   final int addressId;
   final String name;
   final String email;
-  final int? phone;
+  final int phone;
   const Patient({
     required this.id,
     required this.insuranceId,
     required this.addressId,
     required this.name,
     required this.email,
-    this.phone,
+    required this.phone,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1552,9 +1573,7 @@ class Patient extends DataClass implements Insertable<Patient> {
     map['address_id'] = Variable<int>(addressId);
     map['name'] = Variable<String>(name);
     map['email'] = Variable<String>(email);
-    if (!nullToAbsent || phone != null) {
-      map['phone'] = Variable<int>(phone);
-    }
+    map['phone'] = Variable<int>(phone);
     return map;
   }
 
@@ -1565,8 +1584,7 @@ class Patient extends DataClass implements Insertable<Patient> {
       addressId: Value(addressId),
       name: Value(name),
       email: Value(email),
-      phone:
-          phone == null && nullToAbsent ? const Value.absent() : Value(phone),
+      phone: Value(phone),
     );
   }
 
@@ -1581,7 +1599,7 @@ class Patient extends DataClass implements Insertable<Patient> {
       addressId: serializer.fromJson<int>(json['addressId']),
       name: serializer.fromJson<String>(json['name']),
       email: serializer.fromJson<String>(json['email']),
-      phone: serializer.fromJson<int?>(json['phone']),
+      phone: serializer.fromJson<int>(json['phone']),
     );
   }
   @override
@@ -1593,7 +1611,7 @@ class Patient extends DataClass implements Insertable<Patient> {
       'addressId': serializer.toJson<int>(addressId),
       'name': serializer.toJson<String>(name),
       'email': serializer.toJson<String>(email),
-      'phone': serializer.toJson<int?>(phone),
+      'phone': serializer.toJson<int>(phone),
     };
   }
 
@@ -1603,14 +1621,14 @@ class Patient extends DataClass implements Insertable<Patient> {
     int? addressId,
     String? name,
     String? email,
-    Value<int?> phone = const Value.absent(),
+    int? phone,
   }) => Patient(
     id: id ?? this.id,
     insuranceId: insuranceId ?? this.insuranceId,
     addressId: addressId ?? this.addressId,
     name: name ?? this.name,
     email: email ?? this.email,
-    phone: phone.present ? phone.value : this.phone,
+    phone: phone ?? this.phone,
   );
   Patient copyWithCompanion(PatientsCompanion data) {
     return Patient(
@@ -1658,7 +1676,7 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
   final Value<int> addressId;
   final Value<String> name;
   final Value<String> email;
-  final Value<int?> phone;
+  final Value<int> phone;
   const PatientsCompanion({
     this.id = const Value.absent(),
     this.insuranceId = const Value.absent(),
@@ -1673,11 +1691,12 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
     required int addressId,
     required String name,
     required String email,
-    this.phone = const Value.absent(),
+    required int phone,
   }) : insuranceId = Value(insuranceId),
        addressId = Value(addressId),
        name = Value(name),
-       email = Value(email);
+       email = Value(email),
+       phone = Value(phone);
   static Insertable<Patient> custom({
     Expression<int>? id,
     Expression<int>? insuranceId,
@@ -1702,7 +1721,7 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
     Value<int>? addressId,
     Value<String>? name,
     Value<String>? email,
-    Value<int?>? phone,
+    Value<int>? phone,
   }) {
     return PatientsCompanion(
       id: id ?? this.id,
@@ -1985,12 +2004,12 @@ class $DoctorSchedulesTable extends DoctorSchedules
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $DoctorSchedulesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _doctorIdMeta = const VerificationMeta(
-    'doctorId',
+  static const VerificationMeta _doctorCrmMeta = const VerificationMeta(
+    'doctorCrm',
   );
   @override
-  late final GeneratedColumn<int> doctorId = GeneratedColumn<int>(
-    'doctor_id',
+  late final GeneratedColumn<int> doctorCrm = GeneratedColumn<int>(
+    'doctor_crm',
     aliasedName,
     false,
     type: DriftSqlType.int,
@@ -2010,7 +2029,7 @@ class $DoctorSchedulesTable extends DoctorSchedules
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     $customConstraints:
-        'NOT NULL CHECK(weekday IN (\'MON\', \'TUE\', \'WED\', \'THU\', \'FRI\', \'SAT\', \'SUN\'))',
+        'NOT NULL CHECK(weekday IN (\'SUN\', \'MON\', \'TUE\', \'WED\', \'THU\', \'FRI\', \'SAT\'))',
   );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
@@ -2033,7 +2052,7 @@ class $DoctorSchedulesTable extends DoctorSchedules
         'NOT NULL CHECK(status IN (\'available\', \'unavailable\'))',
   );
   @override
-  List<GeneratedColumn> get $columns => [doctorId, weekday, date, status];
+  List<GeneratedColumn> get $columns => [doctorCrm, weekday, date, status];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2046,13 +2065,13 @@ class $DoctorSchedulesTable extends DoctorSchedules
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('doctor_id')) {
+    if (data.containsKey('doctor_crm')) {
       context.handle(
-        _doctorIdMeta,
-        doctorId.isAcceptableOrUnknown(data['doctor_id']!, _doctorIdMeta),
+        _doctorCrmMeta,
+        doctorCrm.isAcceptableOrUnknown(data['doctor_crm']!, _doctorCrmMeta),
       );
     } else if (isInserting) {
-      context.missing(_doctorIdMeta);
+      context.missing(_doctorCrmMeta);
     }
     if (data.containsKey('weekday')) {
       context.handle(
@@ -2082,15 +2101,15 @@ class $DoctorSchedulesTable extends DoctorSchedules
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {doctorId, date};
+  Set<GeneratedColumn> get $primaryKey => {doctorCrm, date};
   @override
   DoctorSchedule map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DoctorSchedule(
-      doctorId:
+      doctorCrm:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
-            data['${effectivePrefix}doctor_id'],
+            data['${effectivePrefix}doctor_crm'],
           )!,
       weekday:
           attachedDatabase.typeMapping.read(
@@ -2117,12 +2136,12 @@ class $DoctorSchedulesTable extends DoctorSchedules
 }
 
 class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
-  final int doctorId;
+  final int doctorCrm;
   final String weekday;
   final DateTime date;
   final String status;
   const DoctorSchedule({
-    required this.doctorId,
+    required this.doctorCrm,
     required this.weekday,
     required this.date,
     required this.status,
@@ -2130,7 +2149,7 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['doctor_id'] = Variable<int>(doctorId);
+    map['doctor_crm'] = Variable<int>(doctorCrm);
     map['weekday'] = Variable<String>(weekday);
     map['date'] = Variable<DateTime>(date);
     map['status'] = Variable<String>(status);
@@ -2139,7 +2158,7 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
 
   DoctorSchedulesCompanion toCompanion(bool nullToAbsent) {
     return DoctorSchedulesCompanion(
-      doctorId: Value(doctorId),
+      doctorCrm: Value(doctorCrm),
       weekday: Value(weekday),
       date: Value(date),
       status: Value(status),
@@ -2152,7 +2171,7 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return DoctorSchedule(
-      doctorId: serializer.fromJson<int>(json['doctorId']),
+      doctorCrm: serializer.fromJson<int>(json['doctorCrm']),
       weekday: serializer.fromJson<String>(json['weekday']),
       date: serializer.fromJson<DateTime>(json['date']),
       status: serializer.fromJson<String>(json['status']),
@@ -2162,7 +2181,7 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'doctorId': serializer.toJson<int>(doctorId),
+      'doctorCrm': serializer.toJson<int>(doctorCrm),
       'weekday': serializer.toJson<String>(weekday),
       'date': serializer.toJson<DateTime>(date),
       'status': serializer.toJson<String>(status),
@@ -2170,19 +2189,19 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
   }
 
   DoctorSchedule copyWith({
-    int? doctorId,
+    int? doctorCrm,
     String? weekday,
     DateTime? date,
     String? status,
   }) => DoctorSchedule(
-    doctorId: doctorId ?? this.doctorId,
+    doctorCrm: doctorCrm ?? this.doctorCrm,
     weekday: weekday ?? this.weekday,
     date: date ?? this.date,
     status: status ?? this.status,
   );
   DoctorSchedule copyWithCompanion(DoctorSchedulesCompanion data) {
     return DoctorSchedule(
-      doctorId: data.doctorId.present ? data.doctorId.value : this.doctorId,
+      doctorCrm: data.doctorCrm.present ? data.doctorCrm.value : this.doctorCrm,
       weekday: data.weekday.present ? data.weekday.value : this.weekday,
       date: data.date.present ? data.date.value : this.date,
       status: data.status.present ? data.status.value : this.status,
@@ -2192,7 +2211,7 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
   @override
   String toString() {
     return (StringBuffer('DoctorSchedule(')
-          ..write('doctorId: $doctorId, ')
+          ..write('doctorCrm: $doctorCrm, ')
           ..write('weekday: $weekday, ')
           ..write('date: $date, ')
           ..write('status: $status')
@@ -2201,49 +2220,49 @@ class DoctorSchedule extends DataClass implements Insertable<DoctorSchedule> {
   }
 
   @override
-  int get hashCode => Object.hash(doctorId, weekday, date, status);
+  int get hashCode => Object.hash(doctorCrm, weekday, date, status);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is DoctorSchedule &&
-          other.doctorId == this.doctorId &&
+          other.doctorCrm == this.doctorCrm &&
           other.weekday == this.weekday &&
           other.date == this.date &&
           other.status == this.status);
 }
 
 class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
-  final Value<int> doctorId;
+  final Value<int> doctorCrm;
   final Value<String> weekday;
   final Value<DateTime> date;
   final Value<String> status;
   final Value<int> rowid;
   const DoctorSchedulesCompanion({
-    this.doctorId = const Value.absent(),
+    this.doctorCrm = const Value.absent(),
     this.weekday = const Value.absent(),
     this.date = const Value.absent(),
     this.status = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   DoctorSchedulesCompanion.insert({
-    required int doctorId,
+    required int doctorCrm,
     required String weekday,
     required DateTime date,
     required String status,
     this.rowid = const Value.absent(),
-  }) : doctorId = Value(doctorId),
+  }) : doctorCrm = Value(doctorCrm),
        weekday = Value(weekday),
        date = Value(date),
        status = Value(status);
   static Insertable<DoctorSchedule> custom({
-    Expression<int>? doctorId,
+    Expression<int>? doctorCrm,
     Expression<String>? weekday,
     Expression<DateTime>? date,
     Expression<String>? status,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (doctorId != null) 'doctor_id': doctorId,
+      if (doctorCrm != null) 'doctor_crm': doctorCrm,
       if (weekday != null) 'weekday': weekday,
       if (date != null) 'date': date,
       if (status != null) 'status': status,
@@ -2252,14 +2271,14 @@ class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
   }
 
   DoctorSchedulesCompanion copyWith({
-    Value<int>? doctorId,
+    Value<int>? doctorCrm,
     Value<String>? weekday,
     Value<DateTime>? date,
     Value<String>? status,
     Value<int>? rowid,
   }) {
     return DoctorSchedulesCompanion(
-      doctorId: doctorId ?? this.doctorId,
+      doctorCrm: doctorCrm ?? this.doctorCrm,
       weekday: weekday ?? this.weekday,
       date: date ?? this.date,
       status: status ?? this.status,
@@ -2270,8 +2289,8 @@ class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (doctorId.present) {
-      map['doctor_id'] = Variable<int>(doctorId.value);
+    if (doctorCrm.present) {
+      map['doctor_crm'] = Variable<int>(doctorCrm.value);
     }
     if (weekday.present) {
       map['weekday'] = Variable<String>(weekday.value);
@@ -2291,7 +2310,7 @@ class DoctorSchedulesCompanion extends UpdateCompanion<DoctorSchedule> {
   @override
   String toString() {
     return (StringBuffer('DoctorSchedulesCompanion(')
-          ..write('doctorId: $doctorId, ')
+          ..write('doctorCrm: $doctorCrm, ')
           ..write('weekday: $weekday, ')
           ..write('date: $date, ')
           ..write('status: $status, ')
@@ -3135,21 +3154,23 @@ typedef $$ClinicsTableProcessedTableManager =
     >;
 typedef $$DoctorsTableCreateCompanionBuilder =
     DoctorsCompanion Function({
-      Value<int> crm,
+      required int crm,
       required int clinicId,
-      Value<String?> name,
-      Value<int?> phone,
+      required String name,
+      required int phone,
       required String specialty,
       Value<String?> imageUrl,
+      Value<int> rowid,
     });
 typedef $$DoctorsTableUpdateCompanionBuilder =
     DoctorsCompanion Function({
       Value<int> crm,
       Value<int> clinicId,
-      Value<String?> name,
-      Value<int?> phone,
+      Value<String> name,
+      Value<int> phone,
       Value<String> specialty,
       Value<String?> imageUrl,
+      Value<int> rowid,
     });
 
 final class $$DoctorsTableReferences
@@ -3198,7 +3219,7 @@ final class $$DoctorsTableReferences
     db.doctorSchedules,
     aliasName: $_aliasNameGenerator(
       db.doctors.crm,
-      db.doctorSchedules.doctorId,
+      db.doctorSchedules.doctorCrm,
     ),
   );
 
@@ -3206,7 +3227,7 @@ final class $$DoctorsTableReferences
     final manager = $$DoctorSchedulesTableTableManager(
       $_db,
       $_db.doctorSchedules,
-    ).filter((f) => f.doctorId.crm.sqlEquals($_itemColumn<int>('crm')!));
+    ).filter((f) => f.doctorCrm.crm.sqlEquals($_itemColumn<int>('crm')!));
 
     final cache = $_typedResult.readTableOrNull(
       _doctorSchedulesRefsTable($_db),
@@ -3306,7 +3327,7 @@ class $$DoctorsTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.crm,
       referencedTable: $db.doctorSchedules,
-      getReferencedColumn: (t) => t.doctorId,
+      getReferencedColumn: (t) => t.doctorCrm,
       builder:
           (
             joinBuilder, {
@@ -3462,7 +3483,7 @@ class $$DoctorsTableAnnotationComposer
       composer: this,
       getCurrentColumn: (t) => t.crm,
       referencedTable: $db.doctorSchedules,
-      getReferencedColumn: (t) => t.doctorId,
+      getReferencedColumn: (t) => t.doctorCrm,
       builder:
           (
             joinBuilder, {
@@ -3515,10 +3536,11 @@ class $$DoctorsTableTableManager
               ({
                 Value<int> crm = const Value.absent(),
                 Value<int> clinicId = const Value.absent(),
-                Value<String?> name = const Value.absent(),
-                Value<int?> phone = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> phone = const Value.absent(),
                 Value<String> specialty = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => DoctorsCompanion(
                 crm: crm,
                 clinicId: clinicId,
@@ -3526,15 +3548,17 @@ class $$DoctorsTableTableManager
                 phone: phone,
                 specialty: specialty,
                 imageUrl: imageUrl,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> crm = const Value.absent(),
+                required int crm,
                 required int clinicId,
-                Value<String?> name = const Value.absent(),
-                Value<int?> phone = const Value.absent(),
+                required String name,
+                required int phone,
                 required String specialty,
                 Value<String?> imageUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => DoctorsCompanion.insert(
                 crm: crm,
                 clinicId: clinicId,
@@ -3542,6 +3566,7 @@ class $$DoctorsTableTableManager
                 phone: phone,
                 specialty: specialty,
                 imageUrl: imageUrl,
+                rowid: rowid,
               ),
           withReferenceMapper:
               (p0) =>
@@ -3635,7 +3660,7 @@ class $$DoctorsTableTableManager
                               ).doctorSchedulesRefs,
                       referencedItemsForCurrentItem:
                           (item, referencedItems) => referencedItems.where(
-                            (e) => e.doctorId == item.crm,
+                            (e) => e.doctorCrm == item.crm,
                           ),
                       typedResults: items,
                     ),
@@ -4003,7 +4028,7 @@ typedef $$PatientsTableCreateCompanionBuilder =
       required int addressId,
       required String name,
       required String email,
-      Value<int?> phone,
+      required int phone,
     });
 typedef $$PatientsTableUpdateCompanionBuilder =
     PatientsCompanion Function({
@@ -4012,7 +4037,7 @@ typedef $$PatientsTableUpdateCompanionBuilder =
       Value<int> addressId,
       Value<String> name,
       Value<String> email,
-      Value<int?> phone,
+      Value<int> phone,
     });
 
 final class $$PatientsTableReferences
@@ -4311,7 +4336,7 @@ class $$PatientsTableTableManager
                 Value<int> addressId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> email = const Value.absent(),
-                Value<int?> phone = const Value.absent(),
+                Value<int> phone = const Value.absent(),
               }) => PatientsCompanion(
                 id: id,
                 insuranceId: insuranceId,
@@ -4327,7 +4352,7 @@ class $$PatientsTableTableManager
                 required int addressId,
                 required String name,
                 required String email,
-                Value<int?> phone = const Value.absent(),
+                required int phone,
               }) => PatientsCompanion.insert(
                 id: id,
                 insuranceId: insuranceId,
@@ -4787,7 +4812,7 @@ typedef $$DoctorInsurancesTableProcessedTableManager =
     >;
 typedef $$DoctorSchedulesTableCreateCompanionBuilder =
     DoctorSchedulesCompanion Function({
-      required int doctorId,
+      required int doctorCrm,
       required String weekday,
       required DateTime date,
       required String status,
@@ -4795,7 +4820,7 @@ typedef $$DoctorSchedulesTableCreateCompanionBuilder =
     });
 typedef $$DoctorSchedulesTableUpdateCompanionBuilder =
     DoctorSchedulesCompanion Function({
-      Value<int> doctorId,
+      Value<int> doctorCrm,
       Value<String> weekday,
       Value<DateTime> date,
       Value<String> status,
@@ -4811,19 +4836,19 @@ final class $$DoctorSchedulesTableReferences
     super.$_typedResult,
   );
 
-  static $DoctorsTable _doctorIdTable(_$AppDatabase db) =>
+  static $DoctorsTable _doctorCrmTable(_$AppDatabase db) =>
       db.doctors.createAlias(
-        $_aliasNameGenerator(db.doctorSchedules.doctorId, db.doctors.crm),
+        $_aliasNameGenerator(db.doctorSchedules.doctorCrm, db.doctors.crm),
       );
 
-  $$DoctorsTableProcessedTableManager get doctorId {
-    final $_column = $_itemColumn<int>('doctor_id')!;
+  $$DoctorsTableProcessedTableManager get doctorCrm {
+    final $_column = $_itemColumn<int>('doctor_crm')!;
 
     final manager = $$DoctorsTableTableManager(
       $_db,
       $_db.doctors,
     ).filter((f) => f.crm.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_doctorIdTable($_db));
+    final item = $_typedResult.readTableOrNull(_doctorCrmTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -4855,10 +4880,10 @@ class $$DoctorSchedulesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$DoctorsTableFilterComposer get doctorId {
+  $$DoctorsTableFilterComposer get doctorCrm {
     final $$DoctorsTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.doctorId,
+      getCurrentColumn: (t) => t.doctorCrm,
       referencedTable: $db.doctors,
       getReferencedColumn: (t) => t.crm,
       builder:
@@ -4903,10 +4928,10 @@ class $$DoctorSchedulesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$DoctorsTableOrderingComposer get doctorId {
+  $$DoctorsTableOrderingComposer get doctorCrm {
     final $$DoctorsTableOrderingComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.doctorId,
+      getCurrentColumn: (t) => t.doctorCrm,
       referencedTable: $db.doctors,
       getReferencedColumn: (t) => t.crm,
       builder:
@@ -4945,10 +4970,10 @@ class $$DoctorSchedulesTableAnnotationComposer
   GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
 
-  $$DoctorsTableAnnotationComposer get doctorId {
+  $$DoctorsTableAnnotationComposer get doctorCrm {
     final $$DoctorsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.doctorId,
+      getCurrentColumn: (t) => t.doctorCrm,
       referencedTable: $db.doctors,
       getReferencedColumn: (t) => t.crm,
       builder:
@@ -4982,7 +5007,7 @@ class $$DoctorSchedulesTableTableManager
           $$DoctorSchedulesTableUpdateCompanionBuilder,
           (DoctorSchedule, $$DoctorSchedulesTableReferences),
           DoctorSchedule,
-          PrefetchHooks Function({bool doctorId})
+          PrefetchHooks Function({bool doctorCrm})
         > {
   $$DoctorSchedulesTableTableManager(
     _$AppDatabase db,
@@ -5006,13 +5031,13 @@ class $$DoctorSchedulesTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> doctorId = const Value.absent(),
+                Value<int> doctorCrm = const Value.absent(),
                 Value<String> weekday = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DoctorSchedulesCompanion(
-                doctorId: doctorId,
+                doctorCrm: doctorCrm,
                 weekday: weekday,
                 date: date,
                 status: status,
@@ -5020,13 +5045,13 @@ class $$DoctorSchedulesTableTableManager
               ),
           createCompanionCallback:
               ({
-                required int doctorId,
+                required int doctorCrm,
                 required String weekday,
                 required DateTime date,
                 required String status,
                 Value<int> rowid = const Value.absent(),
               }) => DoctorSchedulesCompanion.insert(
-                doctorId: doctorId,
+                doctorCrm: doctorCrm,
                 weekday: weekday,
                 date: date,
                 status: status,
@@ -5042,7 +5067,7 @@ class $$DoctorSchedulesTableTableManager
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({doctorId = false}) {
+          prefetchHooksCallback: ({doctorCrm = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -5061,16 +5086,16 @@ class $$DoctorSchedulesTableTableManager
                   dynamic
                 >
               >(state) {
-                if (doctorId) {
+                if (doctorCrm) {
                   state =
                       state.withJoin(
                             currentTable: table,
-                            currentColumn: table.doctorId,
+                            currentColumn: table.doctorCrm,
                             referencedTable: $$DoctorSchedulesTableReferences
-                                ._doctorIdTable(db),
+                                ._doctorCrmTable(db),
                             referencedColumn:
                                 $$DoctorSchedulesTableReferences
-                                    ._doctorIdTable(db)
+                                    ._doctorCrmTable(db)
                                     .crm,
                           )
                           as T;
@@ -5099,7 +5124,7 @@ typedef $$DoctorSchedulesTableProcessedTableManager =
       $$DoctorSchedulesTableUpdateCompanionBuilder,
       (DoctorSchedule, $$DoctorSchedulesTableReferences),
       DoctorSchedule,
-      PrefetchHooks Function({bool doctorId})
+      PrefetchHooks Function({bool doctorCrm})
     >;
 
 class $AppDatabaseManager {
