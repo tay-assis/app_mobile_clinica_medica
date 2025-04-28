@@ -13,6 +13,7 @@ class MainRectangle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        // Gradient background rectangle
         GradientRectangle(width: width, height: height),
         Padding(
           padding: const EdgeInsets.all(20),
@@ -34,32 +35,44 @@ class MainRectangle extends StatelessWidget {
               ),
               const SizedBox(height: 5),
 
-              // Linha com componentes de ícones
+              // Icons widgets
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: const CircleIcon(icon: Icons.favorite),
+                    icon: const CircleIcon(
+                      icon: Icons.favorite,
+                      color: Color(0xFF0089FF),
+                    ),
                     onPressed: () {
-                      // Ação ao pressionar o botão de favorito
+                      // Action when the favorite button is pressed
                     },
                   ),
                   IconButton(
-                    icon: const CircleIcon(icon: Icons.monitor_heart),
+                    icon: const CircleIcon(
+                      icon: Icons.monitor_heart,
+                      color: Color(0xFF0089FF),
+                    ),
                     onPressed: () {
-                      // Ação ao pressionar o botão de monitor cardíaco
+                      // Action when the heart monitor button is pressed
                     },
                   ),
                   IconButton(
-                    icon: const CircleIcon(icon: Icons.medical_services),
+                    icon: const CircleIcon(
+                      icon: Icons.medical_services,
+                      color: Color(0xFF0089FF),
+                    ),
                     onPressed: () {
-                      // Ação ao pressionar o botão de serviços médicos
+                      // Action when the medical services button is pressed
                     },
                   ),
                   IconButton(
-                    icon: const CircleIcon(icon: Icons.vaccines),
+                    icon: const CircleIcon(
+                      icon: Icons.vaccines,
+                      color: Color(0xFF0089FF),
+                    ),
                     onPressed: () {
-                      // Ação ao pressionar o botão de vacinas
+                      // Action when the vaccines button is pressed
                     },
                   ),
                 ],
@@ -67,8 +80,8 @@ class MainRectangle extends StatelessWidget {
 
               const SizedBox(height: 5),
 
-              // Componente de barra de busca
-              const SearchBarComponent(),
+              // Widget for the search bar
+              SearchBarWidget(),
             ],
           ),
         ),
