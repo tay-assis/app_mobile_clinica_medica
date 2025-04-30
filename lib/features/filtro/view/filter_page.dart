@@ -1,4 +1,4 @@
-import 'package:app_mobile_clinica_medica/features/login/view/widgets/custom_button.dart';
+import 'package:app_mobile_clinica_medica/features/shered/widgets/custom_button.dart';
 import 'package:app_mobile_clinica_medica/features/shered/widgets/header_close_back.dart';
 import 'package:flutter/material.dart';
 import 'widgets/custom_autocomplete_input.dart';
