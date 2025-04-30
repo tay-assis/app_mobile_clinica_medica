@@ -1,7 +1,7 @@
 import 'package:app_mobile_clinica_medica/features/dashboard/view/widgets/main_rectangle.dart';
-import 'package:app_mobile_clinica_medica/features/shered/widgets/user_header.dart';
+import 'package:app_mobile_clinica_medica/features/shared/widgets/user_header.dart';
 import 'package:flutter/material.dart';
-import '../../shered/widgets/bottom_nav_bar.dart';
+import '../../shared/widgets/bottom_nav_bar.dart';
 
 class DashboardUser extends StatelessWidget {
   const DashboardUser({super.key});

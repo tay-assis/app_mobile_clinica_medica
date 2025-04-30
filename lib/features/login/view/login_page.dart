@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/login/controller/login_controller.dart';
 import 'widgets/welcome_title.dart';
-import '../../shered/widgets/logo_text.dart';
-import '../../shered/widgets/field_label.dart';
-import '../../shered/widgets/custom_button.dart'; // Botao de login
-import '../../shered/widgets/curved_header.dart';
-import '../../shered/widgets/custom_text_field.dart';
+import '../../shared/widgets/logo_text.dart';
+import '../../shared/widgets/field_label.dart';
+import '../../shared/widgets/custom_button.dart'; // Botao de login
+import '../../shared/widgets/curved_header.dart';
+import '../../shared/widgets/custom_text_field.dart';
 import '../../sing_up/view/sing_up_choose.dart';
-import '../../shered/widgets/slide_transition.dart';
+import '../../shared/widgets/slide_transition.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
