@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../shered/widgets/rectangle.dart';
+import '../../../shared/widgets/rectangle.dart';
 import 'circle_icon.dart';
 import 'search_bar.dart';
 

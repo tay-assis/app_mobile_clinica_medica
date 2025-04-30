@@ -1,9 +1,9 @@
-import 'package:app_mobile_clinica_medica/features/shered/widgets/back_icon.dart';
+import 'package:app_mobile_clinica_medica/features/shared/widgets/back_icon.dart';
 import 'package:flutter/material.dart';
 import '../../login/view/login_page.dart';
-import '../../shered/widgets/curved_header.dart';
-import '../../shered/widgets/custom_button.dart'; // Botao cliente/usuario
-import '../../shered/widgets/slide_transition.dart';
+import '../../shared/widgets/curved_header.dart';
+import '../../shared/widgets/custom_button.dart'; // Botao cliente/usuario
+import '../../shared/widgets/slide_transition.dart';
 import '../view/sing_up_client.dart';
 import '../view/sing_up_clinic.dart';
 

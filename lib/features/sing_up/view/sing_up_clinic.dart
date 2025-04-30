@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_clinica_medica/features/shered/widgets/back_icon.dart';
-import '../../shered/widgets/custom_button.dart';
-import '../../shered/widgets/slide_transition.dart';
+import 'package:app_mobile_clinica_medica/features/shared/widgets/back_icon.dart';
+import '../../shared/widgets/custom_button.dart';
+import '../../shared/widgets/slide_transition.dart';
 import '../view/sing_up_choose.dart';
-import '../../shered/widgets/field_label.dart';
-import '../../shered/widgets/sing_up_client_register.dart';
+import '../../shared/widgets/field_label.dart';
+import '../../shared/widgets/sing_up_client_register.dart';
 import '../../login/view/login_page.dart';
 import '../controller/sing_up_controller.dart';
 
