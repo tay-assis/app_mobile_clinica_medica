@@ -21,8 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    _controller.emailController.dispose();
-    _controller.passwordController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -124,6 +123,11 @@ class _LoginPageState extends State<LoginPage> {
                         width: 149,
                         height: 51,
                         onPressed: () {
+                          //
+                          //Chmando o metodo
+                          _controller.newUser();
+                          //
+                          //Mensagem de login
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: const Text('Login'),
