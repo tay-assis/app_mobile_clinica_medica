@@ -425,6 +425,262 @@ class AddressesCompanion extends UpdateCompanion<Address> {
   }
 }
 
+class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UsersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _firebaseUidMeta = const VerificationMeta(
+    'firebaseUid',
+  );
+  @override
+  late final GeneratedColumn<String> firebaseUid = GeneratedColumn<String>(
+    'firebase_uid',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, email, firebaseUid];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'users';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<User> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (data.containsKey('firebase_uid')) {
+      context.handle(
+        _firebaseUidMeta,
+        firebaseUid.isAcceptableOrUnknown(
+          data['firebase_uid']!,
+          _firebaseUidMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return User(
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
+      email:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}email'],
+          )!,
+      firebaseUid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}firebase_uid'],
+      ),
+    );
+  }
+
+  @override
+  $UsersTable createAlias(String alias) {
+    return $UsersTable(attachedDatabase, alias);
+  }
+}
+
+class User extends DataClass implements Insertable<User> {
+  final int id;
+  final String email;
+  final String? firebaseUid;
+  const User({required this.id, required this.email, this.firebaseUid});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['email'] = Variable<String>(email);
+    if (!nullToAbsent || firebaseUid != null) {
+      map['firebase_uid'] = Variable<String>(firebaseUid);
+    }
+    return map;
+  }
+
+  UsersCompanion toCompanion(bool nullToAbsent) {
+    return UsersCompanion(
+      id: Value(id),
+      email: Value(email),
+      firebaseUid:
+          firebaseUid == null && nullToAbsent
+              ? const Value.absent()
+              : Value(firebaseUid),
+    );
+  }
+
+  factory User.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return User(
+      id: serializer.fromJson<int>(json['id']),
+      email: serializer.fromJson<String>(json['email']),
+      firebaseUid: serializer.fromJson<String?>(json['firebaseUid']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'email': serializer.toJson<String>(email),
+      'firebaseUid': serializer.toJson<String?>(firebaseUid),
+    };
+  }
+
+  User copyWith({
+    int? id,
+    String? email,
+    Value<String?> firebaseUid = const Value.absent(),
+  }) => User(
+    id: id ?? this.id,
+    email: email ?? this.email,
+    firebaseUid: firebaseUid.present ? firebaseUid.value : this.firebaseUid,
+  );
+  User copyWithCompanion(UsersCompanion data) {
+    return User(
+      id: data.id.present ? data.id.value : this.id,
+      email: data.email.present ? data.email.value : this.email,
+      firebaseUid:
+          data.firebaseUid.present ? data.firebaseUid.value : this.firebaseUid,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('User(')
+          ..write('id: $id, ')
+          ..write('email: $email, ')
+          ..write('firebaseUid: $firebaseUid')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, email, firebaseUid);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is User &&
+          other.id == this.id &&
+          other.email == this.email &&
+          other.firebaseUid == this.firebaseUid);
+}
+
+class UsersCompanion extends UpdateCompanion<User> {
+  final Value<int> id;
+  final Value<String> email;
+  final Value<String?> firebaseUid;
+  const UsersCompanion({
+    this.id = const Value.absent(),
+    this.email = const Value.absent(),
+    this.firebaseUid = const Value.absent(),
+  });
+  UsersCompanion.insert({
+    this.id = const Value.absent(),
+    required String email,
+    this.firebaseUid = const Value.absent(),
+  }) : email = Value(email);
+  static Insertable<User> custom({
+    Expression<int>? id,
+    Expression<String>? email,
+    Expression<String>? firebaseUid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (email != null) 'email': email,
+      if (firebaseUid != null) 'firebase_uid': firebaseUid,
+    });
+  }
+
+  UsersCompanion copyWith({
+    Value<int>? id,
+    Value<String>? email,
+    Value<String?>? firebaseUid,
+  }) {
+    return UsersCompanion(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      firebaseUid: firebaseUid ?? this.firebaseUid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (firebaseUid.present) {
+      map['firebase_uid'] = Variable<String>(firebaseUid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UsersCompanion(')
+          ..write('id: $id, ')
+          ..write('email: $email, ')
+          ..write('firebaseUid: $firebaseUid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -441,6 +697,18 @@ class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES users (id)',
     ),
   );
   static const VerificationMeta _addressIdMeta = const VerificationMeta(
@@ -483,7 +751,7 @@ class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, addressId, name, imageUrl];
+  List<GeneratedColumn> get $columns => [id, userId, addressId, name, imageUrl];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -498,6 +766,14 @@ class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
     }
     if (data.containsKey('address_id')) {
       context.handle(
@@ -535,6 +811,11 @@ class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
             DriftSqlType.int,
             data['${effectivePrefix}id'],
           )!,
+      userId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}user_id'],
+          )!,
       addressId:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
@@ -560,11 +841,13 @@ class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
 
 class Clinic extends DataClass implements Insertable<Clinic> {
   final int id;
+  final int userId;
   final int addressId;
   final String name;
   final String? imageUrl;
   const Clinic({
     required this.id,
+    required this.userId,
     required this.addressId,
     required this.name,
     this.imageUrl,
@@ -573,6 +856,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<int>(userId);
     map['address_id'] = Variable<int>(addressId);
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || imageUrl != null) {
@@ -584,6 +868,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
   ClinicsCompanion toCompanion(bool nullToAbsent) {
     return ClinicsCompanion(
       id: Value(id),
+      userId: Value(userId),
       addressId: Value(addressId),
       name: Value(name),
       imageUrl:
@@ -600,6 +885,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Clinic(
       id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<int>(json['userId']),
       addressId: serializer.fromJson<int>(json['addressId']),
       name: serializer.fromJson<String>(json['name']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
@@ -610,6 +896,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<int>(userId),
       'addressId': serializer.toJson<int>(addressId),
       'name': serializer.toJson<String>(name),
       'imageUrl': serializer.toJson<String?>(imageUrl),
@@ -618,11 +905,13 @@ class Clinic extends DataClass implements Insertable<Clinic> {
 
   Clinic copyWith({
     int? id,
+    int? userId,
     int? addressId,
     String? name,
     Value<String?> imageUrl = const Value.absent(),
   }) => Clinic(
     id: id ?? this.id,
+    userId: userId ?? this.userId,
     addressId: addressId ?? this.addressId,
     name: name ?? this.name,
     imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
@@ -630,6 +919,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
   Clinic copyWithCompanion(ClinicsCompanion data) {
     return Clinic(
       id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
       addressId: data.addressId.present ? data.addressId.value : this.addressId,
       name: data.name.present ? data.name.value : this.name,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
@@ -640,6 +930,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
   String toString() {
     return (StringBuffer('Clinic(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
           ..write('addressId: $addressId, ')
           ..write('name: $name, ')
           ..write('imageUrl: $imageUrl')
@@ -648,12 +939,13 @@ class Clinic extends DataClass implements Insertable<Clinic> {
   }
 
   @override
-  int get hashCode => Object.hash(id, addressId, name, imageUrl);
+  int get hashCode => Object.hash(id, userId, addressId, name, imageUrl);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Clinic &&
           other.id == this.id &&
+          other.userId == this.userId &&
           other.addressId == this.addressId &&
           other.name == this.name &&
           other.imageUrl == this.imageUrl);
@@ -661,30 +953,36 @@ class Clinic extends DataClass implements Insertable<Clinic> {
 
 class ClinicsCompanion extends UpdateCompanion<Clinic> {
   final Value<int> id;
+  final Value<int> userId;
   final Value<int> addressId;
   final Value<String> name;
   final Value<String?> imageUrl;
   const ClinicsCompanion({
     this.id = const Value.absent(),
+    this.userId = const Value.absent(),
     this.addressId = const Value.absent(),
     this.name = const Value.absent(),
     this.imageUrl = const Value.absent(),
   });
   ClinicsCompanion.insert({
     this.id = const Value.absent(),
+    required int userId,
     required int addressId,
     required String name,
     this.imageUrl = const Value.absent(),
-  }) : addressId = Value(addressId),
+  }) : userId = Value(userId),
+       addressId = Value(addressId),
        name = Value(name);
   static Insertable<Clinic> custom({
     Expression<int>? id,
+    Expression<int>? userId,
     Expression<int>? addressId,
     Expression<String>? name,
     Expression<String>? imageUrl,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
       if (addressId != null) 'address_id': addressId,
       if (name != null) 'name': name,
       if (imageUrl != null) 'image_url': imageUrl,
@@ -693,12 +991,14 @@ class ClinicsCompanion extends UpdateCompanion<Clinic> {
 
   ClinicsCompanion copyWith({
     Value<int>? id,
+    Value<int>? userId,
     Value<int>? addressId,
     Value<String>? name,
     Value<String?>? imageUrl,
   }) {
     return ClinicsCompanion(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       addressId: addressId ?? this.addressId,
       name: name ?? this.name,
       imageUrl: imageUrl ?? this.imageUrl,
@@ -710,6 +1010,9 @@ class ClinicsCompanion extends UpdateCompanion<Clinic> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
     }
     if (addressId.present) {
       map['address_id'] = Variable<int>(addressId.value);
@@ -727,6 +1030,7 @@ class ClinicsCompanion extends UpdateCompanion<Clinic> {
   String toString() {
     return (StringBuffer('ClinicsCompanion(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
           ..write('addressId: $addressId, ')
           ..write('name: $name, ')
           ..write('imageUrl: $imageUrl')
@@ -1371,6 +1675,18 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES users (id)',
+    ),
+  );
   static const VerificationMeta _insuranceIdMeta = const VerificationMeta(
     'insuranceId',
   );
@@ -1412,19 +1728,6 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _emailMeta = const VerificationMeta('email');
-  @override
-  late final GeneratedColumn<String> email = GeneratedColumn<String>(
-    'email',
-    aliasedName,
-    false,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 50,
-    ),
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
   @override
   late final GeneratedColumn<int> phone = GeneratedColumn<int>(
@@ -1438,10 +1741,10 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    userId,
     insuranceId,
     addressId,
     name,
-    email,
     phone,
   ];
   @override
@@ -1458,6 +1761,14 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
     }
     if (data.containsKey('insurance_id')) {
       context.handle(
@@ -1486,14 +1797,6 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('email')) {
-      context.handle(
-        _emailMeta,
-        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_emailMeta);
-    }
     if (data.containsKey('phone')) {
       context.handle(
         _phoneMeta,
@@ -1516,6 +1819,11 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
             DriftSqlType.int,
             data['${effectivePrefix}id'],
           )!,
+      userId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}user_id'],
+          )!,
       insuranceId:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
@@ -1530,11 +1838,6 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
           attachedDatabase.typeMapping.read(
             DriftSqlType.string,
             data['${effectivePrefix}name'],
-          )!,
-      email:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}email'],
           )!,
       phone:
           attachedDatabase.typeMapping.read(
@@ -1552,27 +1855,27 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
 
 class Patient extends DataClass implements Insertable<Patient> {
   final int id;
+  final int userId;
   final int insuranceId;
   final int addressId;
   final String name;
-  final String email;
   final int phone;
   const Patient({
     required this.id,
+    required this.userId,
     required this.insuranceId,
     required this.addressId,
     required this.name,
-    required this.email,
     required this.phone,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<int>(userId);
     map['insurance_id'] = Variable<int>(insuranceId);
     map['address_id'] = Variable<int>(addressId);
     map['name'] = Variable<String>(name);
-    map['email'] = Variable<String>(email);
     map['phone'] = Variable<int>(phone);
     return map;
   }
@@ -1580,10 +1883,10 @@ class Patient extends DataClass implements Insertable<Patient> {
   PatientsCompanion toCompanion(bool nullToAbsent) {
     return PatientsCompanion(
       id: Value(id),
+      userId: Value(userId),
       insuranceId: Value(insuranceId),
       addressId: Value(addressId),
       name: Value(name),
-      email: Value(email),
       phone: Value(phone),
     );
   }
@@ -1595,10 +1898,10 @@ class Patient extends DataClass implements Insertable<Patient> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Patient(
       id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<int>(json['userId']),
       insuranceId: serializer.fromJson<int>(json['insuranceId']),
       addressId: serializer.fromJson<int>(json['addressId']),
       name: serializer.fromJson<String>(json['name']),
-      email: serializer.fromJson<String>(json['email']),
       phone: serializer.fromJson<int>(json['phone']),
     );
   }
@@ -1607,37 +1910,37 @@ class Patient extends DataClass implements Insertable<Patient> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<int>(userId),
       'insuranceId': serializer.toJson<int>(insuranceId),
       'addressId': serializer.toJson<int>(addressId),
       'name': serializer.toJson<String>(name),
-      'email': serializer.toJson<String>(email),
       'phone': serializer.toJson<int>(phone),
     };
   }
 
   Patient copyWith({
     int? id,
+    int? userId,
     int? insuranceId,
     int? addressId,
     String? name,
-    String? email,
     int? phone,
   }) => Patient(
     id: id ?? this.id,
+    userId: userId ?? this.userId,
     insuranceId: insuranceId ?? this.insuranceId,
     addressId: addressId ?? this.addressId,
     name: name ?? this.name,
-    email: email ?? this.email,
     phone: phone ?? this.phone,
   );
   Patient copyWithCompanion(PatientsCompanion data) {
     return Patient(
       id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
       insuranceId:
           data.insuranceId.present ? data.insuranceId.value : this.insuranceId,
       addressId: data.addressId.present ? data.addressId.value : this.addressId,
       name: data.name.present ? data.name.value : this.name,
-      email: data.email.present ? data.email.value : this.email,
       phone: data.phone.present ? data.phone.value : this.phone,
     );
   }
@@ -1646,10 +1949,10 @@ class Patient extends DataClass implements Insertable<Patient> {
   String toString() {
     return (StringBuffer('Patient(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
           ..write('insuranceId: $insuranceId, ')
           ..write('addressId: $addressId, ')
           ..write('name: $name, ')
-          ..write('email: $email, ')
           ..write('phone: $phone')
           ..write(')'))
         .toString();
@@ -1657,78 +1960,78 @@ class Patient extends DataClass implements Insertable<Patient> {
 
   @override
   int get hashCode =>
-      Object.hash(id, insuranceId, addressId, name, email, phone);
+      Object.hash(id, userId, insuranceId, addressId, name, phone);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Patient &&
           other.id == this.id &&
+          other.userId == this.userId &&
           other.insuranceId == this.insuranceId &&
           other.addressId == this.addressId &&
           other.name == this.name &&
-          other.email == this.email &&
           other.phone == this.phone);
 }
 
 class PatientsCompanion extends UpdateCompanion<Patient> {
   final Value<int> id;
+  final Value<int> userId;
   final Value<int> insuranceId;
   final Value<int> addressId;
   final Value<String> name;
-  final Value<String> email;
   final Value<int> phone;
   const PatientsCompanion({
     this.id = const Value.absent(),
+    this.userId = const Value.absent(),
     this.insuranceId = const Value.absent(),
     this.addressId = const Value.absent(),
     this.name = const Value.absent(),
-    this.email = const Value.absent(),
     this.phone = const Value.absent(),
   });
   PatientsCompanion.insert({
     this.id = const Value.absent(),
+    required int userId,
     required int insuranceId,
     required int addressId,
     required String name,
-    required String email,
     required int phone,
-  }) : insuranceId = Value(insuranceId),
+  }) : userId = Value(userId),
+       insuranceId = Value(insuranceId),
        addressId = Value(addressId),
        name = Value(name),
-       email = Value(email),
        phone = Value(phone);
   static Insertable<Patient> custom({
     Expression<int>? id,
+    Expression<int>? userId,
     Expression<int>? insuranceId,
     Expression<int>? addressId,
     Expression<String>? name,
-    Expression<String>? email,
     Expression<int>? phone,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
       if (insuranceId != null) 'insurance_id': insuranceId,
       if (addressId != null) 'address_id': addressId,
       if (name != null) 'name': name,
-      if (email != null) 'email': email,
       if (phone != null) 'phone': phone,
     });
   }
 
   PatientsCompanion copyWith({
     Value<int>? id,
+    Value<int>? userId,
     Value<int>? insuranceId,
     Value<int>? addressId,
     Value<String>? name,
-    Value<String>? email,
     Value<int>? phone,
   }) {
     return PatientsCompanion(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       insuranceId: insuranceId ?? this.insuranceId,
       addressId: addressId ?? this.addressId,
       name: name ?? this.name,
-      email: email ?? this.email,
       phone: phone ?? this.phone,
     );
   }
@@ -1739,6 +2042,9 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
     if (insuranceId.present) {
       map['insurance_id'] = Variable<int>(insuranceId.value);
     }
@@ -1747,9 +2053,6 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
-    }
-    if (email.present) {
-      map['email'] = Variable<String>(email.value);
     }
     if (phone.present) {
       map['phone'] = Variable<int>(phone.value);
@@ -1761,10 +2064,10 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
   String toString() {
     return (StringBuffer('PatientsCompanion(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
           ..write('insuranceId: $insuranceId, ')
           ..write('addressId: $addressId, ')
           ..write('name: $name, ')
-          ..write('email: $email, ')
           ..write('phone: $phone')
           ..write(')'))
         .toString();
@@ -2324,6 +2627,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $AddressesTable addresses = $AddressesTable(this);
+  late final $UsersTable users = $UsersTable(this);
   late final $ClinicsTable clinics = $ClinicsTable(this);
   late final $DoctorsTable doctors = $DoctorsTable(this);
   late final $InsurancesTable insurances = $InsurancesTable(this);
@@ -2345,12 +2649,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final DoctorScheduleDao doctorScheduleDao = DoctorScheduleDao(
     this as AppDatabase,
   );
+  late final UserDao userDao = UserDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     addresses,
+    users,
     clinics,
     doctors,
     insurances,
@@ -2772,9 +3078,355 @@ typedef $$AddressesTableProcessedTableManager =
       Address,
       PrefetchHooks Function({bool clinicsRefs, bool patientsRefs})
     >;
+typedef $$UsersTableCreateCompanionBuilder =
+    UsersCompanion Function({
+      Value<int> id,
+      required String email,
+      Value<String?> firebaseUid,
+    });
+typedef $$UsersTableUpdateCompanionBuilder =
+    UsersCompanion Function({
+      Value<int> id,
+      Value<String> email,
+      Value<String?> firebaseUid,
+    });
+
+final class $$UsersTableReferences
+    extends BaseReferences<_$AppDatabase, $UsersTable, User> {
+  $$UsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$ClinicsTable, List<Clinic>> _clinicsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.clinics,
+    aliasName: $_aliasNameGenerator(db.users.id, db.clinics.userId),
+  );
+
+  $$ClinicsTableProcessedTableManager get clinicsRefs {
+    final manager = $$ClinicsTableTableManager(
+      $_db,
+      $_db.clinics,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_clinicsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$PatientsTable, List<Patient>> _patientsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.patients,
+    aliasName: $_aliasNameGenerator(db.users.id, db.patients.userId),
+  );
+
+  $$PatientsTableProcessedTableManager get patientsRefs {
+    final manager = $$PatientsTableTableManager(
+      $_db,
+      $_db.patients,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_patientsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> clinicsRefs(
+    Expression<bool> Function($$ClinicsTableFilterComposer f) f,
+  ) {
+    final $$ClinicsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.clinics,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClinicsTableFilterComposer(
+            $db: $db,
+            $table: $db.clinics,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> patientsRefs(
+    Expression<bool> Function($$PatientsTableFilterComposer f) f,
+  ) {
+    final $$PatientsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.patients,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PatientsTableFilterComposer(
+            $db: $db,
+            $table: $db.patients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$UsersTableOrderingComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UsersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => column,
+  );
+
+  Expression<T> clinicsRefs<T extends Object>(
+    Expression<T> Function($$ClinicsTableAnnotationComposer a) f,
+  ) {
+    final $$ClinicsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.clinics,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClinicsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.clinics,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> patientsRefs<T extends Object>(
+    Expression<T> Function($$PatientsTableAnnotationComposer a) f,
+  ) {
+    final $$PatientsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.patients,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PatientsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.patients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$UsersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UsersTable,
+          User,
+          $$UsersTableFilterComposer,
+          $$UsersTableOrderingComposer,
+          $$UsersTableAnnotationComposer,
+          $$UsersTableCreateCompanionBuilder,
+          $$UsersTableUpdateCompanionBuilder,
+          (User, $$UsersTableReferences),
+          User,
+          PrefetchHooks Function({bool clinicsRefs, bool patientsRefs})
+        > {
+  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer:
+              () => $$UsersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () => $$UsersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer:
+              () => $$UsersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> email = const Value.absent(),
+                Value<String?> firebaseUid = const Value.absent(),
+              }) => UsersCompanion(
+                id: id,
+                email: email,
+                firebaseUid: firebaseUid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String email,
+                Value<String?> firebaseUid = const Value.absent(),
+              }) => UsersCompanion.insert(
+                id: id,
+                email: email,
+                firebaseUid: firebaseUid,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          $$UsersTableReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
+          prefetchHooksCallback: ({clinicsRefs = false, patientsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (clinicsRefs) db.clinics,
+                if (patientsRefs) db.patients,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (clinicsRefs)
+                    await $_getPrefetchedData<User, $UsersTable, Clinic>(
+                      currentTable: table,
+                      referencedTable: $$UsersTableReferences._clinicsRefsTable(
+                        db,
+                      ),
+                      managerFromTypedResult:
+                          (p0) =>
+                              $$UsersTableReferences(db, table, p0).clinicsRefs,
+                      referencedItemsForCurrentItem:
+                          (item, referencedItems) =>
+                              referencedItems.where((e) => e.userId == item.id),
+                      typedResults: items,
+                    ),
+                  if (patientsRefs)
+                    await $_getPrefetchedData<User, $UsersTable, Patient>(
+                      currentTable: table,
+                      referencedTable: $$UsersTableReferences
+                          ._patientsRefsTable(db),
+                      managerFromTypedResult:
+                          (p0) =>
+                              $$UsersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).patientsRefs,
+                      referencedItemsForCurrentItem:
+                          (item, referencedItems) =>
+                              referencedItems.where((e) => e.userId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$UsersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UsersTable,
+      User,
+      $$UsersTableFilterComposer,
+      $$UsersTableOrderingComposer,
+      $$UsersTableAnnotationComposer,
+      $$UsersTableCreateCompanionBuilder,
+      $$UsersTableUpdateCompanionBuilder,
+      (User, $$UsersTableReferences),
+      User,
+      PrefetchHooks Function({bool clinicsRefs, bool patientsRefs})
+    >;
 typedef $$ClinicsTableCreateCompanionBuilder =
     ClinicsCompanion Function({
       Value<int> id,
+      required int userId,
       required int addressId,
       required String name,
       Value<String?> imageUrl,
@@ -2782,6 +3434,7 @@ typedef $$ClinicsTableCreateCompanionBuilder =
 typedef $$ClinicsTableUpdateCompanionBuilder =
     ClinicsCompanion Function({
       Value<int> id,
+      Value<int> userId,
       Value<int> addressId,
       Value<String> name,
       Value<String?> imageUrl,
@@ -2790,6 +3443,24 @@ typedef $$ClinicsTableUpdateCompanionBuilder =
 final class $$ClinicsTableReferences
     extends BaseReferences<_$AppDatabase, $ClinicsTable, Clinic> {
   $$ClinicsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $UsersTable _userIdTable(_$AppDatabase db) => db.users.createAlias(
+    $_aliasNameGenerator(db.clinics.userId, db.users.id),
+  );
+
+  $$UsersTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<int>('user_id')!;
+
+    final manager = $$UsersTableTableManager(
+      $_db,
+      $_db.users,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 
   static $AddressesTable _addressIdTable(_$AppDatabase db) => db.addresses
       .createAlias($_aliasNameGenerator(db.clinics.addressId, db.addresses.id));
@@ -2851,6 +3522,29 @@ class $$ClinicsTableFilterComposer
     column: $table.imageUrl,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$UsersTableFilterComposer get userId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableFilterComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$AddressesTableFilterComposer get addressId {
     final $$AddressesTableFilterComposer composer = $composerBuilder(
@@ -2925,6 +3619,29 @@ class $$ClinicsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  $$UsersTableOrderingComposer get userId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableOrderingComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   $$AddressesTableOrderingComposer get addressId {
     final $$AddressesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -2966,6 +3683,29 @@ class $$ClinicsTableAnnotationComposer
 
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  $$UsersTableAnnotationComposer get userId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$AddressesTableAnnotationComposer get addressId {
     final $$AddressesTableAnnotationComposer composer = $composerBuilder(
@@ -3029,7 +3769,11 @@ class $$ClinicsTableTableManager
           $$ClinicsTableUpdateCompanionBuilder,
           (Clinic, $$ClinicsTableReferences),
           Clinic,
-          PrefetchHooks Function({bool addressId, bool doctorsRefs})
+          PrefetchHooks Function({
+            bool userId,
+            bool addressId,
+            bool doctorsRefs,
+          })
         > {
   $$ClinicsTableTableManager(_$AppDatabase db, $ClinicsTable table)
     : super(
@@ -3045,11 +3789,13 @@ class $$ClinicsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int> userId = const Value.absent(),
                 Value<int> addressId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
               }) => ClinicsCompanion(
                 id: id,
+                userId: userId,
                 addressId: addressId,
                 name: name,
                 imageUrl: imageUrl,
@@ -3057,11 +3803,13 @@ class $$ClinicsTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                required int userId,
                 required int addressId,
                 required String name,
                 Value<String?> imageUrl = const Value.absent(),
               }) => ClinicsCompanion.insert(
                 id: id,
+                userId: userId,
                 addressId: addressId,
                 name: name,
                 imageUrl: imageUrl,
@@ -3076,7 +3824,11 @@ class $$ClinicsTableTableManager
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({addressId = false, doctorsRefs = false}) {
+          prefetchHooksCallback: ({
+            userId = false,
+            addressId = false,
+            doctorsRefs = false,
+          }) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [if (doctorsRefs) db.doctors],
@@ -3095,6 +3847,18 @@ class $$ClinicsTableTableManager
                   dynamic
                 >
               >(state) {
+                if (userId) {
+                  state =
+                      state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.userId,
+                            referencedTable: $$ClinicsTableReferences
+                                ._userIdTable(db),
+                            referencedColumn:
+                                $$ClinicsTableReferences._userIdTable(db).id,
+                          )
+                          as T;
+                }
                 if (addressId) {
                   state =
                       state.withJoin(
@@ -3150,7 +3914,7 @@ typedef $$ClinicsTableProcessedTableManager =
       $$ClinicsTableUpdateCompanionBuilder,
       (Clinic, $$ClinicsTableReferences),
       Clinic,
-      PrefetchHooks Function({bool addressId, bool doctorsRefs})
+      PrefetchHooks Function({bool userId, bool addressId, bool doctorsRefs})
     >;
 typedef $$DoctorsTableCreateCompanionBuilder =
     DoctorsCompanion Function({
@@ -4024,25 +4788,43 @@ typedef $$InsurancesTableProcessedTableManager =
 typedef $$PatientsTableCreateCompanionBuilder =
     PatientsCompanion Function({
       Value<int> id,
+      required int userId,
       required int insuranceId,
       required int addressId,
       required String name,
-      required String email,
       required int phone,
     });
 typedef $$PatientsTableUpdateCompanionBuilder =
     PatientsCompanion Function({
       Value<int> id,
+      Value<int> userId,
       Value<int> insuranceId,
       Value<int> addressId,
       Value<String> name,
-      Value<String> email,
       Value<int> phone,
     });
 
 final class $$PatientsTableReferences
     extends BaseReferences<_$AppDatabase, $PatientsTable, Patient> {
   $$PatientsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $UsersTable _userIdTable(_$AppDatabase db) => db.users.createAlias(
+    $_aliasNameGenerator(db.patients.userId, db.users.id),
+  );
+
+  $$UsersTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<int>('user_id')!;
+
+    final manager = $$UsersTableTableManager(
+      $_db,
+      $_db.users,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 
   static $InsurancesTable _insuranceIdTable(_$AppDatabase db) =>
       db.insurances.createAlias(
@@ -4102,15 +4884,33 @@ class $$PatientsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<int> get phone => $composableBuilder(
     column: $table.phone,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$UsersTableFilterComposer get userId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableFilterComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$InsurancesTableFilterComposer get insuranceId {
     final $$InsurancesTableFilterComposer composer = $composerBuilder(
@@ -4178,15 +4978,33 @@ class $$PatientsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<int> get phone => $composableBuilder(
     column: $table.phone,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$UsersTableOrderingComposer get userId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableOrderingComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$InsurancesTableOrderingComposer get insuranceId {
     final $$InsurancesTableOrderingComposer composer = $composerBuilder(
@@ -4250,11 +5068,31 @@ class $$PatientsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get email =>
-      $composableBuilder(column: $table.email, builder: (column) => column);
-
   GeneratedColumn<int> get phone =>
       $composableBuilder(column: $table.phone, builder: (column) => column);
+
+  $$UsersTableAnnotationComposer get userId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$InsurancesTableAnnotationComposer get insuranceId {
     final $$InsurancesTableAnnotationComposer composer = $composerBuilder(
@@ -4316,7 +5154,11 @@ class $$PatientsTableTableManager
           $$PatientsTableUpdateCompanionBuilder,
           (Patient, $$PatientsTableReferences),
           Patient,
-          PrefetchHooks Function({bool insuranceId, bool addressId})
+          PrefetchHooks Function({
+            bool userId,
+            bool insuranceId,
+            bool addressId,
+          })
         > {
   $$PatientsTableTableManager(_$AppDatabase db, $PatientsTable table)
     : super(
@@ -4332,33 +5174,33 @@ class $$PatientsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int> userId = const Value.absent(),
                 Value<int> insuranceId = const Value.absent(),
                 Value<int> addressId = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<String> email = const Value.absent(),
                 Value<int> phone = const Value.absent(),
               }) => PatientsCompanion(
                 id: id,
+                userId: userId,
                 insuranceId: insuranceId,
                 addressId: addressId,
                 name: name,
-                email: email,
                 phone: phone,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                required int userId,
                 required int insuranceId,
                 required int addressId,
                 required String name,
-                required String email,
                 required int phone,
               }) => PatientsCompanion.insert(
                 id: id,
+                userId: userId,
                 insuranceId: insuranceId,
                 addressId: addressId,
                 name: name,
-                email: email,
                 phone: phone,
               ),
           withReferenceMapper:
@@ -4371,7 +5213,11 @@ class $$PatientsTableTableManager
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({insuranceId = false, addressId = false}) {
+          prefetchHooksCallback: ({
+            userId = false,
+            insuranceId = false,
+            addressId = false,
+          }) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -4390,6 +5236,18 @@ class $$PatientsTableTableManager
                   dynamic
                 >
               >(state) {
+                if (userId) {
+                  state =
+                      state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.userId,
+                            referencedTable: $$PatientsTableReferences
+                                ._userIdTable(db),
+                            referencedColumn:
+                                $$PatientsTableReferences._userIdTable(db).id,
+                          )
+                          as T;
+                }
                 if (insuranceId) {
                   state =
                       state.withJoin(
@@ -4442,7 +5300,7 @@ typedef $$PatientsTableProcessedTableManager =
       $$PatientsTableUpdateCompanionBuilder,
       (Patient, $$PatientsTableReferences),
       Patient,
-      PrefetchHooks Function({bool insuranceId, bool addressId})
+      PrefetchHooks Function({bool userId, bool insuranceId, bool addressId})
     >;
 typedef $$DoctorInsurancesTableCreateCompanionBuilder =
     DoctorInsurancesCompanion Function({
@@ -5132,6 +5990,8 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$AddressesTableTableManager get addresses =>
       $$AddressesTableTableManager(_db, _db.addresses);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db, _db.users);
   $$ClinicsTableTableManager get clinics =>
       $$ClinicsTableTableManager(_db, _db.clinics);
   $$DoctorsTableTableManager get doctors =>

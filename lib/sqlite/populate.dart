@@ -1,5 +1,6 @@
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 
+import 'seeders/user_seeder.dart';
 import 'seeders/address_seeder.dart';
 import 'seeders/insurance_seeder.dart';
 import 'seeders/clinic_seeder.dart';
@@ -14,9 +15,16 @@ void main() async {
   // Starting database
   final db = AppDatabase();
 
-  //populating addresses
-  await db.addressDao.deleteAddresses();
+  //populating users
+  await db.userDao.deleteUsers();
 
+  await UserSeeder.run(db);
+  final users = await db.userDao.selectUsers();
+  for (final i in users) {
+    print('Email: ${i.email}, FirebaseUid: ${i.firebaseUid}');
+  }
+
+  //populating addresses
   await AddressSeeder.run(db);
   final addresses = await db.addressDao.selectAddresses();
   for (final i in addresses) {
@@ -26,18 +34,13 @@ void main() async {
   }
 
   //populating insurances
-  await db.insuranceDao.deleteInsurances();
-
   await InsuranceSeeder.run(db);
 
   // populating clinics
   await db.clinicDao.deleteClinics();
-
   await ClinicSeeder.run(db);
 
   // populating doctors
-  await db.doctorDao.deleteDoctors();
-
   await DoctorSeeder.run(db);
 
   final doctors = await db.doctorDao.selectDoctors();
@@ -48,39 +51,36 @@ void main() async {
   }
 
   //populating DoctorInsurances
-  await db.doctorInsuranceDao.deleteDoctorInsurances();
-
   await DoctorInsuranceSeeder.run(db);
   final houseDoctor = await db.doctorDao.selectDoctorByCRM(123);
-  final List<String> houseInsurance = await db.doctorInsuranceDao.selectInsurancesByDoctor(
-    houseDoctor.name,
-  );
+  final List<String> houseInsurance = await db.doctorInsuranceDao
+      .selectInsurancesByDoctor(houseDoctor.name);
   print('Doctor: ${houseDoctor.name}, \n $houseInsurance');
 
   // populating doctorSchedules
-  await db.doctorScheduleDao.deleteDoctorSchedules();
-
   await DoctorScheduleSeeder.run(db);
 
-
   List<String> days = ['MON', 'WED']; // WILL NOT SHOW FRIDAY
-  final houseHours = await db.doctorScheduleDao.selectDoctorSchedulesByAllFilters( // THIS FUNCTION ONLY SHOWS WHAT'S AVAILABLE
-      123,
-      DateTime(2025, 5, 4, 0, 0),   // SUNDAY
-      DateTime(2025, 5, 10, 0, 0),  // SATURDAY
-      days
-  );
-  for(final i in houseHours){
+  final houseHours = await db.doctorScheduleDao
+      .selectDoctorSchedulesByAllFilters(
+        // THIS FUNCTION ONLY SHOWS WHAT'S AVAILABLE
+        123,
+        DateTime(2025, 5, 4, 0, 0), // SUNDAY
+        DateTime(2025, 5, 10, 0, 0), // SATURDAY
+        days,
+      );
+  for (final i in houseHours) {
     print('Weekday: ${i.weekday},  Date: ${i.date}, Status: ${i.status}');
   }
 
   // populating patients
   await db.patientDao.deletePatients();
-
   await PatientSeeder.run(db);
 
   final jao = await db.patientDao.selectPatientByID(1);
-  print('Nome: ${jao.name}, Email: ${jao.email}, phone: ${jao.phone}, convênio: ${await db.patientDao.selectInsuranceByPatientName(jao.name)}');
+  print(
+    'Nome: ${jao.name}, phone: ${jao.phone}, convênio: ${await db.patientDao.selectInsuranceByPatientName(jao.name)}',
+  );
 
   await db.close();
 }
