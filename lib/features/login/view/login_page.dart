@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 149,
                         height: 51,
                         onPressed: () async {
-                          final success = await _controller.newUser();
+                          final success = await _controller.checkUser();
                           //Chmando o metodo
                           //_controller.newUser();
                           //

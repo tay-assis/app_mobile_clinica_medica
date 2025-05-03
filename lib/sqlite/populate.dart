@@ -16,8 +16,6 @@ void main() async {
   final db = AppDatabase();
 
   //populating users
-  await db.userDao.deleteUsers();
-
   await UserSeeder.run(db);
   final users = await db.userDao.selectUsers();
   for (final i in users) {
@@ -37,7 +35,6 @@ void main() async {
   await InsuranceSeeder.run(db);
 
   // populating clinics
-  await db.clinicDao.deleteClinics();
   await ClinicSeeder.run(db);
 
   // populating doctors
@@ -74,12 +71,11 @@ void main() async {
   }
 
   // populating patients
-  await db.patientDao.deletePatients();
   await PatientSeeder.run(db);
 
   final jao = await db.patientDao.selectPatientByID(1);
   print(
-    'Nome: ${jao.name}, phone: ${jao.phone}, convênio: ${await db.patientDao.selectInsuranceByPatientName(jao.name)}',
+    'Nome: ${jao.name}, firebaseUid: ${jao.userId} ,phone: ${jao.phone}, convênio: ${await db.patientDao.selectInsuranceByPatientName(jao.name)}',
   );
 
   await db.close();

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../model/usuario_model.dart';
-import '../../../sqlite/DAOs/patient_dao.dart';
-// i think we will maybe nedd a new table for logins because we can login as a clinic or as an user and the requirements are the same
 import '../../../sqlite/database.dart';
 
 class LoginController {
@@ -26,7 +24,7 @@ class LoginController {
     passwordController.dispose();
   }
 
-  Future<bool> newUser() async {
+  Future<bool> checkUser() async {
     final userLogin = UserLogin(
       email:
           emailController.text
@@ -50,7 +48,7 @@ class LoginController {
         return true;
       }
     } on FirebaseAuthException catch (e) {
-      print('Erro de Login: ${e.code}'); // if not validated we send an error
+      print('Erro de Login: ${e.message}'); // if not validated we send an error
     }
 
     return false;
