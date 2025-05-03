@@ -4,6 +4,7 @@ class UserLogin {
 
   UserLogin({required this.email, required this.senha});
 
+  // PARTE DO BACK END?? OS DADOS PODEM SER OBTIDOS PARA O BACK AQUI
   Map<String, dynamic> toMap() {
     return {'email': email, 'senha': senha};
   }
