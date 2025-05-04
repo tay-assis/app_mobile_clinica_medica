@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:app_mobile_clinica_medica/features/filtro/controller/filter_page_controller.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
-import 'package:flutter/material.dart';
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+
 import 'widgets/custom_autocomplete_input.dart';
 import 'widgets/custom_dropdown.dart';
 
@@ -12,25 +15,21 @@ class FilterPage extends StatefulWidget {
 }
 
 class _FilterPageState extends State<FilterPage> {
-  String? selectedSpecialty;
-  String? selectedClinic = '';
-  String? selectedLocation = '';
-  String? selectedName = '';
+  late FilterNameController _filterController; // Corrigido o nome do controller
+  List<String> doctorNames = [];
 
+  String? selectedSpecialty;
+  String? selectedClinic;
+  String? selectedLocation;
+  String? selectedName;
+
+  // Listas com opções para os filtros
   final List<String> specialties = [
     'Cardiologista',
     'Urologista',
     'Clínico Geral',
     'Dermatologista',
     'Ortopedista',
-  ];
-
-  final List<String> doctors = [
-    'Dr. Ana Souza',
-    'Dr. Pedro Lima',
-    'Dr. Mariana Torres',
-    'Dr. Felipe Martins',
-    'Dr. Camila Rocha',
   ];
 
   final List<String> clinics = [
@@ -49,13 +48,39 @@ class _FilterPageState extends State<FilterPage> {
     'Salvador',
   ];
 
+  // Função que limpa os filtros
   void clearFilters() {
     setState(() {
       selectedSpecialty = null;
-      selectedClinic = '';
-      selectedLocation = '';
-      selectedName = '';
+      selectedClinic = null;
+      selectedLocation = null;
+      selectedName = null;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final db = AppDatabase(); // cria instância do banco
+    _filterController = FilterNameController(
+      db.doctorDao,
+    ); // passa pro controller
+    _loadDoctorNames(); // carrega os nomes dos médicos
+  }
+
+  // Função assíncrona que busca nomes no banco
+  Future<void> _loadDoctorNames() async {
+    try {
+      final names = await _filterController.getDoctorNames();
+      print('==== Lista de nomes carregada ====');
+      print(names);
+      setState(() {
+        doctorNames = names;
+      });
+    } catch (e, stack) {
+      print('Erro ao carregar nomes: $e');
+      print(stack);
+    }
   }
 
   @override
@@ -67,13 +92,11 @@ class _FilterPageState extends State<FilterPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const CustomHeader(
-              // Header with close button
               isCloseButton: true,
               iconColor: Color(0xFF0089FF),
             ),
             const SizedBox(height: 20),
             CustomAutocompleteInput(
-              // Autocomplete input for location
               title: 'Localização',
               label: 'a localização',
               options: locations,
@@ -84,10 +107,9 @@ class _FilterPageState extends State<FilterPage> {
             ),
             const SizedBox(height: 30),
             CustomAutocompleteInput(
-              // Autocomplete input for doctor name
               title: 'Nome',
               label: 'o nome do Médico',
-              options: doctors,
+              options: doctorNames, // Corrigido: doctorNamess → doctorNames
               selectedValue: selectedName,
               onChanged: (value) {
                 setState(() => selectedName = value);
@@ -95,7 +117,6 @@ class _FilterPageState extends State<FilterPage> {
             ),
             const SizedBox(height: 30),
             CustomDropdown(
-              // Dropdown for specialty selection
               title: 'Especialidade',
               label: 'a especialidade do Médico',
               value: selectedSpecialty,
@@ -106,7 +127,6 @@ class _FilterPageState extends State<FilterPage> {
             ),
             const SizedBox(height: 30),
             CustomAutocompleteInput(
-              // Autocomplete input for clinic name
               title: 'Clínica',
               label: 'a clínica do Médico',
               options: clinics,
@@ -120,14 +140,12 @@ class _FilterPageState extends State<FilterPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CustomButton(
-                  // Button to clear filters
                   text: 'Limpar',
                   width: 149,
                   height: 51,
                   onPressed: clearFilters,
                 ),
                 CustomButton(
-                  // Button to apply filters
                   text: 'Aplicar filtros',
                   width: 149,
                   height: 51,
