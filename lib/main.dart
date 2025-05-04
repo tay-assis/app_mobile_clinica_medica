@@ -22,7 +22,7 @@ Future<void> main() async {
       providers: [
         Provider<AppDatabase>.value(value: db),
         ChangeNotifierProvider(
-          create: (_) => FilterNameController(db)..loadDoctors(),
+          create: (_) => FilterNameController(db)..loadDoctorsAndClinics(),
         ),
       ],
       child: const MyApp(),

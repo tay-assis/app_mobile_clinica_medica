@@ -21,34 +21,12 @@ class _FilterPageState extends State<FilterPage> {
   String? selectedLocation;
   String? selectedName;
 
-  final specialties = <String>[
-    'Cardiologista',
-    'Urologista',
-    'Clínico Geral',
-    'Dermatologista',
-    'Ortopedista',
-  ];
-  final clinics = <String>[
-    'Clínica São João',
-    'Clínica Bem Estar',
-    'Centro Médico Saúde',
-    'Hospital Vida',
-    'Clínica Popular',
-  ];
-  final locations = <String>[
-    'São Paulo',
-    'Rio de Janeiro',
-    'Belo Horizonte',
-    'Curitiba',
-    'Salvador',
-  ];
-
   @override
   void initState() {
     super.initState();
     // Inicia carregamento após primeiro frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FilterNameController>().loadDoctors();
+      context.read<FilterNameController>().loadDoctorsAndClinics();
     });
   }
 
@@ -73,6 +51,9 @@ class _FilterPageState extends State<FilterPage> {
 
     // Quando carregado, controller.names possui a lista de nomes que se pede
     final doctorNames = controller.names; // não tenho certeza se a lista local é necessária
+    final doctorSpecialties = controller.specialties;
+    final clinicNames = controller.clinicNames;
+    final clinicAddresses = controller.addresses;
     // doctorNames usado na linha 104
 
     return Scaffold(
@@ -90,7 +71,7 @@ class _FilterPageState extends State<FilterPage> {
             CustomAutocompleteInput(
               title: 'Localização',
               label: 'a localização',
-              options: locations,
+              options: clinicAddresses,
               selectedValue: selectedLocation,
               onChanged: (v) => setState(() => selectedLocation = v),
             ),
@@ -109,7 +90,7 @@ class _FilterPageState extends State<FilterPage> {
               title: 'Especialidade',
               label: 'a especialidade do Médico',
               value: selectedSpecialty,
-              items: specialties,
+              items: doctorSpecialties,
               onChanged: (v) => setState(() => selectedSpecialty = v),
             ),
             const SizedBox(height: 30),
@@ -117,7 +98,7 @@ class _FilterPageState extends State<FilterPage> {
             CustomAutocompleteInput(
               title: 'Clínica',
               label: 'a clínica do Médico',
-              options: clinics,
+              options: clinicNames,
               selectedValue: selectedClinic,
               onChanged: (v) => setState(() => selectedClinic = v),
             ),

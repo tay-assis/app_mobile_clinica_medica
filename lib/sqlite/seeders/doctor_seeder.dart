@@ -36,7 +36,7 @@ class DoctorSeeder {
         1,
         'Dra. Cristina Yang',
         21345634,
-        'Cardioloa',
+        'Cardiologia',
         'https://s2.glbimg.com/uwtZkUu1jkrPJjsUe8JCGi2zZYI=/e.glbimg.com/og/ed/f/original/2021/05/11/cristina_yang.jpg',
       );
       await db.doctorDao.insertDoctor(

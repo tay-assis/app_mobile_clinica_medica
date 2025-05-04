@@ -20,8 +20,15 @@ class AddressDao extends DatabaseAccessor<AppDatabase> with _$AddressDaoMixin {
   }
 
   // SELECT * FROM ADDRESSES WHERE (id == ID)
-  Future<Address> selectAddressByID(int ID){
+  Future<Address> selectAddressesByID(int ID){
     return (select(addresses)..where((t) => t.id.isValue(ID))).getSingle(); // only one element with specific ID
+  }
+
+  // SELECT * FROM ADDRESSES WHERE (id in IDs)
+  Future<List<String>> selectAddressCitiesByIDs(List<int> IDs) {
+    final query = selectOnly(addresses, distinct: true)..addColumns([addresses.city])..where(addresses.id.isIn(IDs));
+
+    return query.map((row) => row.read(addresses.city)!).get();
   }
 
   // SELECT COUNT(*) FROM ADDRESSES
