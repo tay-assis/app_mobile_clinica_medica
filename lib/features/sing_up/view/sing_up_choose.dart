@@ -1,14 +1,30 @@
 import 'package:app_mobile_clinica_medica/features/shared/widgets/back_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:app_mobile_clinica_medica/features/sing_up/controller/sing_up_controller.dart';
 import '../../login/view/login_page.dart';
 import '../../shared/widgets/curved_header.dart';
-import '../../shared/widgets/custom_button.dart'; // Botao cliente/usuario
+import '../../shared/widgets/custom_button.dart';
 import '../../shared/widgets/slide_transition.dart';
+import '../../shared/widgets/custom_text_field.dart';
+import '../../shared/widgets/field_label.dart';
 import '../view/sing_up_client.dart';
 import '../view/sing_up_clinic.dart';
 
-class SingUpChoose extends StatelessWidget {
+class SingUpChoose extends StatefulWidget {
   const SingUpChoose({super.key});
+
+  @override
+  State<SingUpChoose> createState() => _SingUpChooseState();
+}
+
+class _SingUpChooseState extends State<SingUpChoose> {
+  final SingUpController _controller = SingUpController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,29 +38,24 @@ class SingUpChoose extends StatelessWidget {
         height: height,
         child: Stack(
           children: [
-            // Footer espelhado
             Align(
               alignment: Alignment.bottomCenter,
               child: Transform(
                 alignment: Alignment.center,
                 transform:
                     Matrix4.identity()
-                      ..rotateX(3.1416) // Espelha verticalmente
-                      ..rotateY(3.1416), // Espelha horizontalmente
+                      ..rotateX(3.1416)
+                      ..rotateY(3.1416),
                 child: const CurvedHeader(),
               ),
             ),
-            // Conteúdo principal com logo e formulário
             SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Espaço para a curva do header
                     SizedBox(height: height * 0.045),
-
-                    // Seta para voltar
                     Align(
                       alignment: Alignment.centerRight * 0.7,
                       child: BackIcon(
@@ -52,16 +63,11 @@ class SingUpChoose extends StatelessWidget {
                           navigateWithSlideTransition(
                             context: context,
                             destination: const LoginPage(),
-                            beginOffset: const Offset(
-                              -1.0,
-                              0.0,
-                            ), // entrada da direita
+                            beginOffset: const Offset(-1.0, 0.0),
                           );
                         },
                       ),
                     ),
-
-                    // Texto 1
                     SizedBox(height: height * 0.03),
                     Text(
                       'Bem vindo ao\nDoctor On',
@@ -73,8 +79,6 @@ class SingUpChoose extends StatelessWidget {
                         height: 1.24,
                       ),
                     ),
-
-                    // Email
                     SizedBox(height: height * 0.1),
                     const FieldLabel(text: 'E-mail'),
                     Center(
@@ -84,8 +88,6 @@ class SingUpChoose extends StatelessWidget {
                         keyboardType: TextInputType.emailAddress,
                       ),
                     ),
-
-                    // Senha
                     SizedBox(height: height * 0.025),
                     const FieldLabel(text: 'Senha'),
                     Center(
@@ -95,53 +97,53 @@ class SingUpChoose extends StatelessWidget {
                         obscureText: true,
                       ),
                     ),
-
-                    // Texto 2
                     SizedBox(height: height * 0.02),
                     Text(
                       'Escolha o que você deseja cadastrar',
                       style: TextStyle(
-                        color: Colors.black.withValues(alpha: 153),
+                        color: Colors.black.withAlpha(153),
                         fontSize: 17,
                         fontFamily: 'Nunito',
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-
-                    // Botoes
                     SizedBox(height: height * 0.07),
                     Center(
                       child: Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment
-                                .center, // Alinha os botões no centro horizontal
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          //.
-                          //.
-                          //.
-                          // Botão de Cliente
                           CustomButton(
                             text: 'Paciente',
                             width: 170,
                             height: 50,
-                            onPressed: () {
-                              navigateWithSlideTransition(
-                                context: context,
-                                destination: const SingUpClient(),
-                                beginOffset: const Offset(
-                                  1.0,
-                                  0.0,
-                                ), // entrada da direita
-                              );
+                            onPressed: () async {
+                              final success = await _controller.newUser();
+                              if (success) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Cadastro realizado com sucesso!',
+                                    ),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+
+                                navigateWithSlideTransition(
+                                  context: context,
+                                  destination: const SingUpClient(),
+                                  beginOffset: const Offset(1.0, 0.0),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Erro ao realizar cadastro.'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
                             },
                           ),
-                          SizedBox(
-                            width: width * 0.014,
-                          ), // Espaçamento horizontal entre os botões
-                          //.
-                          //.
-                          //.
-                          // Botão de Clinica
+                          SizedBox(width: width * 0.014),
                           CustomButton(
                             text: 'Clinica',
                             width: 170,
@@ -150,25 +152,19 @@ class SingUpChoose extends StatelessWidget {
                               navigateWithSlideTransition(
                                 context: context,
                                 destination: const SingUpClinic(),
-                                beginOffset: const Offset(
-                                  1.0,
-                                  0.0,
-                                ), // entrada da direita
+                                beginOffset: const Offset(1.0, 0.0),
                               );
                             },
                           ),
                         ],
                       ),
                     ),
-
-                    // Imagem
                     SizedBox(height: height * 0.03),
                     Center(
                       child: Image.asset(
                         'lib/images/sing_up_choose_image.png',
                         width: width * 0.8,
                         height: height * 0.3,
-                        //fit: BoxFit.cover,
                       ),
                     ),
                   ],

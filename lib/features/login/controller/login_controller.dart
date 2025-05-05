@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../model/usuario_model.dart';
 import '../../../sqlite/database.dart';
 
 class LoginController {
@@ -25,8 +24,8 @@ class LoginController {
   }
 
   Future<bool> checkUser() async {
-    final email = emailController.text.trim(); 
-    final password = passwordController.text.trim(); 
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
 
     try {
       UserCredential cred = await _auth.signInWithEmailAndPassword(

@@ -1,4 +1,3 @@
-import 'package:app_mobile_clinica_medica/features/sing_up/model/signUp_model.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
