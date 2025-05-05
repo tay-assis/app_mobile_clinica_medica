@@ -6,6 +6,7 @@ import 'features/sing_up/view/sing_up_choose.dart';
 import 'features/sing_up/view/sing_up_client.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // GARANTIR QUE O FLUTTER INICIA ANTES DO FIREBASE
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
