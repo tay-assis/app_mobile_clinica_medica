@@ -32,15 +32,13 @@ class SingUpController {
   }
 
   Future<bool> newUser() async {
-    final signIn = SignupModel(
-      email: emailController.text.trim(),
-      senha: passwordController.text.trim(),
-    );
+    final email = emailController.text.trim();
+    final paswword = passwordController.text.trim();
 
     try {
       final UserCredential cred = await _auth.createUserWithEmailAndPassword(
-        email: signIn.email,
-        password: signIn.senha,
+        email: email,
+        password: password,
       );
 
       final firebaseUID =
