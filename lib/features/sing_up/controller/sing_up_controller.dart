@@ -33,7 +33,7 @@ class SingUpController {
 
   Future<bool> newUser() async {
     final email = emailController.text.trim();
-    final paswword = passwordController.text.trim();
+    final password = passwordController.text.trim();
 
     try {
       final UserCredential cred = await _auth.createUserWithEmailAndPassword(
@@ -48,7 +48,7 @@ class SingUpController {
 
       // inserting into drift
       await _db.userDao.insertUser(
-        signIn.email,
+        email,
         firebaseUID,
       ); // we dont store the password because firebase already does that encrypiting
 

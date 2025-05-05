@@ -25,19 +25,13 @@ class LoginController {
   }
 
   Future<bool> checkUser() async {
-    final userLogin = UserLogin(
-      email:
-          emailController.text
-              .trim(), // the usage of trim() is so spaces before and after the string will be removed
-      senha:
-          passwordController.text
-              .trim(), // the usage of trim() is so spaces before and after the string will be removed
-    );
+    final email = emailController.text.trim(); 
+    final password = passwordController.text.trim(); 
 
     try {
       UserCredential cred = await _auth.signInWithEmailAndPassword(
-        email: userLogin.email,
-        password: userLogin.senha,
+        email: email,
+        password: password,
       );
 
       final user = cred.user;

@@ -74,6 +74,28 @@ class SingUpChoose extends StatelessWidget {
                       ),
                     ),
 
+                    // Email
+                    SizedBox(height: height * 0.1),
+                    const FieldLabel(text: 'E-mail'),
+                    Center(
+                      child: CustomInputField(
+                        controller: _controller.emailController,
+                        hintText: 'Digite seu e-mail',
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                    ),
+
+                    // Senha
+                    SizedBox(height: height * 0.025),
+                    const FieldLabel(text: 'Senha'),
+                    Center(
+                      child: CustomInputField(
+                        controller: _controller.passwordController,
+                        hintText: 'Digite sua senha',
+                        obscureText: true,
+                      ),
+                    ),
+
                     // Texto 2
                     SizedBox(height: height * 0.02),
                     Text(
