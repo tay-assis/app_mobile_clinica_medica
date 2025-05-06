@@ -54,6 +54,8 @@ class SingUpController {
       return true;
     } on FirebaseAuthException catch (e) {
       print('Erro de cadastro: ${e.message}');
+    } catch (e) {
+      print('Erro banco de dados local : $e');
     }
 
     return false;
