@@ -148,12 +148,30 @@ class _SingUpChooseState extends State<SingUpChoose> {
                             text: 'Clinica',
                             width: 170,
                             height: 50,
-                            onPressed: () {
-                              navigateWithSlideTransition(
-                                context: context,
-                                destination: const SingUpClinic(),
-                                beginOffset: const Offset(1.0, 0.0),
-                              );
+                            onPressed: () async {
+                              final success = await _controller.newUser();
+                              if (success) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Cadastro realizado com sucesso!',
+                                    ),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                                navigateWithSlideTransition(
+                                  context: context,
+                                  destination: const SingUpClinic(),
+                                  beginOffset: const Offset(1.0, 0.0),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Erro ao realizar cadastro.'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ],

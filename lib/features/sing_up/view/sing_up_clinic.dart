@@ -97,41 +97,13 @@ class _SingUpClientState extends State<SingUpClinic> {
             // Nome
             Align(
               alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Nome'),
+              child: const FieldLabel(text: 'Nome Clínica'),
             ),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.nomeController,
-                hintText: 'Digite seu nome completo',
+                hintText: 'Digite o nome da Clínica',
                 keyboardType: TextInputType.name,
-              ),
-            ),
-
-            // CNPJ
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'CNPJ'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.cnpjController,
-                hintText: 'Digite seu CNPJ',
-                keyboardType: TextInputType.number,
-              ),
-            ),
-
-            // Senha
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Senha'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.senhaController,
-                hintText: 'Digite sua senha',
-                keyboardType: TextInputType.visiblePassword,
               ),
             ),
 
@@ -144,53 +116,64 @@ class _SingUpClientState extends State<SingUpClinic> {
             Center(
               child: SingUpClientRegister(
                 controller: _controller.enderecoController,
-                hintText: 'Digite seu endereço',
+                hintText: 'Digite o endereço',
                 keyboardType: TextInputType.name,
               ),
             ),
 
-            // Email
             SizedBox(height: height * 0.03),
             Align(
               alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Email'),
+              child: const FieldLabel(text: 'Bairro'),
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.emailController,
-                hintText: 'Digite seu e-mail',
-                keyboardType: TextInputType.emailAddress,
-              ),
-            ),
-
-            // Telefone
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Telefone'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.telefoneController,
-                hintText: 'Digite seu telefone',
-                keyboardType: TextInputType.number,
-              ),
-            ),
-
-            // Convênio
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.22,
-              child: const FieldLabel(text: 'Convênio'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.convenioController,
-                hintText: 'Digite seu Convênio',
+                controller: _controller.enderecoController,
+                hintText: 'Digite o bairro',
                 keyboardType: TextInputType.name,
               ),
             ),
 
+            SizedBox(height: height * 0.03),
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'Cidade'),
+            ),
+            Center(
+              child: SingUpClientRegister(
+                controller: _controller.enderecoController,
+                hintText: 'Digite a cidade',
+                keyboardType: TextInputType.name,
+              ),
+            ),
+
+            SizedBox(height: height * 0.03),
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'Estado'),
+            ),
+            Center(
+              child: SingUpClientRegister(
+                controller: _controller.enderecoController,
+                hintText: 'Digite o estado',
+                keyboardType: TextInputType.name,
+              ),
+            ),
+
+            SizedBox(height: height * 0.03),
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'CEP'),
+            ),
+            Center(
+              child: SingUpClientRegister(
+                controller: _controller.enderecoController,
+                hintText: 'Digite o CEP',
+                keyboardType: TextInputType.name,
+              ),
+            ),
+
+            // Imagem URL
             SizedBox(height: height * 0.05),
             Align(
               alignment: Alignment.centerRight,

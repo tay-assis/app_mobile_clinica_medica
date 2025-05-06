@@ -2,8 +2,6 @@ import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'features/login/view/login_page.dart';
-import 'features/sing_up/view/sing_up_choose.dart';
-import 'features/sing_up/view/sing_up_client.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // GARANTIR QUE O FLUTTER INICIA ANTES DO FIREBASE
