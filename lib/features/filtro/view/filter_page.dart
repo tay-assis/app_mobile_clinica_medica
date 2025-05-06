@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:app_mobile_clinica_medica/features/filtro/controller/filter_page_controller.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
-import 'package:flutter/material.dart';
+
 import 'widgets/custom_autocomplete_input.dart';
 import 'widgets/custom_dropdown.dart';
 
@@ -13,53 +17,45 @@ class FilterPage extends StatefulWidget {
 
 class _FilterPageState extends State<FilterPage> {
   String? selectedSpecialty;
-  String? selectedClinic = '';
-  String? selectedLocation = '';
-  String? selectedName = '';
+  String? selectedClinic;
+  String? selectedLocation;
+  String? selectedName;
 
-  final List<String> specialties = [
-    'Cardiologista',
-    'Urologista',
-    'Clínico Geral',
-    'Dermatologista',
-    'Ortopedista',
-  ];
-
-  final List<String> doctors = [
-    'Dr. Ana Souza',
-    'Dr. Pedro Lima',
-    'Dr. Mariana Torres',
-    'Dr. Felipe Martins',
-    'Dr. Camila Rocha',
-  ];
-
-  final List<String> clinics = [
-    'Clínica São João',
-    'Clínica Bem Estar',
-    'Centro Médico Saúde',
-    'Hospital Vida',
-    'Clínica Popular',
-  ];
-
-  final List<String> locations = [
-    'São Paulo',
-    'Rio de Janeiro',
-    'Belo Horizonte',
-    'Curitiba',
-    'Salvador',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // Inicia carregamento após primeiro frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FilterNameController>().loadDoctorsAndClinics();
+    });
+  }
 
   void clearFilters() {
     setState(() {
       selectedSpecialty = null;
-      selectedClinic = '';
-      selectedLocation = '';
-      selectedName = '';
+      selectedClinic = null;
+      selectedLocation = null;
+      selectedName = null;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<FilterNameController>();
+
+    if (controller.loading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // Quando carregado, controller.names possui a lista de nomes que se pede
+    final doctorNames = controller.names; // não tenho certeza se a lista local é necessária
+    final doctorSpecialties = controller.specialties;
+    final clinicNames = controller.clinicNames;
+    final clinicAddresses = controller.addresses;
+    // doctorNames usado na linha 104
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -67,67 +63,57 @@ class _FilterPageState extends State<FilterPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const CustomHeader(
-              // Header with close button
               isCloseButton: true,
               iconColor: Color(0xFF0089FF),
             ),
             const SizedBox(height: 20),
+
             CustomAutocompleteInput(
-              // Autocomplete input for location
               title: 'Localização',
               label: 'a localização',
-              options: locations,
+              options: clinicAddresses,
               selectedValue: selectedLocation,
-              onChanged: (value) {
-                setState(() => selectedLocation = value);
-              },
+              onChanged: (v) => setState(() => selectedLocation = v),
             ),
             const SizedBox(height: 30),
+
             CustomAutocompleteInput(
-              // Autocomplete input for doctor name
               title: 'Nome',
               label: 'o nome do Médico',
-              options: doctors,
+              options: doctorNames,
               selectedValue: selectedName,
-              onChanged: (value) {
-                setState(() => selectedName = value);
-              },
+              onChanged: (v) => setState(() => selectedName = v),
             ),
             const SizedBox(height: 30),
+
             CustomDropdown(
-              // Dropdown for specialty selection
               title: 'Especialidade',
               label: 'a especialidade do Médico',
               value: selectedSpecialty,
-              items: specialties,
-              onChanged: (value) {
-                setState(() => selectedSpecialty = value);
-              },
+              items: doctorSpecialties,
+              onChanged: (v) => setState(() => selectedSpecialty = v),
             ),
             const SizedBox(height: 30),
+
             CustomAutocompleteInput(
-              // Autocomplete input for clinic name
               title: 'Clínica',
               label: 'a clínica do Médico',
-              options: clinics,
+              options: clinicNames,
               selectedValue: selectedClinic,
-              onChanged: (value) {
-                setState(() => selectedClinic = value);
-              },
+              onChanged: (v) => setState(() => selectedClinic = v),
             ),
             const SizedBox(height: 40),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CustomButton(
-                  // Button to clear filters
                   text: 'Limpar',
                   width: 149,
                   height: 51,
                   onPressed: clearFilters,
                 ),
                 CustomButton(
-                  // Button to apply filters
                   text: 'Aplicar filtros',
                   width: 149,
                   height: 51,

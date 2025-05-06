@@ -1,8 +1,9 @@
+import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'dart:io';
-
-// tabelas:
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+// tables:
 import 'models/address.dart';
 import 'models/clinic.dart';
 import 'models/doctor.dart';
@@ -46,13 +47,28 @@ part 'database.g.dart';
     UserDao,
   ],
 )
-// persistent storage
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
+  //Storing info on mobile
+  static LazyDatabase _openConnection() {
+    return LazyDatabase(() async {
+      // Obtain a writable directory on the device
+      final docsDir = await getApplicationDocumentsDirectory();
+      final dbFolder = Directory(p.join(docsDir.path, 'sqlite'));
+      if (!await dbFolder.exists()) {
+        await dbFolder.create(recursive: true);
+      }
 
+      final file = File(p.join(dbFolder.path, 'app_flutter.sqlite'));
+      return NativeDatabase(file);
+    });
+  }
+}
+
+/* Storing info on computer
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
       final dbFolder = Directory('./lib/sqlite');
@@ -67,3 +83,5 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 }
+
+*/
