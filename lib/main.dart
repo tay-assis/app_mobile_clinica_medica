@@ -2,11 +2,33 @@ import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'features/login/view/login_page.dart';
+//import 'features/sing_up/view/sing_up_choose.dart';
+//import 'features/sing_up/view/sing_up_client.dart';
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+import 'package:provider/provider.dart';
+import 'sqlite/populate.dart';
 
-void main() async {
+// controllers
+import 'features/filtro/controller/filter_page_controller.dart';
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // GARANTIR QUE O FLUTTER INICIA ANTES DO FIREBASE
   await Firebase.initializeApp();
-  runApp(const MyApp());
+
+  // Seed and obtain your DB in one call
+  final db = await DatabaseSeeder.seed();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<AppDatabase>.value(value: db),
+        ChangeNotifierProvider(
+          create: (_) => FilterNameController(db)..loadDoctorsAndClinics(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
