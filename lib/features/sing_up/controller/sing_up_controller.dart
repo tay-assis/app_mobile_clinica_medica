@@ -7,16 +7,23 @@ class SingUpController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // CLIENT
-  final TextEditingController nomeController = TextEditingController();
-  final TextEditingController cpfController = TextEditingController();
-  final TextEditingController senhaController = TextEditingController();
+  // PATIENT
+  final TextEditingController nomePController = TextEditingController();
   final TextEditingController convenioController = TextEditingController();
-  final TextEditingController enderecoController = TextEditingController();
+  final TextEditingController enderecoPController = TextEditingController();
+  final TextEditingController bairroPController = TextEditingController();
+  final TextEditingController cidadePController = TextEditingController();
+  final TextEditingController estadoPController = TextEditingController();
+  final TextEditingController cepPController = TextEditingController();
   final TextEditingController telefoneController = TextEditingController();
 
   // CLINIC
-  final TextEditingController cnpjController = TextEditingController();
+  final TextEditingController nomeCController = TextEditingController();
+  final TextEditingController enderecoCController = TextEditingController();
+  final TextEditingController bairroCController = TextEditingController();
+  final TextEditingController cidadeCController = TextEditingController();
+  final TextEditingController estadoCController = TextEditingController();
+  final TextEditingController cepCController = TextEditingController();
 
   //FIREBASE
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -59,5 +66,24 @@ class SingUpController {
     }
 
     return false;
+  }
+
+  Future<bool> newPatient() async {
+    final name = nomePController.text.trim();
+    final insurance = convenioController.text.trim(); // not text because we want the patient to select which insurance 
+    final street = enderecoPController.text.trim();
+    final neighborhood = bairroPController.text.trim();
+    final city = cidadePController.text.trim();
+    final state = estadoPController.text.trim();
+    final zipCode = cepPController.text.trim();
+    final phone = telefoneController.text.trim();
+
+    //try{
+    //  await db.PatientDao.insertPatient(
+//
+    //  );
+    //} catch(e){
+    //  print('Erro banco de dados local: $e');
+    //}
   }
 }

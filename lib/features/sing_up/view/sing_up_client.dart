@@ -106,35 +106,7 @@ class _SingUpClientState extends State<SingUpClient> {
                 keyboardType: TextInputType.name,
               ),
             ),
-
-            // CPF not used
-            //SizedBox(height: height * 0.03),
-            //Align(
-            //  alignment: Alignment.centerLeft * 1.2,
-            //  child: const FieldLabel(text: 'CPF'),
-            //),
-            //Center(
-            //  child: SingUpClientRegister(
-            //    controller: _controller.cpfController,
-            //    hintText: 'Digite seu CPF',
-            //    keyboardType: TextInputType.number,
-            //  ),
-            //),
-
-            // Senha already done in previous
-            //SizedBox(height: height * 0.03),
-            //Align(
-            //  alignment: Alignment.centerLeft * 1.2,
-            //  child: const FieldLabel(text: 'Senha'),
-            //),
-            //Center(
-            //  child: SingUpClientRegister(
-            //    controller: _controller.senhaController,
-            //    hintText: 'Digite sua senha',
-            //    keyboardType: TextInputType.visiblePassword,
-            //  ),
-            //),
-
+            
             // Telefone
             SizedBox(height: height * 0.03),
             Align(
