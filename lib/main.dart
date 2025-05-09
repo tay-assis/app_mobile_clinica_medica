@@ -8,8 +8,7 @@ import 'package:provider/provider.dart';
 import 'sqlite/populate.dart';
 
 // controllers
-import 'features/filtro/controller/filter_page_controller.dart';
-
+import 'features/filter/controller/filter_page_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,6 +1,6 @@
 import 'package:app_mobile_clinica_medica/features/dashboard/view/widgets/circle_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:app_mobile_clinica_medica/features/filtro/view/filter_page.dart';
+import 'package:app_mobile_clinica_medica/features/filter/view/filter_page.dart';
 
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
