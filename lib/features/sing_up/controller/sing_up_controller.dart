@@ -15,7 +15,7 @@ class SingUpController {
   final TextEditingController cidadePController = TextEditingController();
   final TextEditingController estadoPController = TextEditingController();
   final TextEditingController cepPController = TextEditingController();
-  final TextEditingController telefoneController = TextEditingController();
+  //final TextEditingController telefoneController = TextEditingController();
 
   // CLINIC
   final TextEditingController nomeCController = TextEditingController();
@@ -30,11 +30,30 @@ class SingUpController {
   final _db = AppDatabase();
 
   void dispose() {
-    nomeController.dispose();
-    cpfController.dispose();
-    senhaController.dispose();
+    // free controllers from user
     emailController.dispose();
+    passwordController.dispose();
+
+    // free controllers from patients
+    nomePController.dispose();
     convenioController.dispose();
+    enderecoPController.dispose();
+    // numberPController.dispose();
+    bairroPController.dispose();
+    cidadePController.dispose();
+    estadoPController.dispose();
+    cepPController.dispose();
+    // no use for telefone until now
+    //telefoneController.dispose();
+
+    // free controllers from clinics
+    nomeCController.dispose();
+    enderecoCController.dispose();
+    // numberCController.dispose();
+    bairroCController.dispose();
+    cidadeCController.dispose();
+    estadoCController.dispose();
+    cepCController.dispose();
   }
 
   Future<bool> newUser() async {
@@ -76,14 +95,22 @@ class SingUpController {
     final city = cidadePController.text.trim();
     final state = estadoPController.text.trim();
     final zipCode = cepPController.text.trim();
-    final phone = telefoneController.text.trim();
+    // final phone = telefoneController.text.trim(); we will delete telefone from database, no use
 
-    //try{
-    //  await db.PatientDao.insertPatient(
-//
-    //  );
-    //} catch(e){
-    //  print('Erro banco de dados local: $e');
-    //}
+    try{
+      await db.AddressDao.insertAddress(
+        street : street,
+        neighborhood: neighborhood,
+        city: city,
+        state : state,
+        zipCode : zipCode,
+      );
+      await db.PatientDao.insertPatient(
+
+      );
+    } catch(e){
+      print('Erro banco de dados local: $e');
+    }
+    return false;
   }
 }

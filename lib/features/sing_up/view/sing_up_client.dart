@@ -101,25 +101,25 @@ class _SingUpClientState extends State<SingUpClient> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.nomeController,
+                controller: _controller.nomePController,
                 hintText: 'Digite seu nome completo',
                 keyboardType: TextInputType.name,
               ),
             ),
             
             // Telefone
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Telefone'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.telefoneController,
-                hintText: 'Digite seu telefone',
-                keyboardType: TextInputType.number,
-              ),
-            ),
+            //SizedBox(height: height * 0.03),
+            //Align(
+              //alignment: Alignment.centerLeft * 1.2,
+              //child: const FieldLabel(text: 'Telefone'),
+            //),
+            //Center(
+              //child: SingUpClientRegister(
+               // controller: _controller.telefoneController,
+                //hintText: 'Digite seu telefone',
+                //keyboardType: TextInputType.number,
+              //),
+            //),
 
             // Convênio
             SizedBox(height: height * 0.03),
@@ -143,7 +143,7 @@ class _SingUpClientState extends State<SingUpClient> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoController,
+                controller: _controller.enderecoPController,
                 hintText: 'Digite o endereço',
                 keyboardType: TextInputType.name,
               ),
@@ -156,7 +156,7 @@ class _SingUpClientState extends State<SingUpClient> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoController,
+                controller: _controller.bairroPController,
                 hintText: 'Digite o bairro',
                 keyboardType: TextInputType.name,
               ),
@@ -169,7 +169,7 @@ class _SingUpClientState extends State<SingUpClient> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoController,
+                controller: _controller.cidadePController,
                 hintText: 'Digite a cidade',
                 keyboardType: TextInputType.name,
               ),
@@ -182,7 +182,7 @@ class _SingUpClientState extends State<SingUpClient> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoController,
+                controller: _controller.estadoPController,
                 hintText: 'Digite o estado',
                 keyboardType: TextInputType.name,
               ),
@@ -195,7 +195,7 @@ class _SingUpClientState extends State<SingUpClient> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoController,
+                controller: _controller.cepPController,
                 hintText: 'Digite o CEP',
                 keyboardType: TextInputType.name,
               ),

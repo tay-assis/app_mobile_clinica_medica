@@ -101,7 +101,7 @@ class _SingUpClientState extends State<SingUpClinic> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.nomeController,
+                controller: _controller.nomeCController,
                 hintText: 'Digite o nome da Clínica',
                 keyboardType: TextInputType.name,
               ),
@@ -115,7 +115,7 @@ class _SingUpClientState extends State<SingUpClinic> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoController,
+                controller: _controller.enderecoCController,
                 hintText: 'Digite o endereço',
                 keyboardType: TextInputType.name,
               ),
@@ -128,7 +128,7 @@ class _SingUpClientState extends State<SingUpClinic> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoController,
+                controller: _controller.bairroCController,
                 hintText: 'Digite o bairro',
                 keyboardType: TextInputType.name,
               ),
@@ -141,7 +141,7 @@ class _SingUpClientState extends State<SingUpClinic> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoController,
+                controller: _controller.cidadeCController,
                 hintText: 'Digite a cidade',
                 keyboardType: TextInputType.name,
               ),
@@ -154,7 +154,7 @@ class _SingUpClientState extends State<SingUpClinic> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoController,
+                controller: _controller.estadoCController,
                 hintText: 'Digite o estado',
                 keyboardType: TextInputType.name,
               ),
@@ -167,7 +167,7 @@ class _SingUpClientState extends State<SingUpClinic> {
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoController,
+                controller: _controller.cepCController,
                 hintText: 'Digite o CEP',
                 keyboardType: TextInputType.name,
               ),
