@@ -1,4 +1,5 @@
-import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
+//import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
+import 'package:app_mobile_clinica_medica/features/results/view/filter_result.dart';
 import 'package:flutter/material.dart';
 //import 'features/login/view/login_page.dart';
 //import 'features/sing_up/view/sing_up_choose.dart';
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       //home: const LoginPage(), // <-- Aqui você define a tela que vai abrir
-      home: DashboardUser(), // <-- Aqui você define a tela que vai abrir
+      home: ResultFilter(), // <-- Aqui você define a tela que vai abrir
     );
   }
 }
