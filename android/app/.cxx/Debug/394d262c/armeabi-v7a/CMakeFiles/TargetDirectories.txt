@@ -1,0 +1,2 @@
+/Users/luizalopes/app_mobile_clinica_medica/android/app/.cxx/Debug/394d262c/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/luizalopes/app_mobile_clinica_medica/android/app/.cxx/Debug/394d262c/armeabi-v7a/CMakeFiles/rebuild_cache.dir

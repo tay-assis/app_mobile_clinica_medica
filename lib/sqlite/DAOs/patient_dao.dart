@@ -25,7 +25,8 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
   // SELECT * FROM PATIENTS WHERE(name == NAME)
   Future<String> selectInsuranceByPatientName(String NAME) async {
     // gets the insurance ID
-    Patient vari = await (select(patients)..where((t) => t.name.equals(NAME))).getSingle();
+    Patient vari =
+        await (select(patients)..where((t) => t.name.equals(NAME))).getSingle();
 
     // gets the insurance row based on ID
     Insurance ins = await db.insuranceDao.selectInsuranceByID(vari.insuranceId);
@@ -43,18 +44,18 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
 
   // INSERT INTO PATIENTS (...) VALUES(...)
   Future<void> insertPatient(
+    int USERID,
     int INSURANCEID,
     int ADDRESSID,
     String NAME,
-    String EMAIL,
     int PHONE,
   ) async {
     into(patients).insert(
       PatientsCompanion(
+        userId: Value(USERID),
         insuranceId: Value(INSURANCEID),
         addressId: Value(ADDRESSID),
         name: Value(NAME),
-        email: Value(EMAIL),
         phone: Value(PHONE),
       ),
     );
@@ -67,17 +68,15 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
     int INSURANCEID,
     int ADDRESSID,
     String NAME,
-    String EMAIL,
     int PHONE,
     int targets,
   ) async {
     final companion = PatientsCompanion(
       insuranceId:
-          ((targets & 0x10000) != 0) ? Value(INSURANCEID) : Value.absent(),
-      addressId: ((targets & 0x01000) != 0) ? Value(ADDRESSID) : Value.absent(),
-      name: ((targets & 0x00100) != 0) ? Value(NAME) : Value.absent(),
-      email: ((targets & 0x00010) != 0) ? Value(EMAIL) : Value.absent(),
-      phone: ((targets & 0x00001) != 0) ? Value(PHONE) : Value.absent(),
+          ((targets & 0x1000) != 0) ? Value(INSURANCEID) : Value.absent(),
+      addressId: ((targets & 0x0100) != 0) ? Value(ADDRESSID) : Value.absent(),
+      name: ((targets & 0x0010) != 0) ? Value(NAME) : Value.absent(),
+      phone: ((targets & 0x0001) != 0) ? Value(PHONE) : Value.absent(),
     );
 
     // single update

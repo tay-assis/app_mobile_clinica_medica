@@ -4,6 +4,7 @@ part of 'patient_dao.dart';
 
 // ignore_for_file: type=lint
 mixin _$PatientDaoMixin on DatabaseAccessor<AppDatabase> {
+  $UsersTable get users => attachedDatabase.users;
   $InsurancesTable get insurances => attachedDatabase.insurances;
   $AddressesTable get addresses => attachedDatabase.addresses;
   $PatientsTable get patients => attachedDatabase.patients;
