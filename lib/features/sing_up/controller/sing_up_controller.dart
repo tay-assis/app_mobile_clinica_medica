@@ -89,7 +89,9 @@ class SingUpController {
 
   Future<bool> newPatient() async {
     final name = nomePController.text.trim();
-    final insurance = convenioController.text.trim(); // not text because we want the patient to select which insurance 
+    final insurance =
+        convenioController.text
+            .trim(); // not text because we want the patient to select which insurance
     final street = enderecoPController.text.trim();
     final neighborhood = bairroPController.text.trim();
     final city = cidadePController.text.trim();
@@ -97,20 +99,18 @@ class SingUpController {
     final zipCode = cepPController.text.trim();
     // final phone = telefoneController.text.trim(); we will delete telefone from database, no use
 
-    try{
-      await db.AddressDao.insertAddress(
-        street : street,
-        neighborhood: neighborhood,
-        city: city,
-        state : state,
-        zipCode : zipCode,
-      );
-      await db.PatientDao.insertPatient(
-
-      );
-    } catch(e){
-      print('Erro banco de dados local: $e');
-    }
+    //try {
+    //await _db.addressDao.insertAddress(
+    //street: street,
+    //  neighborhood: neighborhood,
+    //  city: city,
+    //  state: state,
+    //  zipCode: zipCode,
+    //);
+    //  await _db.patientDao.insertPatient();
+    //} catch (e) {
+    //  print('Erro banco de dados local: $e');
+    //}
     return false;
   }
 }
