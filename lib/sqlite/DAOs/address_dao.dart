@@ -51,6 +51,19 @@ class AddressDao extends DatabaseAccessor<AppDatabase> with _$AddressDaoMixin {
     return;
   }
 
+  // INSERT INTO ADDRESSES (...) VALUES(), return ID
+  Future<int> returnAddress(String STREET, String NEIGHBORHOOD, String CITY, String STATE, int ZIPCODE) async {
+    final int insertedId = await into(addresses).insert(AddressesCompanion(
+      street: Value(STREET),
+      neighborhood: Value(NEIGHBORHOOD),
+      city: Value(CITY),
+      state: Value(STATE),
+      zipCode: Value(ZIPCODE),
+    ));
+
+    return insertedId;
+  }
+
   // UPDATE ADDRESSES street=STREET, ... WHERE (id ==ID)
   Future<void> modifyAddress(int ID, String STREET, String NEIGHBORHOOD, String CITY, String STATE, int ZIPCODE, int targets) async{
     // finds the element with id==ID
