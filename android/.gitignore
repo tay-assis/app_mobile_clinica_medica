@@ -6,11 +6,17 @@ local.properties
 /captures/
 /.cxx/
 
+# Ignorar build nativo do Android
+.cxx/
+*.bin
+index-*.*
+
+
 # MANTER os arquivos abaixo para permitir build após o clone
 # NÃO ignore gradlew e gradle-wrapper
-# gradlew
-# gradlew.bat
-# gradle-wrapper.jar
+gradlew
+gradlew.bat
+gradle-wrapper.jar
 
 # Itens relacionados à segurança (corretamente ignorados)
 key.properties

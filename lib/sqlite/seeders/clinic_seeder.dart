@@ -11,6 +11,7 @@ class ClinicSeeder {
         2,
         1,
         'Princeton-Plainsboro Teaching Clinic',
+        1234567,
         'https://upload.wikimedia.org/wikipedia/commons/8/8b/Princeton_Frist_Campus_Center_back.jpg',
       );
 
@@ -18,6 +19,7 @@ class ClinicSeeder {
         3,
         2,
         'Grey Sloan Memorial Clinic',
+        3124567,
         'https://static.wikia.nocookie.net/greysanatomy/images/2/2e/Grey%2BSloan-Memorial-Entrance.png/revision/latest?cb=20151012205425',
       );
 
@@ -25,6 +27,7 @@ class ClinicSeeder {
         4,
         3,
         'Seaside Health & Wellness',
+        4321567,
         'https://static.wikia.nocookie.net/greysanatomy/images/8/8c/SeasideEntrance.png/revision/latest?cb=20200831200324',
       );
     }
