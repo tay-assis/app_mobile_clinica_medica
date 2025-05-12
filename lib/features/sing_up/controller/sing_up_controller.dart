@@ -96,21 +96,25 @@ class SingUpController {
     final neighborhood = bairroPController.text.trim();
     final city = cidadePController.text.trim();
     final state = estadoPController.text.trim();
-    final zipCode = cepPController.text.trim();
+    final zipCode = int.parse(cepCController.text.trim());
     // final phone = telefoneController.text.trim(); we will delete telefone from database, no use
 
-    //try {
-    //await _db.addressDao.insertAddress(
-    //street: street,
-    //  neighborhood: neighborhood,
-    //  city: city,
-    //  state: state,
-    //  zipCode: zipCode,
-    //);
-    //  await _db.patientDao.insertPatient();
-    //} catch (e) {
-    //  print('Erro banco de dados local: $e');
-    //}
+    try {
+      await _db.addressDao.insertAddress(
+        street,
+        neighborhood,
+        city,
+        state,
+        zipCode,
+      );
+      //await _db.patientDao.insertPatient(
+      //  UID,
+      //  insurance_id,
+      //  address_id
+      //);
+    } catch (e) {
+      print('Erro banco de dados local: $e');
+    }
     return false;
   }
 }
