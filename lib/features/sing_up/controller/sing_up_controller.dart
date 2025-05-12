@@ -56,7 +56,7 @@ class SingUpController {
     cepCController.dispose();
   }
 
-  Future<bool> newUser() async {
+  Future<bool> newUser(String type) async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
@@ -75,6 +75,7 @@ class SingUpController {
       await _db.userDao.insertUser(
         email,
         firebaseUID,
+        type,
       ); // we dont store the password because firebase already does that encrypiting
 
       return true;
@@ -87,26 +88,38 @@ class SingUpController {
     return false;
   }
 
-  Future<bool> newPatient() async {
-    final name = nomePController.text.trim();
-    final insurance =
-        convenioController.text
-            .trim(); // not text because we want the patient to select which insurance
+  Future<int> newAddress() async {
     final street = enderecoPController.text.trim();
     final neighborhood = bairroPController.text.trim();
     final city = cidadePController.text.trim();
     final state = estadoPController.text.trim();
     final zipCode = int.parse(cepCController.text.trim());
-    // final phone = telefoneController.text.trim(); we will delete telefone from database, no use
 
     try {
-      await _db.addressDao.insertAddress(
+      final address_id = await _db.addressDao.returnAddress(
         street,
         neighborhood,
         city,
         state,
         zipCode,
       );
+    } catch (e) {
+      print('Erro ao adicionar endereço: $e');
+    }
+
+    return -1; // if error returns -1 as an inexistent ID -> check in patient and in clinic that if address_id = -1 error
+  }
+
+  //Future<bool>
+
+  Future<bool> newPatient() async {
+    final name = nomePController.text.trim();
+    final insurance =
+        convenioController.text
+            .trim(); // not text because we want the patient to select which insurance
+
+    try {
+      //final insurance_id = await _db.insuranceDao.
       //await _db.patientDao.insertPatient(USERID, INSURANCEID, ADDRESSID, name, PHONE)
     } catch (e) {
       print('Erro banco de dados local: $e');

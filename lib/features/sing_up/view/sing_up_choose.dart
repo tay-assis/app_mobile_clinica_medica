@@ -117,7 +117,9 @@ class _SingUpChooseState extends State<SingUpChoose> {
                             width: 170,
                             height: 50,
                             onPressed: () async {
-                              final success = await _controller.newUser();
+                              final success = await _controller.newUser(
+                                'PATIENT',
+                              );
                               if (success) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -149,7 +151,9 @@ class _SingUpChooseState extends State<SingUpChoose> {
                             width: 170,
                             height: 50,
                             onPressed: () async {
-                              final success = await _controller.newUser();
+                              final success = await _controller.newUser(
+                                'CLINIC',
+                              );
                               if (success) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
