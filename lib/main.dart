@@ -1,3 +1,5 @@
+//import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
+//import 'package:app_mobile_clinica_medica/features/results/view/filter_result.dart';
 import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +11,12 @@ import 'package:provider/provider.dart';
 import 'sqlite/populate.dart';
 
 // controllers
+
+//import 'features/filter/controller/filter_page_controller.dart';
+
 //coment to commit
 import 'features/filtro/controller/filter_page_controller.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // GARANTIR QUE O FLUTTER INICIA ANTES DO FIREBASE
@@ -40,7 +46,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Meu App',
       debugShowCheckedModeBanner: false,
-
+      //home: ResultFilter(), // <-- Aqui você define a tela que vai abrir
       home: const LoginPage(), // <-- Aqui você define a tela que vai abrir
       //home: DashboardUser(), // <-- Aqui você define a tela que vai abrir
     );
