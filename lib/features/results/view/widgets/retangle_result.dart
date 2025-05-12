@@ -37,11 +37,11 @@ class ResultRetangle extends StatelessWidget {
               const SizedBox(
                 width: double.infinity,
                 child: Text(
-                  'Resultados de Consulta',
+                  'Encontrando o seu médico',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: 25,
                     fontFamily: 'Nunito',
                     fontWeight: FontWeight.w700,
                   ),
