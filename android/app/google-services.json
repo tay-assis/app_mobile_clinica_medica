@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1017370267208",
+    "project_id": "doctoron-46d68",
+    "storage_bucket": "doctoron-46d68.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017370267208:android:170715f08dd86420e6927d",
+        "android_client_info": {
+          "package_name": "com.example.app_mobile_clinica_medica"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVSrBXwgFmR3vxEP0EOHYxZ6dS1nnyAmc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

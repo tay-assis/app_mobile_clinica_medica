@@ -21,8 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    _controller.emailController.dispose();
-    _controller.passwordController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -123,10 +122,19 @@ class _LoginPageState extends State<LoginPage> {
                         text: 'Login',
                         width: 149,
                         height: 51,
-                        onPressed: () {
+                        onPressed: () async {
+                          final success = await _controller.checkUser();
+                          //Chmando o metodo
+                          //_controller.newUser();
+                          //
+                          //Mensagem de login
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: const Text('Login'),
+                              content: Text(
+                                success
+                                    ? 'Login realizado com sucesso'
+                                    : 'Usuário ou senha inválidos',
+                              ),
                               duration: const Duration(seconds: 2),
                               behavior: SnackBarBehavior.floating,
                               backgroundColor: Colors.blueAccent,
