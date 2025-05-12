@@ -11,5 +11,5 @@ class Patients extends Table {
   IntColumn get addressId => integer().references(Addresses, #id)();
   TextColumn get name => text().withLength(min: 1, max: 50)();
   //TextColumn get email => text().withLength(min: 1, max: 50)();
-  IntColumn get phone => integer().unique()();
+  //IntColumn get phone => integer().unique()();
 }

@@ -107,7 +107,7 @@ class SingUpController {
         state,
         zipCode,
       );
-
+      //await _db.patientDao.insertPatient(USERID, INSURANCEID, ADDRESSID, name, PHONE)
     } catch (e) {
       print('Erro banco de dados local: $e');
     }
