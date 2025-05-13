@@ -11,12 +11,7 @@ import 'package:provider/provider.dart';
 import 'sqlite/populate.dart';
 
 // controllers
-
-//import 'features/filter/controller/filter_page_controller.dart';
-
-//coment to commit
-import 'features/filtro/controller/filter_page_controller.dart';
-
+import 'package:app_mobile_clinica_medica/features/filter/controller/filter_page_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // GARANTIR QUE O FLUTTER INICIA ANTES DO FIREBASE
