@@ -103,6 +103,7 @@ class SingUpController {
         state,
         zipCode,
       );
+      return address_id;
     } catch (e) {
       print('Erro ao adicionar endereço: $e');
     }
@@ -110,17 +111,37 @@ class SingUpController {
     return -1; // if error returns -1 as an inexistent ID -> check in patient and in clinic that if address_id = -1 error
   }
 
-  //Future<bool>
+  Future<int> chooseInsurance(
+    bool isOther,
+    bool isSelected,
+    String valueSelected,
+  ) async {
+    final insuranceName = convenioController.text.trim();
+    if (isSelected) {
+      final insuranceId = await _db.insuranceDao.returnInsurance(valueSelected);
+      return insuranceId;
+    } else if (isOther) {
+      final insuranceId = await _db.insuranceDao.insertAndReturnInsurance(
+        insuranceName,
+      );
+      return insuranceId;
+    }
+    return -1; // if error returns -1 as an inexistent ID -> check in patient and in clinic that if address_id = -1 error
+  }
 
-  Future<bool> newPatient() async {
+  Future<bool> newPatient(
+    bool isOther,
+    bool isSelected,
+    String valueSelected,
+  ) async {
     final name = nomePController.text.trim();
-    final insurance =
-        convenioController.text
-            .trim(); // not text because we want the patient to select which insurance
-
     try {
-      //final insurance_id = await _db.insuranceDao.
-      //await _db.patientDao.insertPatient(USERID, INSURANCEID, ADDRESSID, name, PHONE)
+      //await _db.patientDao.insertPatient(
+      //  UID,
+      //  await chooseInsurance(isOther, isSelected, valueSelected),
+      //  await newAddress(),
+      //  name,
+      //);
     } catch (e) {
       print('Erro banco de dados local: $e');
     }
