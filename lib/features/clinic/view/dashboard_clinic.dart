@@ -1,10 +1,11 @@
-import 'package:app_mobile_clinica_medica/features/dashboard/view/widgets/main_rectangle.dart';
+import 'package:app_mobile_clinica_medica/features/clinic/widgets/rectangle.dart';
+import 'package:app_mobile_clinica_medica/features/login/view/login_page.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/user_header.dart';
 import 'package:flutter/material.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
 
-class DashboardUser extends StatelessWidget {
-  const DashboardUser({super.key});
+class DashboardClinic extends StatelessWidget {
+  const DashboardClinic({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +20,12 @@ class DashboardUser extends StatelessWidget {
               UserHeader(
                 //ESSES DADOS SERAO IMPORTADOS DO BACK-END
                 //DEVEMOS IMPORTAR IMAGENS???
-                name: 'Taynara Araújo',
-                subtitle: 'tay.araujo@gmail.com',
-              ), // Header with user information like name and profile picture
-              SizedBox(height: 20),
-              MainRectangle(
-                width: 373,
-                height: 250,
-              ), // Main rectangle with gradient background and icons
-              // others widgets can be added here, example images, health tips, etc.
+                name: 'Clínica do Goku (Buscar no BD)',
+                subtitle: 'goku@gmail.com (Buscar no BD)',
+                showProfileImage: false,
+              ),
+              SizedBox(height: 30),
+              Rectangle(width: 373, height: 250), // Retangulo Azul e Texto
             ],
           ),
         ),
@@ -35,10 +33,16 @@ class DashboardUser extends StatelessWidget {
       bottomNavigationBar: BottomNavBar(
         showAddIcon: true,
         onAddTap: () {
-          Navigator.pushNamed(context, '/add');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
         },
         onHomeTap: () {
-          Navigator.pushNamed(context, '/home');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const DashboardClinic()),
+          );
         },
         onProfileTap: () {
           Navigator.pushNamed(context, '/profile');
