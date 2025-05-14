@@ -1,7 +1,7 @@
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/dashboard/view/widgets/search_bar.dart';
-import '../../../shared/widgets/rectangle.dart';
+import 'rectangle.dart';
 
 class ResultRetangle extends StatelessWidget {
   final double width;

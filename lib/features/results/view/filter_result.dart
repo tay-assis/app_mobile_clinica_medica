@@ -1,5 +1,5 @@
-import 'package:app_mobile_clinica_medica/features/results/view/widgets/doctor_card.dart';
-import 'package:app_mobile_clinica_medica/features/results/view/widgets/retangle_result.dart';
+import 'package:app_mobile_clinica_medica/features/results/widgets/doctor_card.dart';
+import 'package:app_mobile_clinica_medica/features/shared/widgets/retangle_result.dart';
 import 'package:flutter/material.dart';
 
 // Modelo simples do médico
