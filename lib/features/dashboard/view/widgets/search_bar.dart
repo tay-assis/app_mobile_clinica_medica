@@ -63,7 +63,11 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           ),
           IconButton(
             // Icon to open the filter page
-            icon: const CircleIcon(icon: Icons.tune, color: Color(0xFF0089FF)),
+            icon: const CircleIcon(
+              icon: Icons.tune,
+              color: Color(0xFF0089FF),
+              backgroundColor: Colors.white,
+            ),
             onPressed: _openFilters,
           ),
         ],
