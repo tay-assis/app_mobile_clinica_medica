@@ -8,8 +8,6 @@ import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/reta
 import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 
-import 'package:url_launcher/url_launcher.dart'; // Para abrir URLs
-
 class InfoDoctorPage extends StatefulWidget {
   const InfoDoctorPage({super.key});
 
@@ -19,11 +17,6 @@ class InfoDoctorPage extends StatefulWidget {
 
 class _InfoDoctorPageState extends State<InfoDoctorPage> {
   DateTime selectedDate = DateTime.now();
-
-  // Variáveis de contato e localização para teste
-  final String phone = '+5511999999999';
-  final String email = 'dr.kyle@pacificclinic.com';
-  final String location = 'Pacific Clinics, Los Angeles, CA';
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -125,15 +118,16 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // ✅ Grade de horários com scroll interno
+                // Grid com scroll interno e altura fixa
                 SizedBox(
-                  height: 177,
+                  height: 177, // Altura máxima visível do grid
                   child: Scrollbar(
+                    // Adiciona uma barra de rolagem visual
                     child: GridView.count(
                       crossAxisCount: 3,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
-                      childAspectRatio: 2.3,
+                      childAspectRatio: 2.3, // Ajusta tamanho horizontal
                       scrollDirection: Axis.vertical,
                       children: const [
                         RectangleLabel(label: '9:00 am'),
@@ -154,73 +148,34 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Ícones com ações de e-mail e WhatsApp
                 Center(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          // Abre o app de e-mail com assunto e corpo
-                          final Uri emailUri = Uri(
-                            scheme: 'mailto',
-                            path: email,
-                            query: Uri.encodeFull(
-                              'subject=Consulta&body=Olá Dr. Kyle, gostaria de agendar uma consulta.',
-                            ),
-                          );
-                          if (await canLaunchUrl(emailUri)) {
-                            await launchUrl(emailUri);
-                          }
-                        },
-                        child: const CircleIcon(
-                          icon: Icons.email,
-                          color: Colors.white,
-                          backgroundColor: Color(0xFF0089FF),
-                        ),
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Para centralizar os ícones
+                    children: const [
+                      CircleIcon(
+                        icon: Icons.email,
+                        color: Colors.white,
+                        backgroundColor: Color(0xFF0089FF),
                       ),
-                      const SizedBox(width: 16),
-                      GestureDetector(
-                        onTap: () async {
-                          // Abre WhatsApp com número informado
-                          final Uri whatsappUri = Uri.parse(
-                            'https://wa.me/${phone.replaceAll('+', '').replaceAll(' ', '')}',
-                          );
-                          if (await canLaunchUrl(whatsappUri)) {
-                            await launchUrl(
-                              whatsappUri,
-                              mode: LaunchMode.externalApplication,
-                            );
-                          }
-                        },
-                        child: const CircleIcon(
-                          icon: Icons.phone,
-                          color: Colors.white,
-                          backgroundColor: Color(0xFF0089FF),
-                        ),
+                      SizedBox(width: 16), // Espaçamento entre os ícones
+                      CircleIcon(
+                        icon: Icons.phone,
+                        color: Colors.white,
+                        backgroundColor: Color(0xFF0089FF),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 20),
 
-                // Botão de localização usando Google Maps
                 Center(
                   child: CustomButton(
                     text: 'Set Location',
                     width: 200,
                     height: 50,
-                    onPressed: () async {
-                      // 👉 Abre o Google Maps com a localização fornecida
-                      final Uri mapsUri = Uri.parse(
-                        'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(location)}',
-                      );
-                      if (await canLaunchUrl(mapsUri)) {
-                        await launchUrl(
-                          mapsUri,
-                          mode: LaunchMode.externalApplication,
-                        );
-                      }
+                    onPressed: () {
+                      // ação de localização
                     },
                     styleType: ButtonStyleType.filled,
                   ),
