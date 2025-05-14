@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class DoctorAvatar extends StatelessWidget {
   final String imageUrl;
+  final double radius;
 
-  const DoctorAvatar({super.key, required this.imageUrl});
+  const DoctorAvatar({super.key, required this.imageUrl, required this.radius});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +17,9 @@ class DoctorAvatar extends StatelessWidget {
             snapshot.hasError == false) {
           // Imagem carregada com sucesso
           avatarContent = CircleAvatar(
-            radius: 45,
+            radius: radius,
             backgroundImage: AssetImage(imageUrl),
-            backgroundColor: Colors.grey,
+            backgroundColor: Colors.transparent,
           );
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           // Ainda carregando

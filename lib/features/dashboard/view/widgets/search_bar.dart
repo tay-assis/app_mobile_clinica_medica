@@ -1,4 +1,4 @@
-import 'package:app_mobile_clinica_medica/features/dashboard/view/widgets/circle_icon.dart';
+import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/filter/view/filter_page.dart';
 

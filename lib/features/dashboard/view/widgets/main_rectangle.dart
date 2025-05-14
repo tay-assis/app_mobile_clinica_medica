@@ -1,6 +1,6 @@
+import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/rectangle.dart';
-import 'circle_icon.dart';
 import 'search_bar.dart';
 
 class MainRectangle extends StatelessWidget {

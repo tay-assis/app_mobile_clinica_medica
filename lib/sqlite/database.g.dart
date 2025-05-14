@@ -1728,16 +1728,6 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
-  @override
-  late final GeneratedColumn<int> phone = GeneratedColumn<int>(
-    'phone',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1745,7 +1735,6 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
     insuranceId,
     addressId,
     name,
-    phone,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1797,14 +1786,6 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('phone')) {
-      context.handle(
-        _phoneMeta,
-        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_phoneMeta);
-    }
     return context;
   }
 
@@ -1839,11 +1820,6 @@ class $PatientsTable extends Patients with TableInfo<$PatientsTable, Patient> {
             DriftSqlType.string,
             data['${effectivePrefix}name'],
           )!,
-      phone:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}phone'],
-          )!,
     );
   }
 
@@ -1859,14 +1835,12 @@ class Patient extends DataClass implements Insertable<Patient> {
   final int insuranceId;
   final int addressId;
   final String name;
-  final int phone;
   const Patient({
     required this.id,
     required this.userId,
     required this.insuranceId,
     required this.addressId,
     required this.name,
-    required this.phone,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1876,7 +1850,6 @@ class Patient extends DataClass implements Insertable<Patient> {
     map['insurance_id'] = Variable<int>(insuranceId);
     map['address_id'] = Variable<int>(addressId);
     map['name'] = Variable<String>(name);
-    map['phone'] = Variable<int>(phone);
     return map;
   }
 
@@ -1887,7 +1860,6 @@ class Patient extends DataClass implements Insertable<Patient> {
       insuranceId: Value(insuranceId),
       addressId: Value(addressId),
       name: Value(name),
-      phone: Value(phone),
     );
   }
 
@@ -1902,7 +1874,6 @@ class Patient extends DataClass implements Insertable<Patient> {
       insuranceId: serializer.fromJson<int>(json['insuranceId']),
       addressId: serializer.fromJson<int>(json['addressId']),
       name: serializer.fromJson<String>(json['name']),
-      phone: serializer.fromJson<int>(json['phone']),
     );
   }
   @override
@@ -1914,7 +1885,6 @@ class Patient extends DataClass implements Insertable<Patient> {
       'insuranceId': serializer.toJson<int>(insuranceId),
       'addressId': serializer.toJson<int>(addressId),
       'name': serializer.toJson<String>(name),
-      'phone': serializer.toJson<int>(phone),
     };
   }
 
@@ -1924,14 +1894,12 @@ class Patient extends DataClass implements Insertable<Patient> {
     int? insuranceId,
     int? addressId,
     String? name,
-    int? phone,
   }) => Patient(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     insuranceId: insuranceId ?? this.insuranceId,
     addressId: addressId ?? this.addressId,
     name: name ?? this.name,
-    phone: phone ?? this.phone,
   );
   Patient copyWithCompanion(PatientsCompanion data) {
     return Patient(
@@ -1941,7 +1909,6 @@ class Patient extends DataClass implements Insertable<Patient> {
           data.insuranceId.present ? data.insuranceId.value : this.insuranceId,
       addressId: data.addressId.present ? data.addressId.value : this.addressId,
       name: data.name.present ? data.name.value : this.name,
-      phone: data.phone.present ? data.phone.value : this.phone,
     );
   }
 
@@ -1952,15 +1919,13 @@ class Patient extends DataClass implements Insertable<Patient> {
           ..write('userId: $userId, ')
           ..write('insuranceId: $insuranceId, ')
           ..write('addressId: $addressId, ')
-          ..write('name: $name, ')
-          ..write('phone: $phone')
+          ..write('name: $name')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, insuranceId, addressId, name, phone);
+  int get hashCode => Object.hash(id, userId, insuranceId, addressId, name);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1969,8 +1934,7 @@ class Patient extends DataClass implements Insertable<Patient> {
           other.userId == this.userId &&
           other.insuranceId == this.insuranceId &&
           other.addressId == this.addressId &&
-          other.name == this.name &&
-          other.phone == this.phone);
+          other.name == this.name);
 }
 
 class PatientsCompanion extends UpdateCompanion<Patient> {
@@ -1979,14 +1943,12 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
   final Value<int> insuranceId;
   final Value<int> addressId;
   final Value<String> name;
-  final Value<int> phone;
   const PatientsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.insuranceId = const Value.absent(),
     this.addressId = const Value.absent(),
     this.name = const Value.absent(),
-    this.phone = const Value.absent(),
   });
   PatientsCompanion.insert({
     this.id = const Value.absent(),
@@ -1994,19 +1956,16 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
     required int insuranceId,
     required int addressId,
     required String name,
-    required int phone,
   }) : userId = Value(userId),
        insuranceId = Value(insuranceId),
        addressId = Value(addressId),
-       name = Value(name),
-       phone = Value(phone);
+       name = Value(name);
   static Insertable<Patient> custom({
     Expression<int>? id,
     Expression<int>? userId,
     Expression<int>? insuranceId,
     Expression<int>? addressId,
     Expression<String>? name,
-    Expression<int>? phone,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2014,7 +1973,6 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
       if (insuranceId != null) 'insurance_id': insuranceId,
       if (addressId != null) 'address_id': addressId,
       if (name != null) 'name': name,
-      if (phone != null) 'phone': phone,
     });
   }
 
@@ -2024,7 +1982,6 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
     Value<int>? insuranceId,
     Value<int>? addressId,
     Value<String>? name,
-    Value<int>? phone,
   }) {
     return PatientsCompanion(
       id: id ?? this.id,
@@ -2032,7 +1989,6 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
       insuranceId: insuranceId ?? this.insuranceId,
       addressId: addressId ?? this.addressId,
       name: name ?? this.name,
-      phone: phone ?? this.phone,
     );
   }
 
@@ -2054,9 +2010,6 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (phone.present) {
-      map['phone'] = Variable<int>(phone.value);
-    }
     return map;
   }
 
@@ -2067,8 +2020,7 @@ class PatientsCompanion extends UpdateCompanion<Patient> {
           ..write('userId: $userId, ')
           ..write('insuranceId: $insuranceId, ')
           ..write('addressId: $addressId, ')
-          ..write('name: $name, ')
-          ..write('phone: $phone')
+          ..write('name: $name')
           ..write(')'))
         .toString();
   }
@@ -4792,7 +4744,6 @@ typedef $$PatientsTableCreateCompanionBuilder =
       required int insuranceId,
       required int addressId,
       required String name,
-      required int phone,
     });
 typedef $$PatientsTableUpdateCompanionBuilder =
     PatientsCompanion Function({
@@ -4801,7 +4752,6 @@ typedef $$PatientsTableUpdateCompanionBuilder =
       Value<int> insuranceId,
       Value<int> addressId,
       Value<String> name,
-      Value<int> phone,
     });
 
 final class $$PatientsTableReferences
@@ -4881,11 +4831,6 @@ class $$PatientsTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get phone => $composableBuilder(
-    column: $table.phone,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4978,11 +4923,6 @@ class $$PatientsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get phone => $composableBuilder(
-    column: $table.phone,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   $$UsersTableOrderingComposer get userId {
     final $$UsersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -5067,9 +5007,6 @@ class $$PatientsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<int> get phone =>
-      $composableBuilder(column: $table.phone, builder: (column) => column);
 
   $$UsersTableAnnotationComposer get userId {
     final $$UsersTableAnnotationComposer composer = $composerBuilder(
@@ -5178,14 +5115,12 @@ class $$PatientsTableTableManager
                 Value<int> insuranceId = const Value.absent(),
                 Value<int> addressId = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<int> phone = const Value.absent(),
               }) => PatientsCompanion(
                 id: id,
                 userId: userId,
                 insuranceId: insuranceId,
                 addressId: addressId,
                 name: name,
-                phone: phone,
               ),
           createCompanionCallback:
               ({
@@ -5194,14 +5129,12 @@ class $$PatientsTableTableManager
                 required int insuranceId,
                 required int addressId,
                 required String name,
-                required int phone,
               }) => PatientsCompanion.insert(
                 id: id,
                 userId: userId,
                 insuranceId: insuranceId,
                 addressId: addressId,
                 name: name,
-                phone: phone,
               ),
           withReferenceMapper:
               (p0) =>
