@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 class DoctorAvatar extends StatelessWidget {
   final String imageUrl;
   final double radius;
+  final double width;
+  final double height;
 
-  const DoctorAvatar({super.key, required this.imageUrl, required this.radius});
+  const DoctorAvatar({
+    super.key,
+    required this.imageUrl,
+    required this.radius,
+    required this.width,
+    required this.height,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +46,8 @@ class DoctorAvatar extends StatelessWidget {
         }
 
         return Container(
-          width: 95,
-          height: 95,
+          width: width,
+          height: height,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(color: Color(0xFF0089FF), width: 2),

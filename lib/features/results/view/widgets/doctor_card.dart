@@ -26,7 +26,7 @@ class DoctorCard extends StatelessWidget {
             top: 70,
             child: DoctorInfoCard(doctorName: doctorName, specialty: specialty),
           ),
-          DoctorAvatar(imageUrl: imageUrl, radius: 45),
+          DoctorAvatar(imageUrl: imageUrl, radius: 45, width: 95, height: 95),
         ],
       ),
     );
