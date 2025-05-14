@@ -1,3 +1,4 @@
+import 'package:app_mobile_clinica_medica/features/clinic/view/sing_up_doctor.dart';
 import 'package:app_mobile_clinica_medica/features/clinic/widgets/label.dart';
 import 'package:app_mobile_clinica_medica/features/login/view/login_page.dart';
 import 'package:app_mobile_clinica_medica/features/results/widgets/doctor_card.dart';
@@ -125,9 +126,10 @@ class DashboardClinic extends StatelessWidget {
       bottomNavigationBar: BottomNavBar(
         showAddIcon: true,
         onAddTap: () {
+          // BUTTOM "+"
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
+            MaterialPageRoute(builder: (context) => const SingUpDoctor()),
           );
         },
         onHomeTap: () {
