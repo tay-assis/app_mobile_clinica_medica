@@ -1,7 +1,5 @@
-import 'package:app_mobile_clinica_medica/sqlite/DAOs/user_dao.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 
-import 'seeders/user_seeder.dart';
 import 'seeders/address_seeder.dart';
 import 'seeders/insurance_seeder.dart';
 import 'seeders/clinic_seeder.dart';
@@ -22,8 +20,6 @@ class DatabaseSeeder {
 
     await db.insuranceDao.deleteInsurances();
     await InsuranceSeeder.run(db);
-
-    await UserSeeder.run(db);
 
     await db.clinicDao.deleteClinics();
     await ClinicSeeder.run(db);
