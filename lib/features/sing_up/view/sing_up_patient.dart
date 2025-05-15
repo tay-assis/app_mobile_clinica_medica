@@ -72,7 +72,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
     // insurance variables
     bool isOtherInsurance = false;
     bool isSelected = false;
-    String newInsurance = '';
+    String? newInsurance = null;
 
     return Scaffold(
       body: Padding(
@@ -272,7 +272,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
                     widget.uid,
                     isOtherInsurance,
                     isSelected,
-                    newInsurance,
+                    newInsurance!,
                   );
                   if (success) {
                     ScaffoldMessenger.of(context).showSnackBar(

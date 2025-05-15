@@ -175,9 +175,9 @@ class SingUpController {
   }
 
   Future<int> chooseInsurance(
-    bool isOther,
-    bool isSelected,
-    String valueSelected,
+    bool isOther, //se o check ta on
+    bool isSelected, // se foi selecionado
+    String valueSelected, //valor selecionado ou valor inserido
   ) async {
     final insuranceName = convenioController.text.trim();
     if (isSelected) {
@@ -244,5 +244,12 @@ class SingUpController {
       print('\n Erro banco de dados local: $e \n');
     }
     return false;
+  }
+
+  Future<void> loadInsurances() async {
+    final allInsurances = await _db.insuranceDao.selectInsurances();
+    // insurances names
+    _insurances = allInsurances.map((d) => d.name).toList();
+    print('$_insurances');
   }
 }
