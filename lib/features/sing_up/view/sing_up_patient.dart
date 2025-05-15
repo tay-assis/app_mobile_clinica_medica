@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/back_icon.dart';
+import 'package:provider/provider.dart';
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+
 import '../../shared/widgets/custom_button.dart';
 import '../../shared/widgets/slide_transition.dart';
 import '../view/sing_up_choose.dart';
@@ -8,15 +11,27 @@ import '../../shared/widgets/sing_up_client_register.dart';
 import '../../login/view/login_page.dart';
 import '../controller/sing_up_controller.dart';
 
-class SingUpClient extends StatefulWidget {
-  const SingUpClient({super.key});
+import 'widgets/custom_dropdown.dart';
+
+class SingUpPatient extends StatefulWidget {
+  final int uid;
+
+  SingUpPatient({Key? key, required this.uid}) : super(key: key);
 
   @override
-  State<SingUpClient> createState() => _SingUpClientState();
+  State<SingUpPatient> createState() => _SingUpPatientState();
 }
 
-class _SingUpClientState extends State<SingUpClient> {
-  final SingUpController _controller = SingUpController();
+class _SingUpPatientState extends State<SingUpPatient> {
+  late final AppDatabase _db;
+  late final SingUpController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _db = Provider.of<AppDatabase>(context, listen: false);
+    _controller = SingUpController(_db);
+  }
 
   @override
   void dispose() {
@@ -51,6 +66,13 @@ class _SingUpClientState extends State<SingUpClient> {
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
+
+    final allInsurances = _controller.insurances;
+
+    // insurance variables
+    bool isOtherInsurance = false;
+    bool isSelected = false;
+    String newInsurance = '';
 
     return Scaffold(
       body: Padding(
@@ -106,34 +128,71 @@ class _SingUpClientState extends State<SingUpClient> {
                 keyboardType: TextInputType.name,
               ),
             ),
-            
+
             // Telefone
             //SizedBox(height: height * 0.03),
             //Align(
-              //alignment: Alignment.centerLeft * 1.2,
-              //child: const FieldLabel(text: 'Telefone'),
+            //alignment: Alignment.centerLeft * 1.2,
+            //child: const FieldLabel(text: 'Telefone'),
             //),
             //Center(
-              //child: SingUpClientRegister(
-               // controller: _controller.telefoneController,
-                //hintText: 'Digite seu telefone',
-                //keyboardType: TextInputType.number,
-              //),
+            //child: SingUpClientRegister(
+            // controller: _controller.telefoneController,
+            //hintText: 'Digite seu telefone',
+            //keyboardType: TextInputType.number,
+            //),
             //),
 
             // Convênio
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.22,
-              child: const FieldLabel(text: 'Convênio'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.convenioController,
-                hintText: 'Digite o convênio',
-                keyboardType: TextInputType.name,
+            // Dropdown de convênios (mostrado apenas se não for "Outro")
+            if (!isOtherInsurance)
+              CustomDropdown(
+                title: 'Convênio',
+                label: 'Convênio do paciente',
+                value: newInsurance,
+                items: allInsurances,
+                onChanged: (v) {
+                  setState(() {
+                    newInsurance = v!;
+                  });
+                },
               ),
+
+            const SizedBox(height: 20),
+
+            // Checkbox "Outro convênio"
+            Row(
+              children: [
+                Checkbox(
+                  value: isOtherInsurance,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isOtherInsurance = value ?? false;
+
+                      if (isOtherInsurance) {
+                        isSelected = false; // limpa seleção do dropdown
+                      } else {
+                        _controller.convenioController
+                            .clear(); // limpa campo de texto
+                      }
+                    });
+                  },
+                ),
+                const Text('Outro convênio'),
+              ],
             ),
+
+            const SizedBox(height: 10),
+
+            // Campo de texto para novo convênio (visível só se "Outro" estiver marcado)
+            if (isOtherInsurance)
+              TextField(
+                controller: _controller.convenioController,
+                decoration: const InputDecoration(
+                  labelText: 'Nome do novo convênio',
+                  border: OutlineInputBorder(),
+                ),
+              ),
 
             // Endereço
             SizedBox(height: height * 0.03),
@@ -208,7 +267,33 @@ class _SingUpClientState extends State<SingUpClient> {
                 text: 'Submeter',
                 width: width * 0.25,
                 height: height * 0.04,
-                onPressed: () {
+                onPressed: () async {
+                  final success = await _controller.newPatient(
+                    widget.uid,
+                    isOtherInsurance,
+                    isSelected,
+                    newInsurance,
+                  );
+                  if (success) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Cadastro realizado com sucesso!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    navigateWithSlideTransition(
+                      context: context,
+                      destination: LoginPage(),
+                      beginOffset: const Offset(1.0, 0.0),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Erro ao realizar cadastro.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const LoginPage()),

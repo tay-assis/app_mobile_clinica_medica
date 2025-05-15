@@ -1,5 +1,9 @@
+import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/back_icon.dart';
+import 'package:provider/provider.dart';
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+
 import '../../shared/widgets/custom_button.dart';
 import '../../shared/widgets/slide_transition.dart';
 import '../view/sing_up_choose.dart';
@@ -9,14 +13,24 @@ import '../../login/view/login_page.dart';
 import '../controller/sing_up_controller.dart';
 
 class SingUpClinic extends StatefulWidget {
-  const SingUpClinic({super.key});
+  final int uid;
+
+  SingUpClinic({Key? key, required this.uid}) : super(key: key);
 
   @override
-  State<SingUpClinic> createState() => _SingUpClientState();
+  State<SingUpClinic> createState() => _SingUpClinicState();
 }
 
-class _SingUpClientState extends State<SingUpClinic> {
-  final SingUpController _controller = SingUpController();
+class _SingUpClinicState extends State<SingUpClinic> {
+  late final AppDatabase _db;
+  late final SingUpController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _db = Provider.of<AppDatabase>(context, listen: false);
+    _controller = SingUpController(_db);
+  }
 
   @override
   void dispose() {
@@ -117,7 +131,7 @@ class _SingUpClientState extends State<SingUpClinic> {
               child: SingUpClientRegister(
                 controller: _controller.enderecoCController,
                 hintText: 'Digite o endereço',
-                keyboardType: TextInputType.name,
+                keyboardType: TextInputType.streetAddress,
               ),
             ),
 
@@ -169,7 +183,20 @@ class _SingUpClientState extends State<SingUpClinic> {
               child: SingUpClientRegister(
                 controller: _controller.cepCController,
                 hintText: 'Digite o CEP',
-                keyboardType: TextInputType.name,
+                keyboardType: TextInputType.numberWithOptions(decimal: false),
+              ),
+            ),
+
+            SizedBox(height: height * 0.03),
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'Telefone'),
+            ),
+            Center(
+              child: SingUpClientRegister(
+                controller: _controller.phoneCController,
+                hintText: 'Digite o telefone',
+                keyboardType: TextInputType.number,
               ),
             ),
 
@@ -181,7 +208,28 @@ class _SingUpClientState extends State<SingUpClinic> {
                 text: 'Submeter',
                 width: width * 0.25,
                 height: height * 0.04,
-                onPressed: () {
+                onPressed: () async {
+                  final success = await _controller.newClinic(widget.uid);
+                  if (success) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Cadastro finalizado com sucesso!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    navigateWithSlideTransition(
+                      context: context,
+                      destination: const LoginPage(),
+                      beginOffset: const Offset(1.0, 0.0),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Erro ao finalizar cadastro.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const LoginPage()),

@@ -24,10 +24,18 @@ class SingUpController {
   final TextEditingController cidadeCController = TextEditingController();
   final TextEditingController estadoCController = TextEditingController();
   final TextEditingController cepCController = TextEditingController();
+  final TextEditingController phoneCController = TextEditingController();
+  final TextEditingController imageCController = TextEditingController();
 
   //FIREBASE
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final _db = AppDatabase();
+  final AppDatabase _db;
+  SingUpController(this._db);
+
+  // VARIABLE FOR UID
+
+  List<String> _insurances = [];
+  List<String> get insurances => _insurances;
 
   void dispose() {
     // free controllers from user
@@ -54,9 +62,11 @@ class SingUpController {
     cidadeCController.dispose();
     estadoCController.dispose();
     cepCController.dispose();
+    phoneCController.dispose();
+    imageCController.dispose();
   }
 
-  Future<bool> newUser(String type) async {
+  Future<int> newUser(String type) async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
@@ -69,41 +79,94 @@ class SingUpController {
       final firebaseUID =
           cred
               .user!
-              .uid; //if the autentication process was completed it generated an unique UserId
+              .uid; //if the autentication process was completed it generated an unique firebaseUID
 
       // inserting into drift
-      await _db.userDao.insertUser(
+      final uid = await _db.userDao.insertUser(
+        // it should store the userId in UID variable to be used after in newPatient
         email,
         firebaseUID,
         type,
       ); // we dont store the password because firebase already does that encrypiting
 
-      return true;
+      print('$uid');
+
+      return uid;
     } on FirebaseAuthException catch (e) {
       print('Erro de cadastro: ${e.message}');
     } catch (e) {
       print('Erro banco de dados local : $e');
     }
 
-    return false;
+    return -1;
   }
 
-  Future<int> newAddress() async {
+  Future<int> newPAddress() async {
     final street = enderecoPController.text.trim();
     final neighborhood = bairroPController.text.trim();
     final city = cidadePController.text.trim();
     final state = estadoPController.text.trim();
-    final zipCode = int.parse(cepCController.text.trim());
+    final zipCode = int.tryParse(cepPController.text.trim());
+
+    // making sure this field aren't empty
+    if (street.isEmpty) {
+      print('Erro endereco');
+      return -1;
+    }
+    if (neighborhood.isEmpty) {
+      print('Erro bairro');
+      return -1;
+    }
+    if (city.isEmpty) {
+      print('Erro cidade');
+      return -1;
+    }
+    if (state.isEmpty) {
+      print('Erro estado');
+      return -1;
+    }
+    if (zipCode == null) {
+      print('Erro cep');
+      return -1;
+    }
 
     try {
-      final address_id = await _db.addressDao.returnAddress(
+      final addressId = await _db.addressDao.returnAddress(
         street,
         neighborhood,
         city,
         state,
         zipCode,
       );
-      return address_id;
+      return addressId;
+    } catch (e) {
+      print('Erro ao adicionar endereço: $e');
+    }
+
+    return -1; // if error returns -1 as an inexistent ID -> check in patient and in clinic that if address_id = -1 error
+  }
+
+  Future<int> newCAddress() async {
+    final street = enderecoCController.text.trim();
+    final neighborhood = bairroCController.text.trim();
+    final city = cidadeCController.text.trim();
+    final state = estadoCController.text.trim();
+    final zipCode = int.tryParse(cepCController.text.trim());
+
+    if (zipCode == null) {
+      print('Erro cep');
+      return -1;
+    }
+
+    try {
+      final addressId = await _db.addressDao.returnAddress(
+        street,
+        neighborhood,
+        city,
+        state,
+        zipCode,
+      );
+      return addressId;
     } catch (e) {
       print('Erro ao adicionar endereço: $e');
     }
@@ -130,20 +193,55 @@ class SingUpController {
   }
 
   Future<bool> newPatient(
+    int uid,
     bool isOther,
     bool isSelected,
     String valueSelected,
   ) async {
     final name = nomePController.text.trim();
+
+    final address = await newPAddress();
+    final insurance = await chooseInsurance(isOther, isSelected, valueSelected);
     try {
-      //await _db.patientDao.insertPatient(
-      //  UID,
-      //  await chooseInsurance(isOther, isSelected, valueSelected),
-      //  await newAddress(),
-      //  name,
-      //);
+      if (address != -1 && insurance != -1) {
+        await _db.patientDao.insertPatient(
+          uid, // references users table, not firebase
+          address,
+          insurance,
+          name,
+        );
+        return true;
+      } else {
+        print('\n Erro de endereço id ou convenio id \n');
+
+        return false;
+      }
     } catch (e) {
       print('Erro banco de dados local: $e');
+    }
+    return false;
+  }
+
+  Future<bool> newClinic(int uid) async {
+    final name = nomeCController.text.trim();
+    final phone = int.tryParse(phoneCController.text.trim());
+    final image = imageCController.text.trim();
+
+    final address = await newCAddress();
+
+    print('$name, $phone, $uid, $address');
+
+    try {
+      if (address != -1) {
+        await _db.clinicDao.insertClinic(uid, address, name, phone!, image);
+        return true;
+      } else {
+        print('\n Erro de endereço id \n');
+
+        return false;
+      }
+    } catch (e) {
+      print('\n Erro banco de dados local: $e \n');
     }
     return false;
   }

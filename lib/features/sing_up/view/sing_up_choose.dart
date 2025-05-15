@@ -1,13 +1,16 @@
 import 'package:app_mobile_clinica_medica/features/shared/widgets/back_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/sing_up/controller/sing_up_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+
 import '../../login/view/login_page.dart';
 import '../../shared/widgets/curved_header.dart';
 import '../../shared/widgets/custom_button.dart';
 import '../../shared/widgets/slide_transition.dart';
 import '../../shared/widgets/custom_text_field.dart';
 import '../../shared/widgets/field_label.dart';
-import '../view/sing_up_client.dart';
+import 'sing_up_patient.dart';
 import '../view/sing_up_clinic.dart';
 
 class SingUpChoose extends StatefulWidget {
@@ -18,7 +21,15 @@ class SingUpChoose extends StatefulWidget {
 }
 
 class _SingUpChooseState extends State<SingUpChoose> {
-  final SingUpController _controller = SingUpController();
+  late final AppDatabase _db;
+  late final SingUpController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _db = Provider.of<AppDatabase>(context, listen: false);
+    _controller = SingUpController(_db);
+  }
 
   @override
   void dispose() {
@@ -117,10 +128,8 @@ class _SingUpChooseState extends State<SingUpChoose> {
                             width: 170,
                             height: 50,
                             onPressed: () async {
-                              final success = await _controller.newUser(
-                                'PATIENT',
-                              );
-                              if (success) {
+                              final uid = await _controller.newUser('PATIENT');
+                              if (uid != -1) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
@@ -132,7 +141,7 @@ class _SingUpChooseState extends State<SingUpChoose> {
 
                                 navigateWithSlideTransition(
                                   context: context,
-                                  destination: const SingUpClient(),
+                                  destination: SingUpPatient(uid: uid),
                                   beginOffset: const Offset(1.0, 0.0),
                                 );
                               } else {
@@ -151,10 +160,9 @@ class _SingUpChooseState extends State<SingUpChoose> {
                             width: 170,
                             height: 50,
                             onPressed: () async {
-                              final success = await _controller.newUser(
-                                'CLINIC',
-                              );
-                              if (success) {
+                              final uid = await _controller.newUser('CLINIC');
+                              if (uid != -1) {
+                                // if user created
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
@@ -165,7 +173,7 @@ class _SingUpChooseState extends State<SingUpChoose> {
                                 );
                                 navigateWithSlideTransition(
                                   context: context,
-                                  destination: const SingUpClinic(),
+                                  destination: SingUpClinic(uid: uid),
                                   beginOffset: const Offset(1.0, 0.0),
                                 );
                               } else {

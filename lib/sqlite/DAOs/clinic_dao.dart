@@ -34,11 +34,11 @@ class ClinicDao extends DatabaseAccessor<AppDatabase> with _$ClinicDaoMixin {
 
   // INSERT INTO CLINICS (...) VALUES()
   Future<void> insertClinic(
-    int USERID,
+    int USERID, // not firebase, users table
     int ADDRESSID,
     String NAME,
     int PHONE,
-    String IMAGEURL,
+    String? IMAGEURL,
   ) async {
     into(clinics).insert(
       ClinicsCompanion(
@@ -46,14 +46,17 @@ class ClinicDao extends DatabaseAccessor<AppDatabase> with _$ClinicDaoMixin {
         addressId: Value(ADDRESSID),
         name: Value(NAME),
         phone: Value(PHONE),
-        imageUrl: Value(IMAGEURL),
+        imageUrl:
+            IMAGEURL != null && IMAGEURL.isNotEmpty
+                ? Value(IMAGEURL)
+                : const Value.absent(),
       ),
     );
     return;
   }
 
   // UPDATE CLINICS name=NAME, ... WHERE (id ==ID)
-  Future<void> modifyAddress(
+  Future<void> modifyClinic(
     int ID,
     int ADDRESSID,
     String NAME,

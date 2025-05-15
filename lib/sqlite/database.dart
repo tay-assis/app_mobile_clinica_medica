@@ -53,32 +53,32 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
   //Storing info on mobile
-  //static LazyDatabase _openConnection() {
-  //  return LazyDatabase(() async {
-  //    // Obtain a writable directory on the device
-  //    final docsDir = await getApplicationDocumentsDirectory();
-  //    final dbFolder = Directory(p.join(docsDir.path, 'sqlite'));
-  //    if (!await dbFolder.exists()) {
-  //      await dbFolder.create(recursive: true);
-  //    }
-  //
-  //    final file = File(p.join(dbFolder.path, 'app_flutter.sqlite'));
-  //    return NativeDatabase(file);
-  //  });
-  //}
-
-  // Storing info on computer
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
-      final dbFolder = Directory('./lib/sqlite');
-      if (!dbFolder.existsSync()) {
-        dbFolder.createSync(
-          recursive: true,
-        ); // Creates the directory if it doesn't exist
+      // Obtain a writable directory on the device
+      final docsDir = await getApplicationDocumentsDirectory();
+      final dbFolder = Directory(p.join(docsDir.path, 'sqlite'));
+      if (!await dbFolder.exists()) {
+        await dbFolder.create(recursive: true);
       }
 
-      final file = File('${dbFolder.path}/app_flutter.sqlite');
-      return NativeDatabase.createInBackground(file);
+      final file = File(p.join(dbFolder.path, 'app_flutter.sqlite'));
+      return NativeDatabase(file);
     });
   }
+
+  // Storing info on computer
+  //static LazyDatabase _openConnection() {
+  //  return LazyDatabase(() async {
+  //    final dbFolder = Directory('./lib/sqlite');
+  //    if (!dbFolder.existsSync()) {
+  //      dbFolder.createSync(
+  //        recursive: true,
+  //      ); // Creates the directory if it doesn't exist
+  //    }
+  //
+  //    final file = File('${dbFolder.path}/app_flutter.sqlite');
+  //    return NativeDatabase.createInBackground(file);
+  //  });
+  //}
 }

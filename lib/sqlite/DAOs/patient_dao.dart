@@ -44,7 +44,7 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
 
   // INSERT INTO PATIENTS (...) VALUES(...)
   Future<void> insertPatient(
-    int USERID,
+    int USERID, // not firebase, users table
     int INSURANCEID,
     int ADDRESSID,
     String NAME,
