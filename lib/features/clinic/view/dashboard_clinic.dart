@@ -65,7 +65,7 @@ class DashboardClinic extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        'Clínica do Goku',
+                        'Clínica do Goku', // method nameClinic
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           color: Colors.white,
@@ -79,7 +79,7 @@ class DashboardClinic extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Avenida Paulo Brificado (pegar do BD), 069',
+                        'Avenida Paulo Brificado (pegar do BD), 069', // method streetClinic
                         style: TextStyle(
                           color: Color.fromARGB(218, 255, 255, 255),
                           fontSize: 15,
@@ -110,7 +110,7 @@ class DashboardClinic extends StatelessWidget {
                 mainAxisSpacing: 20,
                 childAspectRatio: 0.8,
               ),
-              itemCount: doctorsList.length,
+              itemCount: doctorsList.length, // method listDoctors
               itemBuilder: (context, index) {
                 final doctor = doctorsList[index];
                 return DoctorCard(
