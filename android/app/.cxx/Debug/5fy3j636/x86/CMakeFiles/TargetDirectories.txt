@@ -1,0 +1,2 @@
+C:/Users/vytak/OneDrive/Documentos/MEUS PROJETOS/app_mobile_clinica_medica/android/app/.cxx/Debug/5fy3j636/x86/CMakeFiles/edit_cache.dir
+C:/Users/vytak/OneDrive/Documentos/MEUS PROJETOS/app_mobile_clinica_medica/android/app/.cxx/Debug/5fy3j636/x86/CMakeFiles/rebuild_cache.dir

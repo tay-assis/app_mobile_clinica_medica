@@ -1,14 +1,21 @@
-gradle-wrapper.jar
-/.gradle
-/captures/
-/gradlew
-/gradlew.bat
-/local.properties
-GeneratedPluginRegistrant.java
-.cxx/
+# Ignorar o cache local do Gradle (pode ser recriado)
+.gradle/
+local.properties
 
-# Remember to never publicly share your keystore.
-# See https://flutter.dev/to/reference-keystore
+# Ignorar apenas os arquivos de build e cache gerados
+/captures/
+/.cxx/
+
+# MANTER os arquivos abaixo para permitir build após o clone
+# NÃO ignore gradlew e gradle-wrapper
+# gradlew
+# gradlew.bat
+# gradle-wrapper.jar
+
+# Itens relacionados à segurança (corretamente ignorados)
 key.properties
-**/*.keystore
-**/*.jks
+*/.keystore
+*/.jks
+
+# Arquivo gerado automaticamente pelo Flutter (opcional ignorar)
+/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java 

@@ -33,9 +33,15 @@ class ClinicDao extends DatabaseAccessor<AppDatabase> with _$ClinicDaoMixin {
   }
 
   // INSERT INTO CLINICS (...) VALUES()
-  Future<void> insertClinic(int ADDRESSID, String NAME, String IMAGEURL) async {
+  Future<void> insertClinic(
+    int USERID,
+    int ADDRESSID,
+    String NAME,
+    String IMAGEURL,
+  ) async {
     into(clinics).insert(
       ClinicsCompanion(
+        userId: Value(USERID),
         addressId: Value(ADDRESSID),
         name: Value(NAME),
         imageUrl: Value(IMAGEURL),
