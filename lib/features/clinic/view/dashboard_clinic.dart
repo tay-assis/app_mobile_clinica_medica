@@ -16,35 +16,42 @@ class Doctor {
   Doctor({required this.name, required this.specialty, required this.imageUrl});
 }
 
-// Página com a grade de médicos
-class DashboardClinic extends StatelessWidget {
-  const DashboardClinic({super.key});
+// Página com a grade de médicos (agora Stateful)
+class DashboardClinic extends StatefulWidget {
+  final int uid;
+
+  DashboardClinic({Key? key, required this.uid}) : super(key: key);
+
+  @override
+  State<DashboardClinic> createState() => _DashboardClinicState();
+}
+
+class _DashboardClinicState extends State<DashboardClinic> {
+  final List<Doctor> doctorsList = [
+    Doctor(
+      name: 'Dr. Kate Rose',
+      specialty: 'Pediatra',
+      imageUrl: 'lib/images/profile.jpg',
+    ),
+    Doctor(
+      name: 'Dr. Kyle Bush',
+      specialty: 'Cardiologista',
+      imageUrl: 'https://placehold.co/130x116',
+    ),
+    Doctor(
+      name: 'Dr. Casey Dean',
+      specialty: 'Dermatologista',
+      imageUrl: 'https://placehold.co/130x116',
+    ),
+    Doctor(
+      name: 'Dr. Simon Le',
+      specialty: 'Dermatologista',
+      imageUrl: 'https://placehold.co/130x116',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final List<Doctor> doctorsList = [
-      Doctor(
-        name: 'Dr. Kate Rose',
-        specialty: 'Pediatra',
-        imageUrl: 'lib/images/profile.jpg',
-      ),
-      Doctor(
-        name: 'Dr. Kyle Bush',
-        specialty: 'Cardiologista',
-        imageUrl: 'https://placehold.co/130x116',
-      ),
-      Doctor(
-        name: 'Dr. Casey Dean',
-        specialty: 'Dermatologista',
-        imageUrl: 'https://placehold.co/130x116',
-      ),
-      Doctor(
-        name: 'Dr. Simon Le',
-        specialty: 'Dermatologista',
-        imageUrl: 'https://placehold.co/130x116',
-      ),
-    ];
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -65,7 +72,7 @@ class DashboardClinic extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        'Clínica do Goku', // method nameClinic
+                        'Clínica do Goku',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           color: Colors.white,
@@ -79,7 +86,7 @@ class DashboardClinic extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Avenida Paulo Brificado (pegar do BD), 069', // method streetClinic
+                        'Avenida Paulo Brificado (pegar do BD), 069',
                         style: TextStyle(
                           color: Color.fromARGB(218, 255, 255, 255),
                           fontSize: 15,
@@ -89,7 +96,6 @@ class DashboardClinic extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     SizedBox(height: 35),
                     Align(
                       alignment: Alignment.centerLeft,
@@ -110,7 +116,7 @@ class DashboardClinic extends StatelessWidget {
                 mainAxisSpacing: 20,
                 childAspectRatio: 0.8,
               ),
-              itemCount: doctorsList.length, // method listDoctors
+              itemCount: doctorsList.length,
               itemBuilder: (context, index) {
                 final doctor = doctorsList[index];
                 return DoctorCard(
@@ -126,17 +132,16 @@ class DashboardClinic extends StatelessWidget {
       bottomNavigationBar: BottomNavBar(
         showAddIcon: true,
         onAddTap: () {
-          // BUTTOM "+"
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const SingUpDoctor()),
           );
         },
         onHomeTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const DashboardClinic()),
-          );
+          //Navigator.push(
+          //  context,
+          //  MaterialPageRoute(builder: (context) => DashboardClinic(uid: uid)),
+          //);
         },
         onProfileTap: () {
           Navigator.pushNamed(context, '/profile');

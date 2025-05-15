@@ -63,11 +63,11 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
               alignment: Alignment.centerRight * 0.7,
               child: BackIcon(
                 onTap: () {
-                  navigateWithSlideTransition(
-                    context: context,
-                    destination: const DashboardClinic(),
-                    beginOffset: const Offset(-1.0, 0.0),
-                  );
+                  //navigateWithSlideTransition(
+                  //  context: context,
+                  //  destination: DashboardClinic(uid: uid),
+                  //  beginOffset: const Offset(-1.0, 0.0),
+                  //);
                 },
               ),
             ),
@@ -195,12 +195,12 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
                 width: width * 0.25,
                 height: height * 0.04,
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DashboardClinic(),
-                    ),
-                  );
+                  //Navigator.pushReplacement(
+                  //  context,
+                  //  MaterialPageRoute(
+                  //    builder: (context) => DashboardClinic(),
+                  //  ),
+                  //);
                 },
                 styleType: ButtonStyleType.outlined,
                 fontSize: 14,

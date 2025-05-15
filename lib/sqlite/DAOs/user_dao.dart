@@ -19,9 +19,8 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
   }
 
   // SELECT * FROM USERS WHERE email == EMAIL
-  Future<User?> findByEmail(String email) {
-    return (select(users)
-      ..where((u) => u.email.equals(email))).getSingleOrNull();
+  Future<User> findByEmail(String email) {
+    return (select(users)..where((u) => u.email.equals(email))).getSingle();
   }
 
   // SELECT COUNT(*) FROM USERS

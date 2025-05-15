@@ -1,3 +1,4 @@
+import 'package:app_mobile_clinica_medica/features/clinic/view/dashboard_clinic.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/login/controller/login_controller.dart';
 import 'widgets/welcome_title.dart';
@@ -124,22 +125,32 @@ class _LoginPageState extends State<LoginPage> {
                         height: 51,
                         onPressed: () async {
                           final success = await _controller.checkUser();
+                          final user = await _controller.findUser();
                           //Chmando o metodo
                           //_controller.newUser();
                           //
                           //Mensagem de login
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                success
-                                    ? 'Login realizado com sucesso'
-                                    : 'Usuário ou senha inválidos',
+                          if (user != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  success
+                                      ? 'Login realizado com sucesso'
+                                      : 'Usuário ou senha inválidos',
+                                ),
+                                duration: const Duration(seconds: 2),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.blueAccent,
                               ),
-                              duration: const Duration(seconds: 2),
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.blueAccent,
-                            ),
-                          );
+                            );
+                            navigateWithSlideTransition(
+                              context: context,
+                              destination: DashboardClinic(
+                                uid: user.id,
+                              ), //needs to change to verify if clinic or patient
+                              beginOffset: const Offset(1.0, 0.0),
+                            );
+                          }
                         },
                       ),
                     ),
