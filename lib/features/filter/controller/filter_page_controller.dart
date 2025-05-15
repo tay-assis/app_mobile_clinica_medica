@@ -40,4 +40,61 @@ class FilterNameController extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  Future<List<int>> applyFilters({
+    String? specialty,
+    String? clinicName,
+    String? location,
+    String? doctorName,
+  }) async {
+
+    // start with all doctors, then start "shaving" it
+    List<Doctor> DoctorsList = await db.doctorDao.selectDoctors();
+
+    // doctor-related filtering first
+    if(specialty != null)
+    {
+      // limits the list to doctors with a specific specialty
+      DoctorsList = DoctorsList.where((d) => d.specialty == specialty).toList();
+    }
+    if(doctorName != null)
+    {
+      // specify the list to doctors with a specific name (doctor.name is not unique)
+      DoctorsList = DoctorsList.where((d) => d.name == doctorName).toList();
+    }
+
+
+    List<Clinic> ClinicsList = await db.clinicDao.selectClinics();
+
+    if(clinicName != null)
+    {
+      // limits clinics to their name
+      final int clinicResult  = ClinicsList.where((c) => c.name == clinicName).map((c) => c.id).single;
+
+      // after discovering which clinic has this name, update the DoctorsList
+      DoctorsList = DoctorsList.where((d) => d.clinicId == clinicResult).toList();
+    }
+    if(location != null)
+    {
+      List<Address> AddressesList = await db.addressDao.selectAddresses();
+      List<int> clinicIds = [];
+
+      // limits clinics to their location
+      for(int i=0; i<ClinicsList.length; i++)
+      {
+        if((AddressesList.where((a) => a.city == location && a.id == ClinicsList[i].addressId)).isNotEmpty)
+        {
+          // clinic only wanted if it is on the desired location
+          clinicIds.add(ClinicsList[i].id);
+        }
+      }
+
+      // after discovering which clinics are on the specified location, update the DoctorsList
+      DoctorsList = DoctorsList.where((d) => clinicIds.contains(d.clinicId)).toList();
+    }
+
+    // only the Doctors' crm is returned
+    return DoctorsList.map((d) => d.crm).toList();
+  }
+
 }
