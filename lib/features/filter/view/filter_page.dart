@@ -48,8 +48,7 @@ class _FilterPageState extends State<FilterPage> {
     }
 
     // Quando carregado, controller.names possui a lista de nomes que se pede
-    final doctorNames =
-        controller.names; // não tenho certeza se a lista local é necessária
+    final doctorNames = controller.names;
     final doctorSpecialties = controller.specialties;
     final clinicNames = controller.clinicNames;
     final clinicAddresses = controller.addresses;
@@ -116,13 +115,21 @@ class _FilterPageState extends State<FilterPage> {
                   text: 'Aplicar filtros',
                   width: 149,
                   height: 51,
-                  onPressed: () {
-                    Navigator.pop(context, {
-                      'specialty': selectedSpecialty,
-                      'clinic': selectedClinic,
-                      'location': selectedLocation,
-                      'name': selectedName,
-                    });
+                  onPressed: () async {
+                    // call your controller
+                    final controller = context.read<FilterNameController>();
+                    final List<int> filterResultList = await controller
+                        .applyFilters(
+                          specialty: selectedSpecialty,
+                          clinicName: selectedClinic,
+                          location: selectedLocation,
+                          doctorName: selectedName,
+                        );
+
+                    Navigator.pop(
+                      context,
+                      // passando adiante a lista com os resultados do filtro
+                    );
                   },
                 ),
               ],

@@ -16,7 +16,12 @@ class DashboardUser extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              UserHeader(), // Header with user information like name and profile picture
+              UserHeader(
+                //ESSES DADOS SERAO IMPORTADOS DO BACK-END
+                //DEVEMOS IMPORTAR IMAGENS???
+                name: 'Taynara Araújo',
+                subtitle: 'tay.araujo@gmail.com',
+              ), // Header with user information like name and profile picture
               SizedBox(height: 20),
               MainRectangle(
                 width: 373,
@@ -27,7 +32,18 @@ class DashboardUser extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: BottomNavBar(
+        showAddIcon: true,
+        onAddTap: () {
+          Navigator.pushNamed(context, '/add');
+        },
+        onHomeTap: () {
+          Navigator.pushNamed(context, '/home');
+        },
+        onProfileTap: () {
+          Navigator.pushNamed(context, '/profile');
+        },
+      ),
     );
   }
 }

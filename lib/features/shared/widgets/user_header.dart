@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
 class UserHeader extends StatelessWidget {
-  const UserHeader({super.key});
+  final bool showProfileImage;
+  final String name;
+  final String subtitle;
+
+  const UserHeader({
+    super.key,
+    required this.name,
+    required this.subtitle,
+    this.showProfileImage = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +20,9 @@ class UserHeader extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Justin Nguyen ',
-              style: TextStyle(
+            Text(
+              name,
+              style: const TextStyle(
                 color: Colors.black,
                 fontSize: 17,
                 fontFamily: 'Nunito',
@@ -23,9 +32,9 @@ class UserHeader extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'Male, 18',
-              style: TextStyle(
-                color: Colors.black.withAlpha(153),
+              subtitle,
+              style: const TextStyle(
+                color: Colors.black54,
                 fontSize: 14,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w400,
@@ -34,10 +43,11 @@ class UserHeader extends StatelessWidget {
             ),
           ],
         ),
-        CircleAvatar(
-          radius: 25,
-          backgroundImage: AssetImage('lib/images/profile.jpg'),
-        ),
+        if (showProfileImage)
+          const CircleAvatar(
+            radius: 25,
+            backgroundImage: AssetImage('lib/images/profile.jpg'),
+          ),
       ],
     );
   }
