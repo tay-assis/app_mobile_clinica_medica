@@ -19,10 +19,32 @@ class DashboardClinicController {
       );
 
       clinicStreet = address.street;
+
+      print('Nome: $clinicName, Endereço: $clinicStreet');
     } catch (e) {
       print('Erro ao buscar a clinica: $e');
     }
 
     return;
+  }
+
+  Future<String?> nameClinic() async {
+    try {
+      print('Nome: $clinicName');
+      return clinicName;
+    } catch (e) {
+      print('Erro ao achar o nome da clínica: $e');
+    }
+    return null;
+  }
+
+  Future<String?> streetClinic() async {
+    try {
+      print('Rua: $clinicStreet');
+      return clinicStreet;
+    } catch (e) {
+      print('Erro ao achar o endereço da clínica: $e');
+    }
+    return null;
   }
 }
