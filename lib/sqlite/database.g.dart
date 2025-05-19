@@ -435,10 +435,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<String> tipo = GeneratedColumn<String>(
     'tipo',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    $customConstraints: 'NOT NULL CHECK(tipo IN (\'CLINIC\', \'PATIENT\'))',
+    requiredDuringInsert: false,
+    $customConstraints: 'CHECK(tipo IN (\'CLINIC\', \'PATIENT\'))',
   );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
@@ -493,8 +493,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         _tipoMeta,
         tipo.isAcceptableOrUnknown(data['tipo']!, _tipoMeta),
       );
-    } else if (isInserting) {
-      context.missing(_tipoMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -525,11 +523,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   User map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return User(
-      tipo:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}tipo'],
-          )!,
+      tipo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tipo'],
+      ),
       id:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
@@ -554,12 +551,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 }
 
 class User extends DataClass implements Insertable<User> {
-  final String tipo;
+  final String? tipo;
   final int id;
   final String email;
   final String? firebaseUid;
   const User({
-    required this.tipo,
+    this.tipo,
     required this.id,
     required this.email,
     this.firebaseUid,
@@ -567,7 +564,9 @@ class User extends DataClass implements Insertable<User> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['tipo'] = Variable<String>(tipo);
+    if (!nullToAbsent || tipo != null) {
+      map['tipo'] = Variable<String>(tipo);
+    }
     map['id'] = Variable<int>(id);
     map['email'] = Variable<String>(email);
     if (!nullToAbsent || firebaseUid != null) {
@@ -578,7 +577,7 @@ class User extends DataClass implements Insertable<User> {
 
   UsersCompanion toCompanion(bool nullToAbsent) {
     return UsersCompanion(
-      tipo: Value(tipo),
+      tipo: tipo == null && nullToAbsent ? const Value.absent() : Value(tipo),
       id: Value(id),
       email: Value(email),
       firebaseUid:
@@ -594,7 +593,7 @@ class User extends DataClass implements Insertable<User> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return User(
-      tipo: serializer.fromJson<String>(json['tipo']),
+      tipo: serializer.fromJson<String?>(json['tipo']),
       id: serializer.fromJson<int>(json['id']),
       email: serializer.fromJson<String>(json['email']),
       firebaseUid: serializer.fromJson<String?>(json['firebaseUid']),
@@ -604,7 +603,7 @@ class User extends DataClass implements Insertable<User> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'tipo': serializer.toJson<String>(tipo),
+      'tipo': serializer.toJson<String?>(tipo),
       'id': serializer.toJson<int>(id),
       'email': serializer.toJson<String>(email),
       'firebaseUid': serializer.toJson<String?>(firebaseUid),
@@ -612,12 +611,12 @@ class User extends DataClass implements Insertable<User> {
   }
 
   User copyWith({
-    String? tipo,
+    Value<String?> tipo = const Value.absent(),
     int? id,
     String? email,
     Value<String?> firebaseUid = const Value.absent(),
   }) => User(
-    tipo: tipo ?? this.tipo,
+    tipo: tipo.present ? tipo.value : this.tipo,
     id: id ?? this.id,
     email: email ?? this.email,
     firebaseUid: firebaseUid.present ? firebaseUid.value : this.firebaseUid,
@@ -656,7 +655,7 @@ class User extends DataClass implements Insertable<User> {
 }
 
 class UsersCompanion extends UpdateCompanion<User> {
-  final Value<String> tipo;
+  final Value<String?> tipo;
   final Value<int> id;
   final Value<String> email;
   final Value<String?> firebaseUid;
@@ -667,12 +666,11 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.firebaseUid = const Value.absent(),
   });
   UsersCompanion.insert({
-    required String tipo,
+    this.tipo = const Value.absent(),
     this.id = const Value.absent(),
     required String email,
     this.firebaseUid = const Value.absent(),
-  }) : tipo = Value(tipo),
-       email = Value(email);
+  }) : email = Value(email);
   static Insertable<User> custom({
     Expression<String>? tipo,
     Expression<int>? id,
@@ -688,7 +686,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   }
 
   UsersCompanion copyWith({
-    Value<String>? tipo,
+    Value<String?>? tipo,
     Value<int>? id,
     Value<String>? email,
     Value<String?>? firebaseUid,
@@ -3135,14 +3133,14 @@ typedef $$AddressesTableProcessedTableManager =
     >;
 typedef $$UsersTableCreateCompanionBuilder =
     UsersCompanion Function({
-      required String tipo,
+      Value<String?> tipo,
       Value<int> id,
       required String email,
       Value<String?> firebaseUid,
     });
 typedef $$UsersTableUpdateCompanionBuilder =
     UsersCompanion Function({
-      Value<String> tipo,
+      Value<String?> tipo,
       Value<int> id,
       Value<String> email,
       Value<String?> firebaseUid,
@@ -3402,7 +3400,7 @@ class $$UsersTableTableManager
               () => $$UsersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String> tipo = const Value.absent(),
+                Value<String?> tipo = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<String> email = const Value.absent(),
                 Value<String?> firebaseUid = const Value.absent(),
@@ -3414,7 +3412,7 @@ class $$UsersTableTableManager
               ),
           createCompanionCallback:
               ({
-                required String tipo,
+                Value<String?> tipo = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 required String email,
                 Value<String?> firebaseUid = const Value.absent(),

@@ -2,8 +2,8 @@ import 'package:drift/drift.dart';
 
 class Users extends Table {
   TextColumn get tipo =>
-      text().customConstraint(
-        "NOT NULL CHECK(tipo IN ('CLINIC', 'PATIENT'))",
+      text().nullable().customConstraint(
+        "CHECK(tipo IN ('CLINIC', 'PATIENT'))",
       )();
   IntColumn get id => integer().autoIncrement()();
   TextColumn get email => text().unique()();
