@@ -84,7 +84,7 @@ class SingUpController {
       // inserting into drift
       final uid = await _db.userDao.insertUser(
         // it should store the userId in UID variable to be used after in newPatient
-        'PATIENT', /// TO DO: LUIZA-> PRECISA DIFERENCIAR QUANDO CLICA-SE EM CLINIC OU PATIENT
+        'PATIENT', /// TODO: LUIZA-> PRECISA DIFERENCIAR QUANDO CLICA-SE EM CLINIC OU PATIENT
         email,
         firebaseUID,
       ); // we dont store the password because firebase already does that encrypiting
