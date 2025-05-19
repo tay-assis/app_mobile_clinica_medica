@@ -84,6 +84,7 @@ class SingUpController {
       // inserting into drift
       final uid = await _db.userDao.insertUser(
         // it should store the userId in UID variable to be used after in newPatient
+        'PATIENT', /// TO DO: LUIZA-> PRECISA DIFERENCIAR QUANDO CLICA-SE EM CLINIC OU PATIENT
         email,
         firebaseUID,
       ); // we dont store the password because firebase already does that encrypiting
@@ -208,7 +209,6 @@ class SingUpController {
           address,
           insurance,
           name,
-          00000000, //default phone for all patients resolve after
         );
         return true;
       } else {
@@ -232,8 +232,8 @@ class SingUpController {
     print('$name, $phone, $uid, $address');
 
     try {
-      if (address != -1) {
-        await _db.clinicDao.insertClinic(uid, address, name, image);
+      if (address != -1 && phone != null) { // tive que adicionar o phone não nulo para tirar erro
+        await _db.clinicDao.insertClinic(uid, address, name, phone, image);
         return true;
       } else {
         print('\n Erro de endereço id \n');

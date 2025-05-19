@@ -33,9 +33,9 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
 
   // INSERT INTO USERS (email, firebaseUID) VALUES (...)
   // firebase generates an UID (userID) when sign up
-  Future<int> insertUser(String email, String firebaseUid) async {
+  Future<int> insertUser(String tipo, String email, String firebaseUid) async {
     final int insertedId = await into(users).insert(
-      UsersCompanion(email: Value(email), firebaseUid: Value(firebaseUid)),
+      UsersCompanion(tipo: Value(tipo), email: Value(email), firebaseUid: Value(firebaseUid)),
     );
 
     return insertedId;
