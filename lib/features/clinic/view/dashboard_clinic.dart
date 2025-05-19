@@ -1,3 +1,4 @@
+import 'package:app_mobile_clinica_medica/features/clinic/controller/dashboard_clinic_controller.dart';
 import 'package:app_mobile_clinica_medica/features/clinic/view/sing_up_doctor.dart';
 import 'package:app_mobile_clinica_medica/features/clinic/widgets/label.dart';
 import 'package:app_mobile_clinica_medica/features/login/view/login_page.dart';
@@ -5,6 +6,7 @@ import 'package:app_mobile_clinica_medica/features/results/widgets/doctor_card.d
 import 'package:app_mobile_clinica_medica/features/shared/widgets/rectangle.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/retangle_result.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/bottom_nav_bar.dart';
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:flutter/material.dart';
 
 // Modelo simples do médico
@@ -27,6 +29,12 @@ class DashboardClinic extends StatefulWidget {
 }
 
 class _DashboardClinicState extends State<DashboardClinic> {
+  late final AppDatabase _db;
+  late final DashboardClinicController _controller;
+
+  String? clinicName;
+  String? clinicStreet;
+
   final List<Doctor> doctorsList = [
     Doctor(
       name: 'Dr. Kate Rose',
@@ -50,6 +58,30 @@ class _DashboardClinicState extends State<DashboardClinic> {
     ),
   ];
 
+  Future<void> _loadClinicData() async {
+    final clinic = await _controller.findClinic(2); //widget.uid
+
+    if (clinic != null) {
+      final name = await _controller.nameClinic(clinic);
+      final street = await _controller.streetClinic(clinic);
+
+      setState(() {
+        clinicName = name;
+        clinicStreet = street;
+      });
+    } else {
+      print('Clínica não encontrada');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    //_db = AppDatabase(); // agora sempre será a mesma instância
+    _controller = DashboardClinicController();
+    _loadClinicData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,11 +100,11 @@ class _DashboardClinicState extends State<DashboardClinic> {
                 padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        'Clínica do Goku',
+                        clinicName ?? 'Carregando nome',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           color: Colors.white,
@@ -86,7 +118,7 @@ class _DashboardClinicState extends State<DashboardClinic> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Avenida Paulo Brificado (pegar do BD), 069',
+                        clinicStreet ?? 'Carregando endereço',
                         style: TextStyle(
                           color: Color.fromARGB(218, 255, 255, 255),
                           fontSize: 15,

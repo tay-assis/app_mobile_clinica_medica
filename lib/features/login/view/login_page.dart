@@ -126,16 +126,13 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () async {
                           final success = await _controller.checkUser();
                           final user = await _controller.findUser();
-                          //Chmando o metodo
-                          //_controller.newUser();
-                          //
                           //Mensagem de login
                           if (user != null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
                                   success
-                                      ? 'Login realizado com sucesso'
+                                      ? 'Login realizado com sucesso, userId: ${user.id}'
                                       : 'Usuário ou senha inválidos',
                                 ),
                                 duration: const Duration(seconds: 2),
