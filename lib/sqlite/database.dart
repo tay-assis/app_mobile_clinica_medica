@@ -66,19 +66,22 @@ class AppDatabase extends _$AppDatabase {
       return NativeDatabase(file);
     });
   }
-
-  // Storing info on computer
-  //static LazyDatabase _openConnection() {
-  //  return LazyDatabase(() async {
-  //    final dbFolder = Directory('./lib/sqlite');
-  //    if (!dbFolder.existsSync()) {
-  //      dbFolder.createSync(
-  //        recursive: true,
-  //      ); // Creates the directory if it doesn't exist
-  //    }
-  //
-  //    final file = File('${dbFolder.path}/app_flutter.sqlite');
-  //    return NativeDatabase.createInBackground(file);
-  //  });
-  //}
 }
+
+/* Storing info on computer
+  static LazyDatabase _openConnection() {
+    return LazyDatabase(() async {
+      final dbFolder = Directory('./lib/sqlite');
+      if (!dbFolder.existsSync()) {
+        dbFolder.createSync(
+          recursive: true,
+        ); // Creates the directory if it doesn't exist
+      }
+
+      final file = File('${dbFolder.path}/app_flutter.sqlite');
+      return NativeDatabase.createInBackground(file);
+    });
+  }
+}
+
+*/

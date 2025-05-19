@@ -86,7 +86,6 @@ class SingUpController {
         // it should store the userId in UID variable to be used after in newPatient
         email,
         firebaseUID,
-        type,
       ); // we dont store the password because firebase already does that encrypiting
 
       print('$uid');
@@ -209,6 +208,7 @@ class SingUpController {
           address,
           insurance,
           name,
+          00000000, //default phone for all patients resolve after
         );
         return true;
       } else {
@@ -233,7 +233,7 @@ class SingUpController {
 
     try {
       if (address != -1) {
-        await _db.clinicDao.insertClinic(uid, address, name, phone!, image);
+        await _db.clinicDao.insertClinic(uid, address, name, image);
         return true;
       } else {
         print('\n Erro de endereço id \n');

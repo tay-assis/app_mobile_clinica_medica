@@ -8,6 +8,6 @@ class Clinics extends Table {
   IntColumn get userId => integer().references(Users, #id)();
   IntColumn get addressId => integer().references(Addresses, #id)();
   TextColumn get name => text().withLength(min: 1, max: 50).unique()();
-  IntColumn get phone => integer().unique()();
+  //IntColumn get phone => integer().unique()();
   TextColumn get imageUrl => text().nullable()(); // Campo para armazenar imagem
 }

@@ -6,8 +6,4 @@ class Users extends Table {
   TextColumn get firebaseUid =>
       text()
           .nullable()(); // instead of storing paswords firebase can handle this, better for security reasons
-  TextColumn get type =>
-      text().customConstraint(
-        "NOT NULL CHECK(type IN ('PATIENT', 'CLINIC'))",
-      )();
 }

@@ -48,6 +48,7 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
     int INSURANCEID,
     int ADDRESSID,
     String NAME,
+    int PHONE,
   ) async {
     into(patients).insert(
       PatientsCompanion(
@@ -55,6 +56,7 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
         insuranceId: Value(INSURANCEID),
         addressId: Value(ADDRESSID),
         name: Value(NAME),
+        phone: Value(PHONE),
       ),
     );
     return;
@@ -71,9 +73,10 @@ class PatientDao extends DatabaseAccessor<AppDatabase> with _$PatientDaoMixin {
   ) async {
     final companion = PatientsCompanion(
       insuranceId:
-          ((targets & 0x100) != 0) ? Value(INSURANCEID) : Value.absent(),
-      addressId: ((targets & 0x010) != 0) ? Value(ADDRESSID) : Value.absent(),
-      name: ((targets & 0x001) != 0) ? Value(NAME) : Value.absent(),
+          ((targets & 0x1000) != 0) ? Value(INSURANCEID) : Value.absent(),
+      addressId: ((targets & 0x0100) != 0) ? Value(ADDRESSID) : Value.absent(),
+      name: ((targets & 0x0010) != 0) ? Value(NAME) : Value.absent(),
+      phone: ((targets & 0x0001) != 0) ? Value(PHONE) : Value.absent(),
     );
 
     // single update
