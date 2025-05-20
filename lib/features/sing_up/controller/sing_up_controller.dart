@@ -1,6 +1,7 @@
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class SingUpController {
   // USER
@@ -66,9 +67,45 @@ class SingUpController {
     imageCController.dispose();
   }
 
+  bool isValidEmail(String email) {
+    // regex (got in stackoverflow) to validate email
+    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+    if (!emailRegex.hasMatch(email)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  bool isValidPassword(String password) {
+    // 8 characteres
+    if (password.length < 8) return false;
+
+    // at least one upper case
+    final uppercaseRegex = RegExp(r'[A-Z]');
+
+    // at least one special character
+    final specialCharRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+
+    if (!uppercaseRegex.hasMatch(password)) return false;
+    if (!specialCharRegex.hasMatch(password)) return false;
+
+    return true;
+  }
+
   Future<int> newUser(String type) async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
+
+    if (!isValidEmail(email)) {
+      print('Email inválido, tente novamente!');
+      return -1;
+    }
+    if (!isValidPassword(password)) {
+      print('Senha inválida, mínimo ');
+      return -1;
+    }
 
     try {
       final UserCredential cred = await _auth.createUserWithEmailAndPassword(
