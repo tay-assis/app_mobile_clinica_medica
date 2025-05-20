@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:app_mobile_clinica_medica/features/filtro/controller/filter_page_controller.dart';
+import 'package:app_mobile_clinica_medica/features/filter/controller/filter_page_controller.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
 
@@ -44,13 +44,12 @@ class _FilterPageState extends State<FilterPage> {
     final controller = context.watch<FilterNameController>();
 
     if (controller.loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     // Quando carregado, controller.names possui a lista de nomes que se pede
-    final doctorNames = controller.names; // não tenho certeza se a lista local é necessária
+    final doctorNames =
+        controller.names; // não tenho certeza se a lista local é necessária
     final doctorSpecialties = controller.specialties;
     final clinicNames = controller.clinicNames;
     final clinicAddresses = controller.addresses;

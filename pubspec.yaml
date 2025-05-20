@@ -70,7 +70,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - lib/images/sing_up_choose_image.png
+    - lib/images/profile.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
