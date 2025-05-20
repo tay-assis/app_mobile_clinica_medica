@@ -26,7 +26,11 @@ class _SingUpPatientState extends State<SingUpPatient> {
   late final AppDatabase _db;
   late final SingUpController _controller;
 
+  // insurance variables
   String? _selectedInsurance;
+  bool isOtherInsurance = false;
+  bool isSelected = false;
+  //TextEditingController _otherInsuranceController = TextEditingController();
 
   @override
   void initState() {
@@ -37,6 +41,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
 
   @override
   void dispose() {
+    //_otherInsuranceController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -68,11 +73,6 @@ class _SingUpPatientState extends State<SingUpPatient> {
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
-
-    // insurance variables
-    bool isOtherInsurance = false;
-    bool isSelected = false;
-    String? newInsurance = null;
 
     return Scaffold(
       body: Padding(
@@ -154,58 +154,82 @@ class _SingUpPatientState extends State<SingUpPatient> {
                 }
 
                 final insuranceNames = snapshot.data ?? [];
-                // Dropdown de convênios (mostrado apenas se não for "Outro")
-                //if (!isOtherInsurance) {
-                return CustomDropdown(
-                  title: 'Insurance',
-                  label: 'insurance',
-                  value: _selectedInsurance,
-                  items: insuranceNames,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedInsurance = value;
-                    });
 
-                    print('Convênio selecionado: $_selectedInsurance');
-                  },
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomDropdown(
+                      title: 'Insurance',
+                      label: 'insurance',
+                      value: isOtherInsurance ? null : _selectedInsurance,
+                      items: insuranceNames,
+                      onChanged: (value) {
+                        if (!isOtherInsurance) {
+                          setState(() {
+                            _selectedInsurance = value;
+                          });
+                          print('Convênio selecionado: $_selectedInsurance');
+                          isSelected =
+                              value != null &&
+                              value.isNotEmpty; //returning true
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: isOtherInsurance,
+                          onChanged: (value) {
+                            setState(() {
+                              isOtherInsurance = value ?? false;
+
+                              if (!isOtherInsurance) {
+                                //mudei controller
+                                _controller.convenioController.clear();
+                                isSelected =
+                                    _selectedInsurance != null &&
+                                    _selectedInsurance!.isNotEmpty;
+                              } else {
+                                //mudei controller
+                                _selectedInsurance =
+                                    _controller.convenioController.text;
+                                isSelected = false;
+                              }
+                            });
+                          },
+                        ),
+                        const Text(
+                          'Outro',
+                          style: TextStyle(fontFamily: 'Nunito', fontSize: 16),
+                        ),
+                        const SizedBox(width: 10),
+                        if (isOtherInsurance)
+                          Expanded(
+                            child: TextFormField(
+                              controller: _controller.convenioController,
+                              onChanged: (text) {
+                                setState(() {
+                                  _selectedInsurance = text;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Digite o nome do convênio',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
                 );
-                //}
               },
             ),
-
-            // Checkbox "Outro convênio"
-            Row(
-              children: [
-                Checkbox(
-                  value: isOtherInsurance,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      isOtherInsurance = value ?? false;
-
-                      if (isOtherInsurance) {
-                        isSelected = false; // limpa seleção do dropdown
-                      } else {
-                        _controller.convenioController
-                            .clear(); // limpa campo de texto
-                      }
-                    });
-                  },
-                ),
-                const Text('Outro convênio'),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
-            // Campo de texto para novo convênio (visível só se "Outro" estiver marcado)
-            if (isOtherInsurance)
-              TextField(
-                controller: _controller.convenioController,
-                decoration: const InputDecoration(
-                  labelText: 'Nome do novo convênio',
-                  border: OutlineInputBorder(),
-                ),
-              ),
 
             // Endereço
             SizedBox(height: height * 0.03),
@@ -285,7 +309,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
                     widget.uid,
                     isOtherInsurance,
                     isSelected,
-                    newInsurance!,
+                    _selectedInsurance!,
                   );
                   if (success) {
                     ScaffoldMessenger.of(context).showSnackBar(

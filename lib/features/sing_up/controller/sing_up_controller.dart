@@ -209,17 +209,20 @@ class SingUpController {
   }
 
   Future<int> chooseInsurance(
-    bool isOther, //se o check ta on
+    bool isOtherInsurance, //se o check ta on
     bool isSelected, // se foi selecionado
-    String valueSelected, //valor selecionado ou valor inserido
+    String selectedInsurance, //valor selecionado ou valor inserido
   ) async {
-    final insuranceName = convenioController.text.trim();
+    print('$isOtherInsurance, $isSelected, $selectedInsurance');
+    //final insuranceName = convenioController.text.trim();
     if (isSelected) {
-      final insuranceId = await _db.insuranceDao.returnInsurance(valueSelected);
+      final insuranceId = await _db.insuranceDao.returnInsurance(
+        selectedInsurance,
+      );
       return insuranceId;
-    } else if (isOther) {
+    } else if (isOtherInsurance) {
       final insuranceId = await _db.insuranceDao.insertAndReturnInsurance(
-        insuranceName,
+        selectedInsurance,
       );
       return insuranceId;
     }
@@ -228,14 +231,18 @@ class SingUpController {
 
   Future<bool> newPatient(
     int uid,
-    bool isOther,
+    bool isOtherInsurance,
     bool isSelected,
-    String valueSelected,
+    String selectedInsurance,
   ) async {
     final name = nomePController.text.trim();
 
     final address = await newPAddress();
-    final insurance = await chooseInsurance(isOther, isSelected, valueSelected);
+    final insurance = await chooseInsurance(
+      isOtherInsurance,
+      isSelected,
+      selectedInsurance,
+    );
     try {
       if (address != -1 && insurance != -1) {
         await _db.patientDao.insertPatient(
