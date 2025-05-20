@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class CustomDropdown extends StatelessWidget {
-  final String title;
   final String label;
   final String? value;
   final List<String> items;
@@ -9,7 +8,6 @@ class CustomDropdown extends StatelessWidget {
 
   const CustomDropdown({
     super.key,
-    required this.title,
     required this.label,
     required this.value,
     required this.items,
@@ -21,26 +19,37 @@ class CustomDropdown extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Nunito',
-          ),
-        ),
         const SizedBox(height: 10),
         DropdownButtonFormField<String>(
           value: value,
           hint: Text('Selecione $label'),
           items:
-              items.map((item) {
-                return DropdownMenuItem<String>(value: item, child: Text(item));
-              }).toList(),
+              items
+                  .map(
+                    (item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(item),
+                    ),
+                  )
+                  .toList(),
           onChanged: onChanged,
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 14,
+            ),
+            hintStyle: TextStyle(color: Colors.blue.shade700),
+            labelStyle: TextStyle(color: Colors.blue.shade800),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.blue),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
+          iconEnabledColor: Colors.blue, // seta azul
         ),
       ],
     );

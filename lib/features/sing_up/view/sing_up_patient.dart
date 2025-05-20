@@ -130,6 +130,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
             ),
 
             //Convênio
+            SizedBox(height: height * 0.03),
             Align(
               alignment: Alignment.centerLeft * 1.2,
               child: const FieldLabel(text: 'Convênio'),
@@ -157,7 +158,6 @@ class _SingUpPatientState extends State<SingUpPatient> {
                 // Dropdown de convênios (mostrado apenas se não for "Outro")
                 //if (!isOtherInsurance) {
                 return CustomDropdown(
-                  title: 'Insurance',
                   label: 'insurance',
                   value: _selectedInsurance,
                   items: insuranceNames,
