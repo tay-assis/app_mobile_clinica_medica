@@ -16,42 +16,59 @@ class CustomDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 10),
-        DropdownButtonFormField<String>(
-          value: value,
-          hint: Text('Selecione $label'),
-          items:
-              items
-                  .map(
-                    (item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    ),
-                  )
-                  .toList(),
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 14,
+    return Focus(
+      onFocusChange: (hasFocus) {
+        if (hasFocus) {
+          FocusScope.of(
+            context,
+          ).unfocus(); // Fecha o teclado se algum campo tiver o foco
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 10),
+          DropdownButtonFormField<String>(
+            value: value,
+            hint: Text('Selecione $label'),
+            items:
+                items
+                    .map(
+                      (item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(item),
+                      ),
+                    )
+                    .toList(),
+            onChanged: (val) {
+              FocusScope.of(
+                context,
+              ).unfocus(); // Fecha o teclado mesmo ao selecionar
+              onChanged(val);
+            },
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 14,
+              ),
+              hintStyle: TextStyle(color: Colors.blue.shade700),
+              labelStyle: TextStyle(color: Colors.blue.shade800),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.blue),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-            hintStyle: TextStyle(color: Colors.blue.shade700),
-            labelStyle: TextStyle(color: Colors.blue.shade800),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.blue),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            iconEnabledColor: Colors.blue, // seta azul
+            dropdownColor: Colors.blue[50], // cor de fundo do menu
           ),
-          iconEnabledColor: Colors.blue, // seta azul
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
