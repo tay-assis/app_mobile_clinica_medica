@@ -1,4 +1,5 @@
 import 'package:app_mobile_clinica_medica/features/shared/widgets/back_icon.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/sing_up/controller/sing_up_controller.dart';
 import 'package:provider/provider.dart';
@@ -160,6 +161,11 @@ class _SingUpChooseState extends State<SingUpChoose> {
                             width: 170,
                             height: 50,
                             onPressed: () async {
+                              final email =
+                                  _controller.emailController.text.trim();
+                              final password =
+                                  _controller.passwordController.text.trim();
+
                               final uid = await _controller.newUser('CLINIC');
                               if (uid != -1) {
                                 // if user created
@@ -177,12 +183,23 @@ class _SingUpChooseState extends State<SingUpChoose> {
                                   beginOffset: const Offset(1.0, 0.0),
                                 );
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Erro ao realizar cadastro.'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
+                                if (!_controller.isValidEmail(email)) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Email inválido'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                } else if (!_controller.isValidPassword(
+                                  password,
+                                )) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Senha inválida'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
                               }
                             },
                           ),
