@@ -130,6 +130,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
             ),
 
             //Convênio
+            SizedBox(height: height * 0.03),
             Align(
               alignment: Alignment.centerLeft * 1.2,
               child: const FieldLabel(text: 'Convênio'),
@@ -159,7 +160,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomDropdown(
-                      title: 'Insurance',
+                      //title: 'Insurance',
                       label: 'insurance',
                       value: isOtherInsurance ? null : _selectedInsurance,
                       items: insuranceNames,
