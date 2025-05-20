@@ -35,9 +35,6 @@ class SingUpController {
 
   // VARIABLE FOR UID
 
-  List<String> _insurances = [];
-  List<String> get insurances => _insurances;
-
   void dispose() {
     // free controllers from user
     emailController.dispose();
@@ -259,6 +256,12 @@ class SingUpController {
     return false;
   }
 
+  Future<List<String>> getInsurancesName() async {
+    final result = await _db.insuranceDao.selectInsurances();
+
+    return result.map((i) => i.name).toList();
+  }
+
   Future<bool> newClinic(int uid) async {
     final name = nomeCController.text.trim();
     final phone = int.tryParse(phoneCController.text.trim());
@@ -282,12 +285,5 @@ class SingUpController {
       print('\n Erro banco de dados local: $e \n');
     }
     return false;
-  }
-
-  Future<void> loadInsurances() async {
-    final allInsurances = await _db.insuranceDao.selectInsurances();
-    // insurances names
-    _insurances = allInsurances.map((d) => d.name).toList();
-    print('$_insurances');
   }
 }

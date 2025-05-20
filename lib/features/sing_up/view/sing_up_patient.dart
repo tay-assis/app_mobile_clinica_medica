@@ -26,6 +26,8 @@ class _SingUpPatientState extends State<SingUpPatient> {
   late final AppDatabase _db;
   late final SingUpController _controller;
 
+  String? _selectedInsurance;
+
   @override
   void initState() {
     super.initState();
@@ -66,8 +68,6 @@ class _SingUpPatientState extends State<SingUpPatient> {
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
-
-    final allInsurances = _controller.insurances;
 
     // insurance variables
     bool isOtherInsurance = false;
@@ -129,36 +129,49 @@ class _SingUpPatientState extends State<SingUpPatient> {
               ),
             ),
 
-            // Telefone
-            //SizedBox(height: height * 0.03),
-            //Align(
-            //alignment: Alignment.centerLeft * 1.2,
-            //child: const FieldLabel(text: 'Telefone'),
-            //),
-            //Center(
-            //child: SingUpClientRegister(
-            // controller: _controller.telefoneController,
-            //hintText: 'Digite seu telefone',
-            //keyboardType: TextInputType.number,
-            //),
-            //),
+            //Convênio
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'Convênio'),
+            ),
+            FutureBuilder<List<String>>(
+              future: _controller.getInsurancesName(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
 
-            // Convênio
-            // Dropdown de convênios (mostrado apenas se não for "Outro")
-            if (!isOtherInsurance)
-              CustomDropdown(
-                title: 'Convênio',
-                label: 'Convênio do paciente',
-                value: newInsurance,
-                items: allInsurances,
-                onChanged: (v) {
-                  setState(() {
-                    newInsurance = v!;
-                  });
-                },
-              ),
+                if (snapshot.hasError) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Text(
+                      'Erro ao carregar convênios: ${snapshot.error}',
+                    ),
+                  );
+                }
 
-            const SizedBox(height: 20),
+                final insuranceNames = snapshot.data ?? [];
+                // Dropdown de convênios (mostrado apenas se não for "Outro")
+                //if (!isOtherInsurance) {
+                return CustomDropdown(
+                  title: 'Insurance',
+                  label: 'insurance',
+                  value: _selectedInsurance,
+                  items: insuranceNames,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedInsurance = value;
+                    });
+
+                    print('Convênio selecionado: $_selectedInsurance');
+                  },
+                );
+                //}
+              },
+            ),
 
             // Checkbox "Outro convênio"
             Row(
