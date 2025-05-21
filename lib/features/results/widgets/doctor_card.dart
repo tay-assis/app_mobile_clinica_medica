@@ -6,14 +6,14 @@ class DoctorCard extends StatelessWidget {
   final String doctorName;
   final String specialty;
   final String imageUrl;
-  final String CRM;
+  final String? CRM;
 
   const DoctorCard({
     super.key,
     required this.doctorName,
     required this.specialty,
     required this.imageUrl,
-    required this.CRM,
+    this.CRM,
   });
 
   @override
@@ -29,7 +29,7 @@ class DoctorCard extends StatelessWidget {
             child: DoctorInfoCard(
               doctorName: doctorName,
               specialty: specialty,
-              CRM: CRM,
+              CRM: CRM ?? '',
             ),
           ),
           DoctorAvatar(imageUrl: imageUrl, radius: 45, width: 95, height: 95),
