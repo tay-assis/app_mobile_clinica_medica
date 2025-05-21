@@ -1,3 +1,4 @@
+import 'package:app_mobile_clinica_medica/features/filter/model/select_filter.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/filter/view/filter_page.dart';
@@ -12,6 +13,25 @@ class SearchBarWidget extends StatefulWidget {
 class _SearchBarWidgetState extends State<SearchBarWidget> {
   int appliedFilters = 0;
 
+  @override
+  void initState() {
+    super.initState();
+
+    // Check filters in singleton and update conter
+    final filtros = SelectedFilter();
+    int quantity = 0;
+    if (filtros.specialty != null && filtros.specialty!.isNotEmpty) quantity++;
+    if (filtros.clinic != null && filtros.clinic!.isNotEmpty) quantity++;
+    if (filtros.location != null && filtros.location!.isNotEmpty) quantity++;
+    if (filtros.doctorName != null && filtros.doctorName!.isNotEmpty) {
+      quantity++;
+    }
+
+    setState(() {
+      appliedFilters = quantity;
+    });
+  }
+
   // Function to open the filter page and get the selected filters
   void _openFilters() async {
     final result = await showModalBottomSheet<Map<String, String?>>(
@@ -20,16 +40,14 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       builder: (_) => const FilterPage(),
     );
 
+    // Update quantity of the filters apply with singleton
+    final filtros = SelectedFilter();
     int quantity = 0;
-
-    // Check if the result is not null and count the number of applied filters
-    if (result != null) {
-      result.forEach((key, value) {
-        if (value != null && value.trim().isNotEmpty) {
-          quantity++;
-        }
-      });
-    }
+    if (filtros.specialty != null && filtros.specialty!.isNotEmpty) quantity++;
+    if (filtros.clinic != null && filtros.clinic!.isNotEmpty) quantity++;
+    if (filtros.location != null && filtros.location!.isNotEmpty) quantity++;
+    if (filtros.doctorName != null && filtros.doctorName!.isNotEmpty)
+      quantity++;
 
     // Update the state with the number of applied filters
     setState(() {

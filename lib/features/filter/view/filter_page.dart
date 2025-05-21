@@ -1,11 +1,10 @@
+import 'package:app_mobile_clinica_medica/features/filter/model/select_filter.dart';
 import 'package:app_mobile_clinica_medica/features/results/view/filter_result.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:app_mobile_clinica_medica/features/filter/controller/filter_page_controller.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
-
 import 'widgets/custom_autocomplete_input.dart';
 import 'widgets/custom_dropdown.dart';
 
@@ -28,6 +27,14 @@ class _FilterPageState extends State<FilterPage> {
     // Inicia carregamento após primeiro frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FilterNameController>().loadDoctorsAndClinics();
+
+      final filters = SelectedFilter();
+      setState(() {
+        selectedSpecialty = filters.specialty;
+        selectedClinic = filters.clinic;
+        selectedLocation = filters.location;
+        selectedName = filters.doctorName;
+      });
     });
   }
 
@@ -38,6 +45,8 @@ class _FilterPageState extends State<FilterPage> {
       selectedLocation = null;
       selectedName = null;
     });
+
+    SelectedFilter().clear();
   }
 
   @override
@@ -53,7 +62,6 @@ class _FilterPageState extends State<FilterPage> {
     final doctorSpecialties = controller.specialties;
     final clinicNames = controller.clinicNames;
     final clinicAddresses = controller.addresses;
-    // doctorNames usado na linha 104
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -117,6 +125,13 @@ class _FilterPageState extends State<FilterPage> {
                   width: 149,
                   height: 51,
                   onPressed: () async {
+                    // save the selected filters
+                    final filters = SelectedFilter();
+                    filters.specialty = selectedSpecialty;
+                    filters.clinic = selectedClinic;
+                    filters.location = selectedLocation;
+                    filters.doctorName = selectedName;
+
                     // call your controller
                     final controller = context.read<FilterNameController>();
                     final List<int> filterResultList = await controller
@@ -132,7 +147,7 @@ class _FilterPageState extends State<FilterPage> {
                       // passando adiante a lista com os resultados do filtro
                       MaterialPageRoute(
                         builder: (_) {
-                          return ResultFilter(doctorsIds: filterResultList);
+                          return ResultFilter(doctorsCRMs: filterResultList);
                         },
                       ),
                     );
