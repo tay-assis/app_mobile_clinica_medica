@@ -68,7 +68,7 @@ class LoginController {
     return null;
   }
 
-  Future<int?> userUid() async {
+  Future<int> userUid() async {
     final local_db.User? user = await findUser();
 
     if (user != null) {

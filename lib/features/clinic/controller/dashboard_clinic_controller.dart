@@ -6,7 +6,7 @@ class DashboardClinicController {
 
   Future<Clinic?> findClinic(int uid) async {
     try {
-      final clinic = await _db.clinicDao.selectClinicByID(uid);
+      final clinic = await _db.clinicDao.selectClinicByUID(uid);
       return clinic;
     } catch (e) {
       print('Erro ao buscar a clínica: $e');

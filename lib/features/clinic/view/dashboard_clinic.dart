@@ -59,11 +59,14 @@ class _DashboardClinicState extends State<DashboardClinic> {
   ];
 
   Future<void> _loadClinicData() async {
-    final clinic = await _controller.findClinic(2); //widget.uid
+    print('DASHBOARD LOAD: ${widget.uid}');
+    final clinic = await _controller.findClinic(widget.uid); //widget.uid
 
     if (clinic != null) {
       final name = await _controller.nameClinic(clinic);
       final street = await _controller.streetClinic(clinic);
+      print('${clinic.userId}');
+      print('\n $name, $street \n');
 
       setState(() {
         clinicName = name;
@@ -77,7 +80,7 @@ class _DashboardClinicState extends State<DashboardClinic> {
   @override
   void initState() {
     super.initState();
-    //_db = AppDatabase(); // agora sempre será a mesma instância
+    _db = AppDatabase(); // agora sempre será a mesma instância
     _controller = DashboardClinicController();
     _loadClinicData();
   }
