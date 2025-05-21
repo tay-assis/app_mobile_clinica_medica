@@ -7,7 +7,7 @@ part 'clinic_dao.g.dart';
 @DriftAccessor(tables: [Clinics])
 class ClinicDao extends DatabaseAccessor<AppDatabase> with _$ClinicDaoMixin {
   // You must pass an instance of AppDatabase to the DAO.
-  ClinicDao(AppDatabase db) : super(db);
+  ClinicDao(super.db);
 
   // É recomendada a leitura da documentação do drift para entendimento dos métodos
   // No C in CRUD, because the tables were already created
