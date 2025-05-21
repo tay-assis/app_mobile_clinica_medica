@@ -1,3 +1,4 @@
+import 'package:app_mobile_clinica_medica/features/results/view/filter_result.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -126,9 +127,14 @@ class _FilterPageState extends State<FilterPage> {
                           doctorName: selectedName,
                         );
 
-                    Navigator.pop(
+                    Navigator.push(
                       context,
                       // passando adiante a lista com os resultados do filtro
+                      MaterialPageRoute(
+                        builder: (_) {
+                          return ResultFilter(doctorsIds: filterResultList);
+                        },
+                      ),
                     );
                   },
                 ),

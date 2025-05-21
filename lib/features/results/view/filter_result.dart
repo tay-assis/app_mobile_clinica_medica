@@ -13,40 +13,46 @@ class Doctor {
 
 // Página com a grade de médicos
 class ResultFilter extends StatelessWidget {
-  const ResultFilter({super.key});
+  final List<int> doctorsIds;
+
+  ResultFilter({super.key, required this.doctorsIds});
 
   @override
   Widget build(BuildContext context) {
     // Lista de médicos(será modificado posteriomente por uma lista de ID)
-    final List<Doctor> doctorsList = [
-      Doctor(
-        name: 'Dr. Kate Rose',
-        specialty: 'Pediatra',
-        imageUrl: 'lib/images/profile.jpg',
-      ),
-      Doctor(
-        name: 'Dr. Kyle Bush',
-        specialty: 'Cardiologista',
-        imageUrl: 'https://placehold.co/130x116',
-      ),
-      Doctor(
-        name: 'Dr. Casey Dean',
-        specialty: 'Dermatologista',
-        imageUrl: 'https://placehold.co/130x116',
-      ),
-      Doctor(
-        name: 'Dr. Simon Le',
-        specialty: 'Dermatologista',
-        imageUrl: 'https://placehold.co/130x116',
-      ),
-    ];
+    // final List<Doctor> doctorsList = [
+    //   Doctor(
+    //     name: 'Dr. Kate Rose',
+    //     specialty: 'Pediatra',
+    //     imageUrl: 'lib/images/profile.jpg',
+    //   ),
+    //   Doctor(
+    //     name: 'Dr. Kyle Bush',
+    //     specialty: 'Cardiologista',
+    //     imageUrl: 'https://placehold.co/130x116',
+    //   ),
+    //   Doctor(
+    //     name: 'Dr. Casey Dean',
+    //     specialty: 'Dermatologista',
+    //     imageUrl: 'https://placehold.co/130x116',
+    //   ),
+    //   Doctor(
+    //     name: 'Dr. Simon Le',
+    //     specialty: 'Dermatologista',
+    //     imageUrl: 'https://placehold.co/130x116',
+    //   ),
+    // ];
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
           // Cabeçalho com título e busca
-          ResultRetangle(width: MediaQuery.of(context).size.width, height: 250),
+          ResultRetangle(
+            width: MediaQuery.of(context).size.width,
+            height: 250,
+            returnHome: true,
+          ),
 
           // Espaçamento entre o cabeçalho e a lista de médicos
           const SizedBox(height: 20),
@@ -65,13 +71,13 @@ class ResultFilter extends StatelessWidget {
               ),
               // Exibe o widgets com a foto e a informação do médico
               // de acordo com a quantidade de médicos na lista
-              itemCount: doctorsList.length,
+              itemCount: doctorsIds.length,
               itemBuilder: (context, index) {
-                final doctor = doctorsList[index];
+                final doctorId = doctorsIds[index];
                 return DoctorCard(
-                  doctorName: doctor.name,
-                  specialty: doctor.specialty,
-                  imageUrl: doctor.imageUrl,
+                  doctorName: 'Id: $doctorId',
+                  specialty: 'Test specialty $doctorId',
+                  imageUrl: 'lib/images/profile.jpg',
                 );
               },
             ),
