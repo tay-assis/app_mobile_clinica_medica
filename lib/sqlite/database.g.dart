@@ -430,6 +430,16 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $UsersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _tipoMeta = const VerificationMeta('tipo');
+  @override
+  late final GeneratedColumn<String> tipo = GeneratedColumn<String>(
+    'tipo',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    $customConstraints: 'CHECK(tipo IN (\'CLINIC\', \'PATIENT\'))',
+  );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -465,7 +475,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, email, firebaseUid];
+  List<GeneratedColumn> get $columns => [tipo, id, email, firebaseUid];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -478,6 +488,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('tipo')) {
+      context.handle(
+        _tipoMeta,
+        tipo.isAcceptableOrUnknown(data['tipo']!, _tipoMeta),
+      );
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
@@ -507,6 +523,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   User map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return User(
+      tipo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tipo'],
+      ),
       id:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
@@ -531,13 +551,22 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 }
 
 class User extends DataClass implements Insertable<User> {
+  final String? tipo;
   final int id;
   final String email;
   final String? firebaseUid;
-  const User({required this.id, required this.email, this.firebaseUid});
+  const User({
+    this.tipo,
+    required this.id,
+    required this.email,
+    this.firebaseUid,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (!nullToAbsent || tipo != null) {
+      map['tipo'] = Variable<String>(tipo);
+    }
     map['id'] = Variable<int>(id);
     map['email'] = Variable<String>(email);
     if (!nullToAbsent || firebaseUid != null) {
@@ -548,6 +577,7 @@ class User extends DataClass implements Insertable<User> {
 
   UsersCompanion toCompanion(bool nullToAbsent) {
     return UsersCompanion(
+      tipo: tipo == null && nullToAbsent ? const Value.absent() : Value(tipo),
       id: Value(id),
       email: Value(email),
       firebaseUid:
@@ -563,6 +593,7 @@ class User extends DataClass implements Insertable<User> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return User(
+      tipo: serializer.fromJson<String?>(json['tipo']),
       id: serializer.fromJson<int>(json['id']),
       email: serializer.fromJson<String>(json['email']),
       firebaseUid: serializer.fromJson<String?>(json['firebaseUid']),
@@ -572,6 +603,7 @@ class User extends DataClass implements Insertable<User> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'tipo': serializer.toJson<String?>(tipo),
       'id': serializer.toJson<int>(id),
       'email': serializer.toJson<String>(email),
       'firebaseUid': serializer.toJson<String?>(firebaseUid),
@@ -579,16 +611,19 @@ class User extends DataClass implements Insertable<User> {
   }
 
   User copyWith({
+    Value<String?> tipo = const Value.absent(),
     int? id,
     String? email,
     Value<String?> firebaseUid = const Value.absent(),
   }) => User(
+    tipo: tipo.present ? tipo.value : this.tipo,
     id: id ?? this.id,
     email: email ?? this.email,
     firebaseUid: firebaseUid.present ? firebaseUid.value : this.firebaseUid,
   );
   User copyWithCompanion(UsersCompanion data) {
     return User(
+      tipo: data.tipo.present ? data.tipo.value : this.tipo,
       id: data.id.present ? data.id.value : this.id,
       email: data.email.present ? data.email.value : this.email,
       firebaseUid:
@@ -599,6 +634,7 @@ class User extends DataClass implements Insertable<User> {
   @override
   String toString() {
     return (StringBuffer('User(')
+          ..write('tipo: $tipo, ')
           ..write('id: $id, ')
           ..write('email: $email, ')
           ..write('firebaseUid: $firebaseUid')
@@ -607,36 +643,42 @@ class User extends DataClass implements Insertable<User> {
   }
 
   @override
-  int get hashCode => Object.hash(id, email, firebaseUid);
+  int get hashCode => Object.hash(tipo, id, email, firebaseUid);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is User &&
+          other.tipo == this.tipo &&
           other.id == this.id &&
           other.email == this.email &&
           other.firebaseUid == this.firebaseUid);
 }
 
 class UsersCompanion extends UpdateCompanion<User> {
+  final Value<String?> tipo;
   final Value<int> id;
   final Value<String> email;
   final Value<String?> firebaseUid;
   const UsersCompanion({
+    this.tipo = const Value.absent(),
     this.id = const Value.absent(),
     this.email = const Value.absent(),
     this.firebaseUid = const Value.absent(),
   });
   UsersCompanion.insert({
+    this.tipo = const Value.absent(),
     this.id = const Value.absent(),
     required String email,
     this.firebaseUid = const Value.absent(),
   }) : email = Value(email);
   static Insertable<User> custom({
+    Expression<String>? tipo,
     Expression<int>? id,
     Expression<String>? email,
     Expression<String>? firebaseUid,
   }) {
     return RawValuesInsertable({
+      if (tipo != null) 'tipo': tipo,
       if (id != null) 'id': id,
       if (email != null) 'email': email,
       if (firebaseUid != null) 'firebase_uid': firebaseUid,
@@ -644,11 +686,13 @@ class UsersCompanion extends UpdateCompanion<User> {
   }
 
   UsersCompanion copyWith({
+    Value<String?>? tipo,
     Value<int>? id,
     Value<String>? email,
     Value<String?>? firebaseUid,
   }) {
     return UsersCompanion(
+      tipo: tipo ?? this.tipo,
       id: id ?? this.id,
       email: email ?? this.email,
       firebaseUid: firebaseUid ?? this.firebaseUid,
@@ -658,6 +702,9 @@ class UsersCompanion extends UpdateCompanion<User> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (tipo.present) {
+      map['tipo'] = Variable<String>(tipo.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
@@ -673,6 +720,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   @override
   String toString() {
     return (StringBuffer('UsersCompanion(')
+          ..write('tipo: $tipo, ')
           ..write('id: $id, ')
           ..write('email: $email, ')
           ..write('firebaseUid: $firebaseUid')
@@ -739,6 +787,16 @@ class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<int> phone = GeneratedColumn<int>(
+    'phone',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
   );
@@ -751,7 +809,14 @@ class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, addressId, name, imageUrl];
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    addressId,
+    name,
+    phone,
+    imageUrl,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -791,6 +856,14 @@ class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('phone')) {
+      context.handle(
+        _phoneMeta,
+        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_phoneMeta);
+    }
     if (data.containsKey('image_url')) {
       context.handle(
         _imageUrlMeta,
@@ -826,6 +899,11 @@ class $ClinicsTable extends Clinics with TableInfo<$ClinicsTable, Clinic> {
             DriftSqlType.string,
             data['${effectivePrefix}name'],
           )!,
+      phone:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}phone'],
+          )!,
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
@@ -844,12 +922,14 @@ class Clinic extends DataClass implements Insertable<Clinic> {
   final int userId;
   final int addressId;
   final String name;
+  final int phone;
   final String? imageUrl;
   const Clinic({
     required this.id,
     required this.userId,
     required this.addressId,
     required this.name,
+    required this.phone,
     this.imageUrl,
   });
   @override
@@ -859,6 +939,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
     map['user_id'] = Variable<int>(userId);
     map['address_id'] = Variable<int>(addressId);
     map['name'] = Variable<String>(name);
+    map['phone'] = Variable<int>(phone);
     if (!nullToAbsent || imageUrl != null) {
       map['image_url'] = Variable<String>(imageUrl);
     }
@@ -871,6 +952,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
       userId: Value(userId),
       addressId: Value(addressId),
       name: Value(name),
+      phone: Value(phone),
       imageUrl:
           imageUrl == null && nullToAbsent
               ? const Value.absent()
@@ -888,6 +970,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
       userId: serializer.fromJson<int>(json['userId']),
       addressId: serializer.fromJson<int>(json['addressId']),
       name: serializer.fromJson<String>(json['name']),
+      phone: serializer.fromJson<int>(json['phone']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
     );
   }
@@ -899,6 +982,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
       'userId': serializer.toJson<int>(userId),
       'addressId': serializer.toJson<int>(addressId),
       'name': serializer.toJson<String>(name),
+      'phone': serializer.toJson<int>(phone),
       'imageUrl': serializer.toJson<String?>(imageUrl),
     };
   }
@@ -908,12 +992,14 @@ class Clinic extends DataClass implements Insertable<Clinic> {
     int? userId,
     int? addressId,
     String? name,
+    int? phone,
     Value<String?> imageUrl = const Value.absent(),
   }) => Clinic(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     addressId: addressId ?? this.addressId,
     name: name ?? this.name,
+    phone: phone ?? this.phone,
     imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
   );
   Clinic copyWithCompanion(ClinicsCompanion data) {
@@ -922,6 +1008,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
       userId: data.userId.present ? data.userId.value : this.userId,
       addressId: data.addressId.present ? data.addressId.value : this.addressId,
       name: data.name.present ? data.name.value : this.name,
+      phone: data.phone.present ? data.phone.value : this.phone,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
     );
   }
@@ -933,13 +1020,14 @@ class Clinic extends DataClass implements Insertable<Clinic> {
           ..write('userId: $userId, ')
           ..write('addressId: $addressId, ')
           ..write('name: $name, ')
+          ..write('phone: $phone, ')
           ..write('imageUrl: $imageUrl')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, addressId, name, imageUrl);
+  int get hashCode => Object.hash(id, userId, addressId, name, phone, imageUrl);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -948,6 +1036,7 @@ class Clinic extends DataClass implements Insertable<Clinic> {
           other.userId == this.userId &&
           other.addressId == this.addressId &&
           other.name == this.name &&
+          other.phone == this.phone &&
           other.imageUrl == this.imageUrl);
 }
 
@@ -956,12 +1045,14 @@ class ClinicsCompanion extends UpdateCompanion<Clinic> {
   final Value<int> userId;
   final Value<int> addressId;
   final Value<String> name;
+  final Value<int> phone;
   final Value<String?> imageUrl;
   const ClinicsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.addressId = const Value.absent(),
     this.name = const Value.absent(),
+    this.phone = const Value.absent(),
     this.imageUrl = const Value.absent(),
   });
   ClinicsCompanion.insert({
@@ -969,15 +1060,18 @@ class ClinicsCompanion extends UpdateCompanion<Clinic> {
     required int userId,
     required int addressId,
     required String name,
+    required int phone,
     this.imageUrl = const Value.absent(),
   }) : userId = Value(userId),
        addressId = Value(addressId),
-       name = Value(name);
+       name = Value(name),
+       phone = Value(phone);
   static Insertable<Clinic> custom({
     Expression<int>? id,
     Expression<int>? userId,
     Expression<int>? addressId,
     Expression<String>? name,
+    Expression<int>? phone,
     Expression<String>? imageUrl,
   }) {
     return RawValuesInsertable({
@@ -985,6 +1079,7 @@ class ClinicsCompanion extends UpdateCompanion<Clinic> {
       if (userId != null) 'user_id': userId,
       if (addressId != null) 'address_id': addressId,
       if (name != null) 'name': name,
+      if (phone != null) 'phone': phone,
       if (imageUrl != null) 'image_url': imageUrl,
     });
   }
@@ -994,6 +1089,7 @@ class ClinicsCompanion extends UpdateCompanion<Clinic> {
     Value<int>? userId,
     Value<int>? addressId,
     Value<String>? name,
+    Value<int>? phone,
     Value<String?>? imageUrl,
   }) {
     return ClinicsCompanion(
@@ -1001,6 +1097,7 @@ class ClinicsCompanion extends UpdateCompanion<Clinic> {
       userId: userId ?? this.userId,
       addressId: addressId ?? this.addressId,
       name: name ?? this.name,
+      phone: phone ?? this.phone,
       imageUrl: imageUrl ?? this.imageUrl,
     );
   }
@@ -1020,6 +1117,9 @@ class ClinicsCompanion extends UpdateCompanion<Clinic> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (phone.present) {
+      map['phone'] = Variable<int>(phone.value);
+    }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
     }
@@ -1033,6 +1133,7 @@ class ClinicsCompanion extends UpdateCompanion<Clinic> {
           ..write('userId: $userId, ')
           ..write('addressId: $addressId, ')
           ..write('name: $name, ')
+          ..write('phone: $phone, ')
           ..write('imageUrl: $imageUrl')
           ..write(')'))
         .toString();
@@ -3032,12 +3133,14 @@ typedef $$AddressesTableProcessedTableManager =
     >;
 typedef $$UsersTableCreateCompanionBuilder =
     UsersCompanion Function({
+      Value<String?> tipo,
       Value<int> id,
       required String email,
       Value<String?> firebaseUid,
     });
 typedef $$UsersTableUpdateCompanionBuilder =
     UsersCompanion Function({
+      Value<String?> tipo,
       Value<int> id,
       Value<String> email,
       Value<String?> firebaseUid,
@@ -3094,6 +3197,11 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get tipo => $composableBuilder(
+    column: $table.tipo,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -3169,6 +3277,11 @@ class $$UsersTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get tipo => $composableBuilder(
+    column: $table.tipo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -3194,6 +3307,9 @@ class $$UsersTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get tipo =>
+      $composableBuilder(column: $table.tipo, builder: (column) => column);
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -3284,20 +3400,24 @@ class $$UsersTableTableManager
               () => $$UsersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<String?> tipo = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<String> email = const Value.absent(),
                 Value<String?> firebaseUid = const Value.absent(),
               }) => UsersCompanion(
+                tipo: tipo,
                 id: id,
                 email: email,
                 firebaseUid: firebaseUid,
               ),
           createCompanionCallback:
               ({
+                Value<String?> tipo = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 required String email,
                 Value<String?> firebaseUid = const Value.absent(),
               }) => UsersCompanion.insert(
+                tipo: tipo,
                 id: id,
                 email: email,
                 firebaseUid: firebaseUid,
@@ -3381,6 +3501,7 @@ typedef $$ClinicsTableCreateCompanionBuilder =
       required int userId,
       required int addressId,
       required String name,
+      required int phone,
       Value<String?> imageUrl,
     });
 typedef $$ClinicsTableUpdateCompanionBuilder =
@@ -3389,6 +3510,7 @@ typedef $$ClinicsTableUpdateCompanionBuilder =
       Value<int> userId,
       Value<int> addressId,
       Value<String> name,
+      Value<int> phone,
       Value<String?> imageUrl,
     });
 
@@ -3467,6 +3589,11 @@ class $$ClinicsTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get phone => $composableBuilder(
+    column: $table.phone,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3566,6 +3693,11 @@ class $$ClinicsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnOrderings(column),
@@ -3632,6 +3764,9 @@ class $$ClinicsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get phone =>
+      $composableBuilder(column: $table.phone, builder: (column) => column);
 
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
@@ -3744,12 +3879,14 @@ class $$ClinicsTableTableManager
                 Value<int> userId = const Value.absent(),
                 Value<int> addressId = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<int> phone = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
               }) => ClinicsCompanion(
                 id: id,
                 userId: userId,
                 addressId: addressId,
                 name: name,
+                phone: phone,
                 imageUrl: imageUrl,
               ),
           createCompanionCallback:
@@ -3758,12 +3895,14 @@ class $$ClinicsTableTableManager
                 required int userId,
                 required int addressId,
                 required String name,
+                required int phone,
                 Value<String?> imageUrl = const Value.absent(),
               }) => ClinicsCompanion.insert(
                 id: id,
                 userId: userId,
                 addressId: addressId,
                 name: name,
+                phone: phone,
                 imageUrl: imageUrl,
               ),
           withReferenceMapper:
