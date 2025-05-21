@@ -1,6 +1,6 @@
+import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/rectangle.dart';
-import 'circle_icon.dart';
 import 'search_bar.dart';
 
 class MainRectangle extends StatelessWidget {
@@ -43,6 +43,7 @@ class MainRectangle extends StatelessWidget {
                     icon: const CircleIcon(
                       icon: Icons.favorite,
                       color: Color(0xFF0089FF),
+                      backgroundColor: Colors.white,
                     ),
                     onPressed: () {
                       // Action when the favorite button is pressed
@@ -52,6 +53,7 @@ class MainRectangle extends StatelessWidget {
                     icon: const CircleIcon(
                       icon: Icons.monitor_heart,
                       color: Color(0xFF0089FF),
+                      backgroundColor: Colors.white,
                     ),
                     onPressed: () {
                       // Action when the heart monitor button is pressed
@@ -61,6 +63,7 @@ class MainRectangle extends StatelessWidget {
                     icon: const CircleIcon(
                       icon: Icons.medical_services,
                       color: Color(0xFF0089FF),
+                      backgroundColor: Colors.white,
                     ),
                     onPressed: () {
                       // Action when the medical services button is pressed
@@ -70,6 +73,7 @@ class MainRectangle extends StatelessWidget {
                     icon: const CircleIcon(
                       icon: Icons.vaccines,
                       color: Color(0xFF0089FF),
+                      backgroundColor: Colors.white,
                     ),
                     onPressed: () {
                       // Action when the vaccines button is pressed

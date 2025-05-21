@@ -36,6 +36,25 @@ class InsuranceDao extends DatabaseAccessor<AppDatabase>
     return;
   }
 
+  // INSERT INTO CLINICS (...) VALUES() return ID
+  Future<int> insertAndReturnInsurance(String NAME) async {
+    final int insertedId = await into(
+      insurances,
+    ).insert(InsurancesCompanion(name: Value(NAME)));
+    return insertedId;
+  }
+
+  // select clinic by name and return ID
+  Future<int> returnInsurance(String NAME) async {
+    final Insurance returnedInsurance =
+        await (select(insurances)
+          ..where((t) => t.name.isValue(NAME))).getSingle();
+
+    final returnedId = returnedInsurance.id;
+
+    return returnedId;
+  }
+
   // UPDATE INSURANCES name=NAME ... WHERE (id ==ID)
   Future<void> modifyName(int ID, String NAME, int targets) async {
     // finds the element with id==ID

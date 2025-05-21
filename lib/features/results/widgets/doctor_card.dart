@@ -1,5 +1,5 @@
-import 'package:app_mobile_clinica_medica/features/results/widgets/doctor_card_image.dart';
 import 'package:app_mobile_clinica_medica/features/results/widgets/doctor_card_info.dart';
+import 'package:app_mobile_clinica_medica/features/shared/widgets/doctor_card_image.dart';
 import 'package:flutter/material.dart';
 
 class DoctorCard extends StatelessWidget {
@@ -26,7 +26,7 @@ class DoctorCard extends StatelessWidget {
             top: 70,
             child: DoctorInfoCard(doctorName: doctorName, specialty: specialty),
           ),
-          DoctorAvatar(imageUrl: imageUrl),
+          DoctorAvatar(imageUrl: imageUrl, radius: 45, width: 95, height: 95),
         ],
       ),
     );

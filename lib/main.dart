@@ -1,5 +1,7 @@
 //import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
 //import 'package:app_mobile_clinica_medica/features/results/view/filter_result.dart';
+//import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
+//import 'package:app_mobile_clinica_medica/features/info_doctor/view/info_doctor_page.dart';
 import 'package:app_mobile_clinica_medica/features/clinic/view/dashboard_clinic.dart';
 import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
 import 'package:app_mobile_clinica_medica/features/filter/view/filter_page.dart';
@@ -7,7 +9,7 @@ import 'package:app_mobile_clinica_medica/features/results/view/filter_result.da
 import 'package:app_mobile_clinica_medica/features/login/view/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'features/login/view/login_page.dart';
+//import 'features/login/view/login_page.dart';
 //import 'features/sing_up/view/sing_up_choose.dart';
 //import 'features/sing_up/view/sing_up_client.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
@@ -45,6 +47,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Meu App',
       debugShowCheckedModeBanner: false,
+
+      //home: ResultFilter(), // <-- Aqui você define a tela que vai abrir
+      //home: const LoginPage(), // <-- Aqui você define a tela que vai abrir
+      //home: DashboardUser(), // <-- Aqui você define a tela que vai abrir
+      //home: DashboardClinic(), // <-- Aqui você define a tela que vai abrir
+      //home: InfoDoctorPage(), // <-- Aqui você define a tela que vai abrir
       //home: ResultFilter(),     // <-- Aqui você define a tela que vai abrir
       home: LoginPage(), // <-- Aqui você define a tela que vai abrir
       //home: DashboardUser(),    // <-- Aqui você define a tela que vai abrir

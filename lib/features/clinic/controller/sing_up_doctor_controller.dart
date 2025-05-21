@@ -56,61 +56,61 @@ class SingUpDoctorController {
     cepCController.dispose();
   }
 
-  Future<bool> newUser() async {
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-
-    try {
-      final UserCredential cred = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      final firebaseUID =
-          cred
-              .user!
-              .uid; //if the autentication process was completed it generated an unique UserId
-
-      // inserting into drift
-      await _db.userDao.insertUser(
-        email,
-        firebaseUID,
-      ); // we dont store the password because firebase already does that encrypiting
-
-      return true;
-    } on FirebaseAuthException catch (e) {
-      print('Erro de cadastro: ${e.message}');
-    } catch (e) {
-      print('Erro banco de dados local : $e');
-    }
-
-    return false;
-  }
-
-  Future<bool> newPatient() async {
-    final name = nomePController.text.trim();
-    final insurance =
-        convenioController.text
-            .trim(); // not text because we want the patient to select which insurance
-    final street = enderecoPController.text.trim();
-    final neighborhood = bairroPController.text.trim();
-    final city = cidadePController.text.trim();
-    final state = estadoPController.text.trim();
-    final zipCode = int.parse(cepCController.text.trim());
-    // final phone = telefoneController.text.trim(); we will delete telefone from database, no use
-
-    try {
-      await _db.addressDao.insertAddress(
-        street,
-        neighborhood,
-        city,
-        state,
-        zipCode,
-      );
-      //await _db.patientDao.insertPatient(USERID, INSURANCEID, ADDRESSID, name, PHONE)
-    } catch (e) {
-      print('Erro banco de dados local: $e');
-    }
-    return false;
-  }
+  //Future<bool> newUser() async {
+  //  final email = emailController.text.trim();
+  //  final password = passwordController.text.trim();
+  //
+  //  try {
+  //    final UserCredential cred = await _auth.createUserWithEmailAndPassword(
+  //      email: email,
+  //      password: password,
+  //    );
+  //
+  //    final firebaseUID =
+  //        cred
+  //            .user!
+  //            .uid; //if the autentication process was completed it generated an unique UserId
+  //
+  //    // inserting into drift
+  //    await _db.userDao.insertUser(
+  //      email,
+  //      firebaseUID,
+  //    ); // we dont store the password because firebase already does that encrypiting
+  //
+  //    return true;
+  //  } on FirebaseAuthException catch (e) {
+  //    print('Erro de cadastro: ${e.message}');
+  //  } catch (e) {
+  //    print('Erro banco de dados local : $e');
+  //  }
+  //
+  //  return false;
+  //}
+  //
+  //Future<bool> newPatient() async {
+  //  final name = nomePController.text.trim();
+  //  final insurance =
+  //      convenioController.text
+  //          .trim(); // not text because we want the patient to select which insurance
+  //  final street = enderecoPController.text.trim();
+  //  final neighborhood = bairroPController.text.trim();
+  //  final city = cidadePController.text.trim();
+  //  final state = estadoPController.text.trim();
+  //  final zipCode = int.parse(cepCController.text.trim());
+  //  // final phone = telefoneController.text.trim(); we will delete telefone from database, no use
+  //
+  //  try {
+  //    await _db.addressDao.insertAddress(
+  //      street,
+  //      neighborhood,
+  //      city,
+  //      state,
+  //      zipCode,
+  //    );
+  //    //await _db.patientDao.insertPatient(USERID, INSURANCEID, ADDRESSID, name, PHONE)
+  //  } catch (e) {
+  //    print('Erro banco de dados local: $e');
+  //  }
+  //  return false;
+  //}
 }

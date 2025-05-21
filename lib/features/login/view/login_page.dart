@@ -1,3 +1,4 @@
+import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
 import 'package:app_mobile_clinica_medica/features/clinic/view/dashboard_clinic.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/login/controller/login_controller.dart';
@@ -10,6 +11,9 @@ import '../../shared/widgets/custom_text_field.dart';
 import '../../sing_up/view/sing_up_choose.dart';
 import '../../shared/widgets/slide_transition.dart';
 
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+import 'package:provider/provider.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -18,12 +22,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final LoginController _controller = LoginController();
-
+  late final AppDatabase _db;
+  late final LoginController _controller;
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _db = Provider.of<AppDatabase>(context, listen: false);
+    _controller = LoginController(_db);
   }
 
   @override
@@ -125,27 +136,35 @@ class _LoginPageState extends State<LoginPage> {
                         height: 51,
                         onPressed: () async {
                           final success = await _controller.checkUser();
-                          final user = await _controller.findUser();
-                          //Mensagem de login
-                          if (user != null) {
+                          final type = await _controller.userType();
+                          print('$type');
+                          if (success) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  success
-                                      ? 'Login realizado com sucesso, userId: ${user.id}'
-                                      : 'Usuário ou senha inválidos',
-                                ),
-                                duration: const Duration(seconds: 2),
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.blueAccent,
+                              const SnackBar(
+                                content: Text('Login finalizado com sucesso!'),
+                                backgroundColor: Colors.green,
                               ),
                             );
-                            navigateWithSlideTransition(
-                              context: context,
-                              destination: DashboardClinic(
-                                uid: user.id,
-                              ), //needs to change to verify if clinic or patient
-                              beginOffset: const Offset(1.0, 0.0),
+                            if (type == 'PATIENT') {
+                              navigateWithSlideTransition(
+                                context: context,
+                                destination: const DashboardUser(),
+                                beginOffset: const Offset(1.0, 0.0),
+                              );
+                            }
+                            if (type == 'CLINIC') {
+                              navigateWithSlideTransition(
+                                context: context,
+                                destination: const DashboardClinic(),
+                                beginOffset: const Offset(1.0, 0.0),
+                              );
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Erro ao finalizar cadastro.'),
+                                backgroundColor: Colors.red,
+                              ),
                             );
                           }
                         },
