@@ -1,13 +1,16 @@
+import 'package:app_mobile_clinica_medica/features/info_doctor/view/info_doctor_page.dart';
 import 'package:flutter/material.dart';
 
 class DoctorInfoCard extends StatelessWidget {
   final String doctorName;
   final String specialty;
+  final String CRM;
 
   const DoctorInfoCard({
     super.key,
     required this.doctorName,
     required this.specialty,
+    required this.CRM,
   });
 
   @override
@@ -52,7 +55,12 @@ class DoctorInfoCard extends StatelessWidget {
                 color: Color(0xFF0089FF),
               ),
               onPressed: () {
-                // Ação do botão
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InfoDoctorPage(CRM: CRM),
+                  ),
+                );
               },
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
