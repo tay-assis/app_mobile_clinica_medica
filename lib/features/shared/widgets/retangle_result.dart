@@ -6,8 +6,14 @@ import 'rectangle.dart';
 class ResultRetangle extends StatelessWidget {
   final double width;
   final double height;
+  final bool returnHome;
 
-  const ResultRetangle({super.key, required this.width, required this.height});
+  const ResultRetangle({
+    super.key,
+    required this.width,
+    required this.height,
+    this.returnHome = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +23,15 @@ class ResultRetangle extends StatelessWidget {
         GradientRectangle(width: width, height: height),
 
         // Botão de voltar
-        const Positioned(
+        Positioned(
           top: 16,
           left: 16,
           right: 16,
-          child: CustomHeader(isCloseButton: false, iconColor: Colors.white),
+          child: CustomHeader(
+            isCloseButton: false,
+            iconColor: Colors.white,
+            returnHome: returnHome,
+          ),
         ),
 
         // Conteúdo principal: Título + Barra de busca
