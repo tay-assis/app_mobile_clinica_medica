@@ -13,9 +13,9 @@ class Doctor {
 
 // Página com a grade de médicos
 class ResultFilter extends StatelessWidget {
-  final List<int> doctorsIds;
+  final List<int> doctorsCRMs;
 
-  ResultFilter({super.key, required this.doctorsIds});
+  ResultFilter({super.key, required this.doctorsCRMs});
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +71,14 @@ class ResultFilter extends StatelessWidget {
               ),
               // Exibe o widgets com a foto e a informação do médico
               // de acordo com a quantidade de médicos na lista
-              itemCount: doctorsIds.length,
+              itemCount: doctorsCRMs.length,
               itemBuilder: (context, index) {
-                final doctorId = doctorsIds[index];
+                final doctorCRM = doctorsCRMs[index];
                 return DoctorCard(
-                  doctorName: 'Id: $doctorId',
-                  specialty: 'Test specialty $doctorId',
+                  doctorName: 'CRM: $doctorCRM',
+                  specialty: 'Test specialty $doctorCRM',
                   imageUrl: 'lib/images/profile.jpg',
+                  CRM: doctorCRM.toString(),
                 );
               },
             ),
