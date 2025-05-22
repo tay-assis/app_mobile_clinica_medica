@@ -1,52 +1,29 @@
 import 'package:app_mobile_clinica_medica/features/results/widgets/doctor_card.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/retangle_result.dart';
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+import 'package:app_mobile_clinica_medica/features/results/controller/resultFilterController.dart';
 import 'package:flutter/material.dart';
-
-// Modelo simples do médico
-class Doctor {
-  final String name;
-  final String specialty;
-  final String imageUrl;
-
-  Doctor({required this.name, required this.specialty, required this.imageUrl});
-}
 
 // Página com a grade de médicos
 class ResultFilter extends StatelessWidget {
-  const ResultFilter({super.key});
+  final List<int> doctorsCRMs;
+  final List<Doctor> doctorList = ;
+
+  ResultFilter({super.key, required this.doctorsCRMs});
 
   @override
   Widget build(BuildContext context) {
-    // Lista de médicos(será modificado posteriomente por uma lista de ID)
-    final List<Doctor> doctorsList = [
-      Doctor(
-        name: 'Dr. Kate Rose',
-        specialty: 'Pediatra',
-        imageUrl: 'lib/images/profile.jpg',
-      ),
-      Doctor(
-        name: 'Dr. Kyle Bush',
-        specialty: 'Cardiologista',
-        imageUrl: 'https://placehold.co/130x116',
-      ),
-      Doctor(
-        name: 'Dr. Casey Dean',
-        specialty: 'Dermatologista',
-        imageUrl: 'https://placehold.co/130x116',
-      ),
-      Doctor(
-        name: 'Dr. Simon Le',
-        specialty: 'Dermatologista',
-        imageUrl: 'https://placehold.co/130x116',
-      ),
-    ];
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
           // Cabeçalho com título e busca
-          ResultRetangle(width: MediaQuery.of(context).size.width, height: 250),
+          ResultRetangle(
+            width: MediaQuery.of(context).size.width,
+            height: 250,
+            returnHome: true,
+          ),
 
           // Espaçamento entre o cabeçalho e a lista de médicos
           const SizedBox(height: 20),
@@ -65,13 +42,14 @@ class ResultFilter extends StatelessWidget {
               ),
               // Exibe o widgets com a foto e a informação do médico
               // de acordo com a quantidade de médicos na lista
-              itemCount: doctorsList.length,
+              itemCount: doctorsCRMs.length,
               itemBuilder: (context, index) {
-                final doctor = doctorsList[index];
+                final doctorCRM = doctorsCRMs[index];
                 return DoctorCard(
-                  doctorName: doctor.name,
-                  specialty: doctor.specialty,
-                  imageUrl: doctor.imageUrl,
+                  doctorName: 'CRM: $doctorCRM',
+                  specialty: 'Test specialty $doctorCRM',
+                  imageUrl: 'lib/images/profile.jpg',
+                  CRM: doctorCRM.toString(),
                 );
               },
             ),
