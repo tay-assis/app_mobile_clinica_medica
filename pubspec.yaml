@@ -72,7 +72,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - lib/images/profile.jpg
+    - lib/images/default_profile.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

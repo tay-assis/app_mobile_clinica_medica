@@ -34,6 +34,7 @@ class _DashboardClinicState extends State<DashboardClinic> {
 
   String? clinicName;
   String? clinicStreet;
+  List<Doctor> _doctors = [];
 
   //final List<Doctor> doctorsList = [
   //  Doctor(
@@ -76,8 +77,6 @@ class _DashboardClinicState extends State<DashboardClinic> {
       print('Clínica não encontrada');
     }
   }
-
-  List<Doctor> _doctors = [];
 
   @override
   void initState() {
