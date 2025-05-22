@@ -1,48 +1,45 @@
 import 'package:app_mobile_clinica_medica/features/results/widgets/doctor_card.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/retangle_result.dart';
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+import 'package:app_mobile_clinica_medica/features/results/controller/resultFilterController.dart';
+
 import 'package:flutter/material.dart';
-
-// Modelo simples do médico
-class Doctor {
-  final String name;
-  final String specialty;
-  final String imageUrl;
-
-  Doctor({required this.name, required this.specialty, required this.imageUrl});
-}
+import 'package:provider/provider.dart';
 
 // Página com a grade de médicos
-class ResultFilter extends StatelessWidget {
+class ResultFilter extends StatefulWidget {
   final List<int> doctorsCRMs;
 
   ResultFilter({super.key, required this.doctorsCRMs});
 
   @override
-  Widget build(BuildContext context) {
-    // Lista de médicos(será modificado posteriomente por uma lista de ID)
-    // final List<Doctor> doctorsList = [
-    //   Doctor(
-    //     name: 'Dr. Kate Rose',
-    //     specialty: 'Pediatra',
-    //     imageUrl: 'lib/images/profile.jpg',
-    //   ),
-    //   Doctor(
-    //     name: 'Dr. Kyle Bush',
-    //     specialty: 'Cardiologista',
-    //     imageUrl: 'https://placehold.co/130x116',
-    //   ),
-    //   Doctor(
-    //     name: 'Dr. Casey Dean',
-    //     specialty: 'Dermatologista',
-    //     imageUrl: 'https://placehold.co/130x116',
-    //   ),
-    //   Doctor(
-    //     name: 'Dr. Simon Le',
-    //     specialty: 'Dermatologista',
-    //     imageUrl: 'https://placehold.co/130x116',
-    //   ),
-    // ];
+  State<ResultFilter> createState() => _ResultFilterState();
+}
 
+class _ResultFilterState extends State<ResultFilter> {
+  late final AppDatabase _db;
+  late final ResultFilterController _controller;
+
+  List<Doctor> _doctors = [];
+
+  Future<void> _loadDoctors() async {
+    final docs = await _controller.getDoctorsFromList(widget.doctorsCRMs);
+    print('$docs');
+    setState(() {
+      _doctors = docs;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _db = Provider.of<AppDatabase>(context, listen: false);
+    _controller = ResultFilterController(_db);
+    _loadDoctors();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -71,14 +68,14 @@ class ResultFilter extends StatelessWidget {
               ),
               // Exibe o widgets com a foto e a informação do médico
               // de acordo com a quantidade de médicos na lista
-              itemCount: doctorsCRMs.length,
+              itemCount: _doctors.length,
               itemBuilder: (context, index) {
-                final doctorCRM = doctorsCRMs[index];
+                final doctor = _doctors[index];
                 return DoctorCard(
-                  doctorName: 'CRM: $doctorCRM',
-                  specialty: 'Test specialty $doctorCRM',
-                  imageUrl: 'lib/images/profile.jpg',
-                  CRM: doctorCRM.toString(),
+                  doctorName: doctor.name,
+                  specialty: 'Especialidade: ${doctor.specialty}',
+                  imageUrl: 'lib/images/default_profile.jpg',
+                  //CRM: doctorCRM.toString(),
                 );
               },
             ),
