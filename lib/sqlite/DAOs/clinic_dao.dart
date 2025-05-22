@@ -25,6 +25,12 @@ class ClinicDao extends DatabaseAccessor<AppDatabase> with _$ClinicDaoMixin {
     )).getSingle(); // only one element with specific ID
   }
 
+  Future<Clinic> selectClinicByUID(int UID) {
+    return (select(clinics)..where(
+      (t) => t.userId.equals(UID),
+    )).getSingle(); // only one element with specific ID
+  }
+
   // SELECT COUNT(*) FROM Clinics
   Future<int> lengthClinics() async {
     final query = selectOnly(clinics)..addColumns([clinics.id.count()]);

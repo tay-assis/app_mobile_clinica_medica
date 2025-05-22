@@ -137,7 +137,8 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () async {
                           final success = await _controller.checkUser();
                           final type = await _controller.userType();
-                          print('$type');
+                          final uid = await _controller.userUid();
+                          print('LOGIN: $uid');
                           if (success) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -145,17 +146,17 @@ class _LoginPageState extends State<LoginPage> {
                                 backgroundColor: Colors.green,
                               ),
                             );
-                            if (type == 'PATIENT') {
+                            if (type == 'PATIENT' && uid != -1) {
                               navigateWithSlideTransition(
                                 context: context,
                                 destination: const DashboardUser(),
                                 beginOffset: const Offset(1.0, 0.0),
                               );
                             }
-                            if (type == 'CLINIC') {
+                            if (type == 'CLINIC' && uid != -1) {
                               navigateWithSlideTransition(
                                 context: context,
-                                destination: const DashboardClinic(),
+                                destination: DashboardClinic(uid: uid),
                                 beginOffset: const Offset(1.0, 0.0),
                               );
                             }
