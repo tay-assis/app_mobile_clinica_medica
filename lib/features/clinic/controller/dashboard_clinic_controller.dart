@@ -2,7 +2,8 @@ import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:flutter/material.dart';
 
 class DashboardClinicController {
-  final _db = AppDatabase();
+  final AppDatabase _db;
+  DashboardClinicController(this._db);
 
   Future<Clinic?> findClinic(int uid) async {
     try {
@@ -33,6 +34,18 @@ class DashboardClinicController {
       return address.street;
     } catch (e) {
       print('Erro ao achar o endereço da clínica: $e');
+    }
+    return null;
+  }
+
+  Future<List<Doctor>?> findDoctor(Clinic clinic) async {
+    try {
+      final cid = clinic.id;
+      final docs = await _db.doctorDao.selectDoctorsByClinicID(cid);
+      print('CONTROLLER: $docs');
+      return docs;
+    } catch (e) {
+      print('Médicos não achados: $e');
     }
     return null;
   }

@@ -8,15 +8,15 @@ import 'package:app_mobile_clinica_medica/features/shared/widgets/retangle_resul
 import 'package:app_mobile_clinica_medica/features/shared/widgets/bottom_nav_bar.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 // Modelo simples do médico
-class Doctor {
-  final String name;
-  final String specialty;
-  final String imageUrl;
-
-  Doctor({required this.name, required this.specialty, required this.imageUrl});
-}
+//class Doctor {
+//  final String name;
+//  final String specialty;
+//  final String imageUrl;
+//
+//  Doctor({required this.name, required this.specialty, required this.imageUrl});
+//}
 
 // Página com a grade de médicos (agora Stateful)
 class DashboardClinic extends StatefulWidget {
@@ -35,55 +35,73 @@ class _DashboardClinicState extends State<DashboardClinic> {
   String? clinicName;
   String? clinicStreet;
 
-  final List<Doctor> doctorsList = [
-    Doctor(
-      name: 'Dr. Kate Rose',
-      specialty: 'Pediatra',
-      imageUrl: 'lib/images/profile.jpg',
-    ),
-    Doctor(
-      name: 'Dr. Kyle Bush',
-      specialty: 'Cardiologista',
-      imageUrl: 'https://placehold.co/130x116',
-    ),
-    Doctor(
-      name: 'Dr. Casey Dean',
-      specialty: 'Dermatologista',
-      imageUrl: 'https://placehold.co/130x116',
-    ),
-    Doctor(
-      name: 'Dr. Simon Le',
-      specialty: 'Dermatologista',
-      imageUrl: 'https://placehold.co/130x116',
-    ),
-  ];
+  //final List<Doctor> doctorsList = [
+  //  Doctor(
+  //    name: 'Dr. Kate Rose',
+  //    specialty: 'Pediatra',
+  //    imageUrl: 'lib/images/profile.jpg',
+  //  ),
+  //  Doctor(
+  //    name: 'Dr. Kyle Bush',
+  //    specialty: 'Cardiologista',
+  //    imageUrl: 'https://placehold.co/130x116',
+  //  ),
+  //  Doctor(
+  //    name: 'Dr. Casey Dean',
+  //    specialty: 'Dermatologista',
+  //    imageUrl: 'https://placehold.co/130x116',
+  //  ),
+  //  Doctor(
+  //    name: 'Dr. Simon Le',
+  //    specialty: 'Dermatologista',
+  //    imageUrl: 'https://placehold.co/130x116',
+  //  ),
+  //];
 
   Future<void> _loadClinicData() async {
-    print('DASHBOARD LOAD: ${widget.uid}');
     final clinic = await _controller.findClinic(widget.uid); //widget.uid
 
     if (clinic != null) {
       final name = await _controller.nameClinic(clinic);
       final street = await _controller.streetClinic(clinic);
-      print('${clinic.userId}');
-      print('\n $name, $street \n');
-
+      final docs = await _controller.findDoctor(clinic);
       setState(() {
         clinicName = name;
         clinicStreet = street;
+        if (docs != null) {
+          _doctors = docs;
+        }
       });
     } else {
       print('Clínica não encontrada');
     }
   }
 
+  List<Doctor> _doctors = [];
+
   @override
   void initState() {
     super.initState();
-    _db = AppDatabase(); // agora sempre será a mesma instância
-    _controller = DashboardClinicController();
+    _db = Provider.of<AppDatabase>(
+      context,
+      listen: false,
+    ); // agora sempre será a mesma instância
+    _controller = DashboardClinicController(_db);
     _loadClinicData();
+    //_loadDoctors();
   }
+
+  //void _loadDoctors() async {
+  //  final clinic = await _controller.findClinic(widget.uid);
+  //  final docs = await _controller.findDoctor(clinic);
+  //  if (docs != null) {
+  //    print('LOAD: $docs');
+  //    setState(() {
+  //      _doctors = docs;
+  //      print('STSTATE: $_doctors');
+  //    });
+  //  }
+  //}
 
   @override
   Widget build(BuildContext context) {
@@ -151,13 +169,13 @@ class _DashboardClinicState extends State<DashboardClinic> {
                 mainAxisSpacing: 20,
                 childAspectRatio: 0.8,
               ),
-              itemCount: doctorsList.length,
+              itemCount: _doctors.length,
               itemBuilder: (context, index) {
-                final doctor = doctorsList[index];
+                final doctor = _doctors[index];
                 return DoctorCard(
                   doctorName: doctor.name,
                   specialty: doctor.specialty,
-                  imageUrl: doctor.imageUrl,
+                  imageUrl: doctor.imageUrl ?? 'hshshdsh',
                 );
               },
             ),
