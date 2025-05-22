@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 // Página com a grade de médicos
 class ResultFilter extends StatelessWidget {
   final List<int> doctorsCRMs;
-  final List<Doctor> doctorList = ;
 
   ResultFilter({super.key, required this.doctorsCRMs});
 
