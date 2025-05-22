@@ -1,4 +1,5 @@
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+import 'package:app_mobile_clinica_medica/sqlite/seeders/user_seeder.dart';
 
 import 'seeders/address_seeder.dart';
 import 'seeders/insurance_seeder.dart';
@@ -13,6 +14,9 @@ class DatabaseSeeder {
   static Future<AppDatabase> seed() async {
     // 1️⃣ Instantiate DB
     final db = AppDatabase();
+
+    await db.userDao.deleteUsers();
+    await UserSeeder.run(db);
 
     // 2️⃣ Wipe & seed tables (in dev—skip deletes in production)
     await db.addressDao.deleteAddresses();

@@ -9,7 +9,9 @@ import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.da
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 
 class InfoDoctorPage extends StatefulWidget {
-  const InfoDoctorPage({super.key});
+  final String CRM;
+
+  const InfoDoctorPage({super.key, required this.CRM});
 
   @override
   State<InfoDoctorPage> createState() => _InfoDoctorPageState();
@@ -37,7 +39,7 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
     final String formattedDate = DateFormat(
       'MMMM d, yyyy',
     ).format(selectedDate);
-
+    ;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -60,10 +62,10 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Center(
+                Center(
                   child: Text(
-                    'Dr. Kyle Bush',
-                    style: TextStyle(
+                    'Dr. Kyle Bush (${widget.CRM})',
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 25,
                       fontFamily: 'Nunito',

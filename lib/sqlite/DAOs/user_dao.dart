@@ -19,9 +19,8 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
   }
 
   // SELECT * FROM USERS WHERE email == EMAIL
-  Future<User?> findByEmail(String email) {
-    return (select(users)
-      ..where((u) => u.email.equals(email))).getSingleOrNull();
+  Future<User> findByEmail(String email) {
+    return (select(users)..where((u) => u.email.equals(email))).getSingle();
   }
 
   // SELECT COUNT(*) FROM USERS
@@ -33,10 +32,16 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
 
   // INSERT INTO USERS (email, firebaseUID) VALUES (...)
   // firebase generates an UID (userID) when sign up
-  Future<void> insertUser(String email, String firebaseUid) async {
-    await into(users).insert(
-      UsersCompanion(email: Value(email), firebaseUid: Value(firebaseUid)),
+  Future<int> insertUser(String tipo, String email, String firebaseUid) async {
+    final int insertedId = await into(users).insert(
+      UsersCompanion(
+        tipo: Value(tipo),
+        email: Value(email),
+        firebaseUid: Value(firebaseUid),
+      ),
     );
+
+    return insertedId;
   }
 
   // UPDATE USERS SET ... WHERE id == ID

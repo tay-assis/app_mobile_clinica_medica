@@ -25,6 +25,12 @@ class ClinicDao extends DatabaseAccessor<AppDatabase> with _$ClinicDaoMixin {
     )).getSingle(); // only one element with specific ID
   }
 
+  Future<Clinic> selectClinicByUID(int UID) {
+    return (select(clinics)..where(
+      (t) => t.userId.equals(UID),
+    )).getSingle(); // only one element with specific ID
+  }
+
   // SELECT COUNT(*) FROM Clinics
   Future<int> lengthClinics() async {
     final query = selectOnly(clinics)..addColumns([clinics.id.count()]);
@@ -34,9 +40,10 @@ class ClinicDao extends DatabaseAccessor<AppDatabase> with _$ClinicDaoMixin {
 
   // INSERT INTO CLINICS (...) VALUES()
   Future<void> insertClinic(
-    int USERID,
+    int USERID, // not firebase, users table
     int ADDRESSID,
     String NAME,
+    int PHONE,
     String IMAGEURL,
   ) async {
     into(clinics).insert(
@@ -44,6 +51,7 @@ class ClinicDao extends DatabaseAccessor<AppDatabase> with _$ClinicDaoMixin {
         userId: Value(USERID),
         addressId: Value(ADDRESSID),
         name: Value(NAME),
+        phone: Value(PHONE),
         imageUrl: Value(IMAGEURL),
       ),
     );
@@ -51,20 +59,22 @@ class ClinicDao extends DatabaseAccessor<AppDatabase> with _$ClinicDaoMixin {
   }
 
   // UPDATE CLINICS name=NAME, ... WHERE (id ==ID)
-  Future<void> modifyAddress(
+  Future<void> modifyClinic(
     int ID,
     int ADDRESSID,
     String NAME,
     String IMAGEURL,
+    int PHONE,
     int targets,
   ) async {
     // finds the element with id==ID
     // 'targets' represents flags used to know which values will be modified
     // example: targets = 0x110 means only address and name will be modified
     final companion = ClinicsCompanion(
-      addressId: ((targets & 0x100) != 0) ? Value(ADDRESSID) : Value.absent(),
-      name: ((targets & 0x010) != 0) ? Value(NAME) : Value.absent(),
-      imageUrl: ((targets & 0x001) != 0) ? Value(IMAGEURL) : Value.absent(),
+      addressId: ((targets & 0x1000) != 0) ? Value(ADDRESSID) : Value.absent(),
+      name: ((targets & 0x0100) != 0) ? Value(NAME) : Value.absent(),
+      imageUrl: ((targets & 0x0010) != 0) ? Value(IMAGEURL) : Value.absent(),
+      phone: ((targets & 0x001) != 0) ? Value(PHONE) : Value.absent(),
     );
 
     // single update
