@@ -3,114 +3,68 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SingUpDoctorController {
-  // USER
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController crmController = TextEditingController();
+  final TextEditingController nomeController = TextEditingController();
+  final TextEditingController especialidadeController = TextEditingController();
 
-  // PATIENT
-  final TextEditingController nomePController = TextEditingController();
-  final TextEditingController convenioController = TextEditingController();
-  final TextEditingController enderecoPController = TextEditingController();
-  final TextEditingController bairroPController = TextEditingController();
-  final TextEditingController cidadePController = TextEditingController();
-  final TextEditingController estadoPController = TextEditingController();
-  final TextEditingController cepPController = TextEditingController();
-  //final TextEditingController telefoneController = TextEditingController();
-
-  // CLINIC
-  final TextEditingController nomeCController = TextEditingController();
-  final TextEditingController enderecoCController = TextEditingController();
-  final TextEditingController bairroCController = TextEditingController();
-  final TextEditingController cidadeCController = TextEditingController();
-  final TextEditingController estadoCController = TextEditingController();
-  final TextEditingController cepCController = TextEditingController();
-
-  //FIREBASE
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final _db = AppDatabase();
+  final AppDatabase _db;
+  SingUpDoctorController(this._db);
 
   void dispose() {
-    // free controllers from user
-    emailController.dispose();
-    passwordController.dispose();
-
-    // free controllers from patients
-    nomePController.dispose();
-    convenioController.dispose();
-    enderecoPController.dispose();
-    // numberPController.dispose();
-    bairroPController.dispose();
-    cidadePController.dispose();
-    estadoPController.dispose();
-    cepPController.dispose();
-    // no use for telefone until now
-    //telefoneController.dispose();
-
-    // free controllers from clinics
-    nomeCController.dispose();
-    enderecoCController.dispose();
-    // numberCController.dispose();
-    bairroCController.dispose();
-    cidadeCController.dispose();
-    estadoCController.dispose();
-    cepCController.dispose();
+    // free controllers from doctor
+    crmController.dispose();
+    nomeController.dispose();
+    especialidadeController.dispose();
   }
 
-  //Future<bool> newUser() async {
-  //  final email = emailController.text.trim();
-  //  final password = passwordController.text.trim();
-  //
-  //  try {
-  //    final UserCredential cred = await _auth.createUserWithEmailAndPassword(
-  //      email: email,
-  //      password: password,
-  //    );
-  //
-  //    final firebaseUID =
-  //        cred
-  //            .user!
-  //            .uid; //if the autentication process was completed it generated an unique UserId
-  //
-  //    // inserting into drift
-  //    await _db.userDao.insertUser(
-  //      email,
-  //      firebaseUID,
-  //    ); // we dont store the password because firebase already does that encrypiting
-  //
-  //    return true;
-  //  } on FirebaseAuthException catch (e) {
-  //    print('Erro de cadastro: ${e.message}');
-  //  } catch (e) {
-  //    print('Erro banco de dados local : $e');
-  //  }
-  //
-  //  return false;
-  //}
-  //
-  //Future<bool> newPatient() async {
-  //  final name = nomePController.text.trim();
-  //  final insurance =
-  //      convenioController.text
-  //          .trim(); // not text because we want the patient to select which insurance
-  //  final street = enderecoPController.text.trim();
-  //  final neighborhood = bairroPController.text.trim();
-  //  final city = cidadePController.text.trim();
-  //  final state = estadoPController.text.trim();
-  //  final zipCode = int.parse(cepCController.text.trim());
-  //  // final phone = telefoneController.text.trim(); we will delete telefone from database, no use
-  //
-  //  try {
-  //    await _db.addressDao.insertAddress(
-  //      street,
-  //      neighborhood,
-  //      city,
-  //      state,
-  //      zipCode,
-  //    );
-  //    //await _db.patientDao.insertPatient(USERID, INSURANCEID, ADDRESSID, name, PHONE)
-  //  } catch (e) {
-  //    print('Erro banco de dados local: $e');
-  //  }
-  //  return false;
-  //}
+  Future<int?> findCid(int uid) async {
+    try {
+      final clinic = await _db.clinicDao.selectClinicByUID(uid);
+      return clinic.id;
+    } catch (e) {
+      print('Erro ao buscar a clínica: $e');
+    }
+    return null;
+  }
+
+  Future<int> checkCrm() async {
+    final crm = int.tryParse(crmController.text.trim());
+
+    try {
+      if (crm != null) {
+        final doctor = await _db.doctorDao.selectDoctorByCRM(
+          crm,
+        ); // may there is an more eficiently way
+
+        print('checando doutor $doctor, $crm');
+        if (doctor == null) {
+          print('doutor nao existe $doctor, $crm');
+          return crm; // means crm is unique
+        }
+        return -1;
+      }
+    } catch (e) {
+      print('CRM nao passou pela checagem: $e');
+    }
+
+    return -1;
+  }
+
+  Future<int> newDoctor(int? cid) async {
+    //format every controller to put in the insert method from daos
+    final crm =
+        await checkCrm(); //making sure crm is unique and telling the user
+    final nome = nomeController.text.trim();
+    final especialidade = especialidadeController.text.trim();
+
+    try {
+      if (crm != -1 && cid != null) {
+        await _db.doctorDao.insertDoctor(crm, cid, nome, especialidade, '');
+      }
+    } catch (e) {
+      print('Erro ao adicionar médico');
+    }
+
+    return crm; //if crm is -1 is because the doctor wasn't inserted or already exists on the database
+  }
 }

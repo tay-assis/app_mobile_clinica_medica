@@ -1178,16 +1178,6 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
-  @override
-  late final GeneratedColumn<int> phone = GeneratedColumn<int>(
-    'phone',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
-  );
   static const VerificationMeta _specialtyMeta = const VerificationMeta(
     'specialty',
   );
@@ -1219,7 +1209,6 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
     crm,
     clinicId,
     name,
-    phone,
     specialty,
     imageUrl,
   ];
@@ -1259,14 +1248,6 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('phone')) {
-      context.handle(
-        _phoneMeta,
-        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_phoneMeta);
-    }
     if (data.containsKey('specialty')) {
       context.handle(
         _specialtyMeta,
@@ -1305,11 +1286,6 @@ class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
             DriftSqlType.string,
             data['${effectivePrefix}name'],
           )!,
-      phone:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}phone'],
-          )!,
       specialty:
           attachedDatabase.typeMapping.read(
             DriftSqlType.string,
@@ -1332,14 +1308,12 @@ class Doctor extends DataClass implements Insertable<Doctor> {
   final int crm;
   final int clinicId;
   final String name;
-  final int phone;
   final String specialty;
   final String? imageUrl;
   const Doctor({
     required this.crm,
     required this.clinicId,
     required this.name,
-    required this.phone,
     required this.specialty,
     this.imageUrl,
   });
@@ -1349,7 +1323,6 @@ class Doctor extends DataClass implements Insertable<Doctor> {
     map['crm'] = Variable<int>(crm);
     map['clinic_id'] = Variable<int>(clinicId);
     map['name'] = Variable<String>(name);
-    map['phone'] = Variable<int>(phone);
     map['specialty'] = Variable<String>(specialty);
     if (!nullToAbsent || imageUrl != null) {
       map['image_url'] = Variable<String>(imageUrl);
@@ -1362,7 +1335,6 @@ class Doctor extends DataClass implements Insertable<Doctor> {
       crm: Value(crm),
       clinicId: Value(clinicId),
       name: Value(name),
-      phone: Value(phone),
       specialty: Value(specialty),
       imageUrl:
           imageUrl == null && nullToAbsent
@@ -1380,7 +1352,6 @@ class Doctor extends DataClass implements Insertable<Doctor> {
       crm: serializer.fromJson<int>(json['crm']),
       clinicId: serializer.fromJson<int>(json['clinicId']),
       name: serializer.fromJson<String>(json['name']),
-      phone: serializer.fromJson<int>(json['phone']),
       specialty: serializer.fromJson<String>(json['specialty']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
     );
@@ -1392,7 +1363,6 @@ class Doctor extends DataClass implements Insertable<Doctor> {
       'crm': serializer.toJson<int>(crm),
       'clinicId': serializer.toJson<int>(clinicId),
       'name': serializer.toJson<String>(name),
-      'phone': serializer.toJson<int>(phone),
       'specialty': serializer.toJson<String>(specialty),
       'imageUrl': serializer.toJson<String?>(imageUrl),
     };
@@ -1402,14 +1372,12 @@ class Doctor extends DataClass implements Insertable<Doctor> {
     int? crm,
     int? clinicId,
     String? name,
-    int? phone,
     String? specialty,
     Value<String?> imageUrl = const Value.absent(),
   }) => Doctor(
     crm: crm ?? this.crm,
     clinicId: clinicId ?? this.clinicId,
     name: name ?? this.name,
-    phone: phone ?? this.phone,
     specialty: specialty ?? this.specialty,
     imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
   );
@@ -1418,7 +1386,6 @@ class Doctor extends DataClass implements Insertable<Doctor> {
       crm: data.crm.present ? data.crm.value : this.crm,
       clinicId: data.clinicId.present ? data.clinicId.value : this.clinicId,
       name: data.name.present ? data.name.value : this.name,
-      phone: data.phone.present ? data.phone.value : this.phone,
       specialty: data.specialty.present ? data.specialty.value : this.specialty,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
     );
@@ -1430,7 +1397,6 @@ class Doctor extends DataClass implements Insertable<Doctor> {
           ..write('crm: $crm, ')
           ..write('clinicId: $clinicId, ')
           ..write('name: $name, ')
-          ..write('phone: $phone, ')
           ..write('specialty: $specialty, ')
           ..write('imageUrl: $imageUrl')
           ..write(')'))
@@ -1438,8 +1404,7 @@ class Doctor extends DataClass implements Insertable<Doctor> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(crm, clinicId, name, phone, specialty, imageUrl);
+  int get hashCode => Object.hash(crm, clinicId, name, specialty, imageUrl);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1447,7 +1412,6 @@ class Doctor extends DataClass implements Insertable<Doctor> {
           other.crm == this.crm &&
           other.clinicId == this.clinicId &&
           other.name == this.name &&
-          other.phone == this.phone &&
           other.specialty == this.specialty &&
           other.imageUrl == this.imageUrl);
 }
@@ -1456,7 +1420,6 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
   final Value<int> crm;
   final Value<int> clinicId;
   final Value<String> name;
-  final Value<int> phone;
   final Value<String> specialty;
   final Value<String?> imageUrl;
   final Value<int> rowid;
@@ -1464,7 +1427,6 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
     this.crm = const Value.absent(),
     this.clinicId = const Value.absent(),
     this.name = const Value.absent(),
-    this.phone = const Value.absent(),
     this.specialty = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1473,20 +1435,17 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
     required int crm,
     required int clinicId,
     required String name,
-    required int phone,
     required String specialty,
     this.imageUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : crm = Value(crm),
        clinicId = Value(clinicId),
        name = Value(name),
-       phone = Value(phone),
        specialty = Value(specialty);
   static Insertable<Doctor> custom({
     Expression<int>? crm,
     Expression<int>? clinicId,
     Expression<String>? name,
-    Expression<int>? phone,
     Expression<String>? specialty,
     Expression<String>? imageUrl,
     Expression<int>? rowid,
@@ -1495,7 +1454,6 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
       if (crm != null) 'crm': crm,
       if (clinicId != null) 'clinic_id': clinicId,
       if (name != null) 'name': name,
-      if (phone != null) 'phone': phone,
       if (specialty != null) 'specialty': specialty,
       if (imageUrl != null) 'image_url': imageUrl,
       if (rowid != null) 'rowid': rowid,
@@ -1506,7 +1464,6 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
     Value<int>? crm,
     Value<int>? clinicId,
     Value<String>? name,
-    Value<int>? phone,
     Value<String>? specialty,
     Value<String?>? imageUrl,
     Value<int>? rowid,
@@ -1515,7 +1472,6 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
       crm: crm ?? this.crm,
       clinicId: clinicId ?? this.clinicId,
       name: name ?? this.name,
-      phone: phone ?? this.phone,
       specialty: specialty ?? this.specialty,
       imageUrl: imageUrl ?? this.imageUrl,
       rowid: rowid ?? this.rowid,
@@ -1533,9 +1489,6 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
-    }
-    if (phone.present) {
-      map['phone'] = Variable<int>(phone.value);
     }
     if (specialty.present) {
       map['specialty'] = Variable<String>(specialty.value);
@@ -1555,7 +1508,6 @@ class DoctorsCompanion extends UpdateCompanion<Doctor> {
           ..write('crm: $crm, ')
           ..write('clinicId: $clinicId, ')
           ..write('name: $name, ')
-          ..write('phone: $phone, ')
           ..write('specialty: $specialty, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('rowid: $rowid')
@@ -4012,7 +3964,6 @@ typedef $$DoctorsTableCreateCompanionBuilder =
       required int crm,
       required int clinicId,
       required String name,
-      required int phone,
       required String specialty,
       Value<String?> imageUrl,
       Value<int> rowid,
@@ -4022,7 +3973,6 @@ typedef $$DoctorsTableUpdateCompanionBuilder =
       Value<int> crm,
       Value<int> clinicId,
       Value<String> name,
-      Value<int> phone,
       Value<String> specialty,
       Value<String?> imageUrl,
       Value<int> rowid,
@@ -4109,11 +4059,6 @@ class $$DoctorsTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get phone => $composableBuilder(
-    column: $table.phone,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4220,11 +4165,6 @@ class $$DoctorsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get phone => $composableBuilder(
-    column: $table.phone,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get specialty => $composableBuilder(
     column: $table.specialty,
     builder: (column) => ColumnOrderings(column),
@@ -4273,9 +4213,6 @@ class $$DoctorsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<int> get phone =>
-      $composableBuilder(column: $table.phone, builder: (column) => column);
 
   GeneratedColumn<String> get specialty =>
       $composableBuilder(column: $table.specialty, builder: (column) => column);
@@ -4392,7 +4329,6 @@ class $$DoctorsTableTableManager
                 Value<int> crm = const Value.absent(),
                 Value<int> clinicId = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<int> phone = const Value.absent(),
                 Value<String> specialty = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -4400,7 +4336,6 @@ class $$DoctorsTableTableManager
                 crm: crm,
                 clinicId: clinicId,
                 name: name,
-                phone: phone,
                 specialty: specialty,
                 imageUrl: imageUrl,
                 rowid: rowid,
@@ -4410,7 +4345,6 @@ class $$DoctorsTableTableManager
                 required int crm,
                 required int clinicId,
                 required String name,
-                required int phone,
                 required String specialty,
                 Value<String?> imageUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -4418,7 +4352,6 @@ class $$DoctorsTableTableManager
                 crm: crm,
                 clinicId: clinicId,
                 name: name,
-                phone: phone,
                 specialty: specialty,
                 imageUrl: imageUrl,
                 rowid: rowid,
