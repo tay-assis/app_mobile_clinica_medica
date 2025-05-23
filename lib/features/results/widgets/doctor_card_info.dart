@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DoctorInfoCard extends StatelessWidget {
   final String doctorName;
   final String specialty;
-  final String CRM;
+  final int CRM;
   final int uid;
 
   const DoctorInfoCard({

@@ -6,7 +6,7 @@ class DoctorCard extends StatelessWidget {
   final String doctorName;
   final String specialty;
   final String imageUrl;
-  final String? CRM;
+  final int? CRM;
   final int? uid;
 
   const DoctorCard({
@@ -31,7 +31,7 @@ class DoctorCard extends StatelessWidget {
             child: DoctorInfoCard(
               doctorName: doctorName,
               specialty: specialty,
-              CRM: CRM ?? '',
+              CRM: CRM ?? -1,
               uid: uid ?? -1,
             ),
           ),

@@ -78,7 +78,7 @@ class _ResultFilterState extends State<ResultFilter> {
                   doctorName: doctor.name,
                   specialty: 'Especialidade: ${doctor.specialty}',
                   imageUrl: 'lib/images/default_profile.jpg',
-                  CRM: (doctor.crm).toString(),
+                  CRM: doctor.crm,
                   uid: widget.uid,
                 );
               },

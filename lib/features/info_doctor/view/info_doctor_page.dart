@@ -1,4 +1,9 @@
+// controller and database
+import 'package:app_mobile_clinica_medica/features/info_doctor/controller/infoDoctorController.dart';
 import 'package:flutter/material.dart';
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+import 'package:provider/provider.dart';
+import 'package:app_mobile_clinica_medica/features/clinic/controller/dashboard_clinic_controller.dart';
 import 'package:intl/intl.dart';
 
 // Widgets personalizados
@@ -9,7 +14,7 @@ import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.da
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 
 class InfoDoctorPage extends StatefulWidget {
-  final String CRM;
+  final int CRM;
 
   final int uid;
 
@@ -20,7 +25,14 @@ class InfoDoctorPage extends StatefulWidget {
 }
 
 class _InfoDoctorPageState extends State<InfoDoctorPage> {
+  late final AppDatabase _db;
+  late final InfoDoctorController _controller;
+
   DateTime selectedDate = DateTime.now();
+
+  String? doctorName;
+  String? doctorSpecialty;
+  String? clinicName;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -34,6 +46,44 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
         selectedDate = pickedDate;
       });
     }
+  }
+
+  Future<void> _loadDoctorData() async {
+    print('USER ID: ${widget.uid}');
+    final doctor = await _controller.getDoctorFromCrm(widget.CRM);
+    final clinic = await _controller.getClinicName(widget.CRM);
+    print('INFO PAGE: $doctor');
+    if (doctor != null) {
+      print('dentro do if');
+      setState(() {
+        print('dentro do setstate');
+        doctorName = doctor.name;
+        doctorSpecialty = doctor.specialty;
+        print('TESTE FINAL 0:$doctorName');
+      });
+      print('TESTE FINAL:$doctorName');
+    } else {
+      print('Doutor não encontrado');
+    }
+
+    print('doutor nao  nulo ');
+    if (clinic != null) {
+      print('clinica nao nulla');
+      setState(() {
+        clinicName = clinic.name;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _db = Provider.of<AppDatabase>(
+      context,
+      listen: false,
+    ); // agora sempre será a mesma instância
+    _controller = InfoDoctorController(_db);
+    _loadDoctorData();
   }
 
   @override
@@ -66,7 +116,7 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                 const SizedBox(height: 20),
                 Center(
                   child: Text(
-                    'Dr. Kyle Bush (${widget.CRM})',
+                    '$doctorName: (${widget.CRM})',
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 25,
@@ -76,9 +126,9 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Center(
+                Center(
                   child: Text(
-                    'Cardiologist',
+                    '$doctorSpecialty',
                     style: TextStyle(
                       color: Color(0xFF0089FF),
                       fontSize: 15,
@@ -88,8 +138,8 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Pacific Clinics',
+                Text(
+                  '$clinicName',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
