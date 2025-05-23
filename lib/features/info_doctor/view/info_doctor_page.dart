@@ -3,13 +3,13 @@ import 'package:app_mobile_clinica_medica/features/info_doctor/controller/infoDo
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:provider/provider.dart';
-import 'package:app_mobile_clinica_medica/features/clinic/controller/dashboard_clinic_controller.dart';
+//import 'package:app_mobile_clinica_medica/features/clinic/controller/dashboard_clinic_controller.dart';
 import 'package:intl/intl.dart';
 
 // Widgets personalizados
 import 'package:app_mobile_clinica_medica/features/shared/widgets/doctor_card_image.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
-import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/retangle_label.dart';
+import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/rectangle_label.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 
@@ -33,6 +33,7 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
   String? doctorName;
   String? doctorSpecialty;
   String? clinicName;
+  List<DoctorSchedule>? scheduleList;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -48,10 +49,19 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
     }
   }
 
+  // modelo "HH:MM"
+  String timeToString(DateTime date) {
+    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  }
+
   Future<void> _loadDoctorData() async {
     print('USER ID: ${widget.uid}');
     final doctor = await _controller.getDoctorFromCrm(widget.CRM);
     final clinic = await _controller.getClinicName(widget.CRM);
+    final List<DoctorSchedule>? schedules = await _controller.getSchedule(widget.CRM);
+
+
+
     print('INFO PAGE: $doctor');
     if (doctor != null) {
       print('dentro do if');
@@ -68,9 +78,16 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
 
     print('doutor nao  nulo ');
     if (clinic != null) {
-      print('clinica nao nulla');
+      print('clinica nao nula');
       setState(() {
         clinicName = clinic.name;
+      });
+    }
+
+    if (schedules != null) {
+      print('agenda nao nula');
+      setState(() {
+        scheduleList = schedules;
       });
     }
   }
@@ -91,7 +108,32 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
     final String formattedDate = DateFormat(
       'MMMM d, yyyy',
     ).format(selectedDate);
-    ;
+
+    List<Widget> rectList = [];
+
+    // still loading
+    if (scheduleList == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (scheduleList!.isNotEmpty) {
+      // filtered for the selected day
+      final todaySchedules = scheduleList!
+          .where((s) => s.date.year  == selectedDate.year
+          && s.date.month == selectedDate.month
+          && s.date.day   == selectedDate.day
+          && s.status == "available")
+          .toList();
+
+      // add results to the Widget List
+      if (todaySchedules.isNotEmpty) {
+        for(int i=0; i<todaySchedules.length;i++)
+        {
+          rectList.add(RectangleLabel(label: timeToString(todaySchedules[i].date)));
+        }
+      }
+    }
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -172,10 +214,13 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                 ),
                 const SizedBox(height: 20),
 
+
                 // Grid com scroll interno e altura fixa
                 SizedBox(
                   height: 177, // Altura máxima visível do grid
                   child: Scrollbar(
+
+
                     // Adiciona uma barra de rolagem visual
                     child: GridView.count(
                       crossAxisCount: 3,
@@ -183,20 +228,12 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                       crossAxisSpacing: 10,
                       childAspectRatio: 2.3, // Ajusta tamanho horizontal
                       scrollDirection: Axis.vertical,
-                      children: const [
-                        RectangleLabel(label: '9:00 am'),
-                        RectangleLabel(label: '10:30 am'),
-                        RectangleLabel(label: '11:00 am'),
-                        RectangleLabel(label: '12:30 pm'),
-                        RectangleLabel(label: '4:00 pm'),
-                        RectangleLabel(label: '6:00 pm'),
-                        RectangleLabel(label: '6:30 pm'),
-                        RectangleLabel(label: '7:00 pm'),
-                        RectangleLabel(label: '7:30 pm'),
-                        RectangleLabel(label: '8:00 pm'),
-                        RectangleLabel(label: '9:00 pm'),
-                        RectangleLabel(label: '9:30 pm'),
-                      ],
+                      children:
+
+                          /// list with all the available schedules
+                          rectList,
+
+
                     ),
                   ),
                 ),

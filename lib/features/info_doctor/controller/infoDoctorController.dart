@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 
 class InfoDoctorController {
@@ -30,10 +29,9 @@ class InfoDoctorController {
     return null;
   }
 
-  Future<DoctorSchedule> getSchedule(int crm, DateTime time) async {
-    return await _db.doctorScheduleDao.selectDoctorScheduleByPrimaryKey(
+  Future<List<DoctorSchedule>> getSchedule(int crm) async {
+    return await _db.doctorScheduleDao.selectDoctorSchedulesByDoctorCRM(
       crm,
-      time,
     );
   }
 }
