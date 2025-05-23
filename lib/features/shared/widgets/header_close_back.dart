@@ -18,7 +18,7 @@ class CustomHeader extends StatelessWidget {
     if (returnHome) {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const DashboardUser()),
+        MaterialPageRoute(builder: (_) => const DashboardUser(uid: 1)),
         (route) => false,
       );
     } else {

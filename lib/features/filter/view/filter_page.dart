@@ -9,7 +9,9 @@ import 'widgets/custom_autocomplete_input.dart';
 import 'widgets/custom_dropdown.dart';
 
 class FilterPage extends StatefulWidget {
-  const FilterPage({super.key});
+  final int uid;
+
+  FilterPage({super.key, required this.uid});
 
   @override
   State<FilterPage> createState() => _FilterPageState();
@@ -147,7 +149,10 @@ class _FilterPageState extends State<FilterPage> {
                       // passando adiante a lista com os resultados do filtro
                       MaterialPageRoute(
                         builder: (_) {
-                          return ResultFilter(doctorsCRMs: filterResultList);
+                          return ResultFilter(
+                            doctorsCRMs: filterResultList,
+                            uid: widget.uid,
+                          );
                         },
                       ),
                     );

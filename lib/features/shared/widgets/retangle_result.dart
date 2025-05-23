@@ -7,12 +7,14 @@ class ResultRetangle extends StatelessWidget {
   final double width;
   final double height;
   final bool returnHome;
+  final int uid;
 
   const ResultRetangle({
     super.key,
     required this.width,
     required this.height,
     this.returnHome = false,
+    required this.uid,
   });
 
   @override
@@ -58,7 +60,7 @@ class ResultRetangle extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              const SearchBarWidget(),
+              SearchBarWidget(uid: uid),
             ],
           ),
         ),

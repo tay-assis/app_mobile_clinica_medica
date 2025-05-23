@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/filter/view/filter_page.dart';
 
 class SearchBarWidget extends StatefulWidget {
-  const SearchBarWidget({super.key});
+  final int uid;
+  const SearchBarWidget({super.key, required this.uid});
 
   @override
   _SearchBarWidgetState createState() => _SearchBarWidgetState();
@@ -37,7 +38,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
     final result = await showModalBottomSheet<Map<String, String?>>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => const FilterPage(),
+      builder: (_) => FilterPage(uid: widget.uid),
     );
 
     // Update quantity of the filters apply with singleton

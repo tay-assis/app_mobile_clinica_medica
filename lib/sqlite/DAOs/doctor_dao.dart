@@ -21,8 +21,9 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
   }
 
   // SELECT * FROM DOCTORS WHERE(crm == CRM)
-  Future<Doctor> selectDoctorByCRM(int CRM) {
-    return (select(doctors)..where((t) => t.crm.isValue(CRM))).getSingle();
+  Future<Doctor?> selectDoctorByCRM(int CRM) {
+    return (select(doctors)
+      ..where((t) => t.crm.isValue(CRM))).getSingleOrNull();
   }
 
   // SELECT COUNT(*) FROM DOCTORS

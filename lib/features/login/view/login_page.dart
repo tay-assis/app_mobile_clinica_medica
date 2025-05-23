@@ -149,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                             if (type == 'PATIENT' && uid != -1) {
                               navigateWithSlideTransition(
                                 context: context,
-                                destination: const DashboardUser(),
+                                destination: DashboardUser(uid: uid),
                                 beginOffset: const Offset(1.0, 0.0),
                               );
                             }

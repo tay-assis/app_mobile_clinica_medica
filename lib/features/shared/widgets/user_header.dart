@@ -22,7 +22,7 @@ class UserHeader extends StatelessWidget {
           children: [
             Text(
               name,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.black,
                 fontSize: 17,
                 fontFamily: 'Nunito',
@@ -33,7 +33,7 @@ class UserHeader extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.black54,
                 fontSize: 14,
                 fontFamily: 'Nunito',
@@ -46,7 +46,7 @@ class UserHeader extends StatelessWidget {
         if (showProfileImage)
           const CircleAvatar(
             radius: 25,
-            backgroundImage: AssetImage('lib/images/profile.jpg'),
+            backgroundImage: AssetImage('lib/images/default_profile.jpg'),
           ),
       ],
     );

@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 class DoctorInfoCard extends StatelessWidget {
   final String doctorName;
   final String specialty;
-  final String CRM;
+  final int CRM;
+  final int uid;
 
   const DoctorInfoCard({
     super.key,
     required this.doctorName,
     required this.specialty,
     required this.CRM,
+    required this.uid,
   });
 
   @override
@@ -58,7 +60,7 @@ class DoctorInfoCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => InfoDoctorPage(CRM: CRM),
+                    builder: (context) => InfoDoctorPage(CRM: CRM, uid: uid),
                   ),
                 );
               },
