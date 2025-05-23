@@ -66,6 +66,7 @@ class _DashboardUserState extends State<DashboardUser> {
               MainRectangle(
                 width: 373,
                 height: 250,
+                uid: widget.uid,
               ), // Main rectangle with gradient background and icons
               // others widgets can be added here, example images, health tips, etc.
             ],

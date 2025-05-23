@@ -48,18 +48,16 @@ class MyApp extends StatelessWidget {
       title: 'Meu App',
       debugShowCheckedModeBanner: false,
 
-      home: ResultFilter(
-        doctorsCRMs: [345, 234],
-      ), // <-- Aqui você define a tela que vai abrir
+      //home: ResultFilter(doctorsCRMs: [345, 234],), // <-- Aqui você define a tela que vai abrir
       //home: const LoginPage(), // <-- Aqui você define a tela que vai abrir
       //home: DashboardUser(), // <-- Aqui você define a tela que vai abrir
       //home: DashboardClinic(), // <-- Aqui você define a tela que vai abrir
       //home: InfoDoctorPage(), // <-- Aqui você define a tela que vai abrir
       //home: ResultFilter(),     // <-- Aqui você define a tela que vai abrir
       //home: const DashboardClinic(), // <-- Aqui você define a tela que vai abrir
-      //home: LoginPage(), // <-- Aqui você define a tela que vai abrir
-      //home: DashboardUser(),    // <-- Aqui você define a tela que vai abrir
+      home: LoginPage(), // <-- Aqui você define a tela que vai abrir
 
+      //home: DashboardUser(),    // <-- Aqui você define a tela que vai abrir
     );
   }
 }

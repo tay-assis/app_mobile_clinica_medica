@@ -6,8 +6,14 @@ import 'search_bar.dart';
 class MainRectangle extends StatelessWidget {
   final double width;
   final double height;
+  final int uid;
 
-  const MainRectangle({super.key, required this.width, required this.height});
+  const MainRectangle({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.uid,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +91,7 @@ class MainRectangle extends StatelessWidget {
               const SizedBox(height: 5),
 
               // Widget for the search bar
-              SearchBarWidget(),
+              SearchBarWidget(uid: uid),
             ],
           ),
         ),

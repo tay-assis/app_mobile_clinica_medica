@@ -8,18 +8,17 @@ class InfoDoctorController extends ChangeNotifier {
 
   Doctor? doc;
 
-  Future<Doctor> getDoctorsFromList(int crm) async
-  {
+  Future<Doctor> getDoctorsFromCrm(int crm) async {
     final result = await db.doctorDao.selectDoctorByCRM(crm);
-
-    doc = result;
 
     // gets the doctor from the crm
     return result;
   }
 
-  Future<DoctorSchedule> getSchedule(int crm, DateTime time) async
-  {
-      return await db.doctorScheduleDao.selectDoctorScheduleByPrimaryKey(crm, time);
+  Future<DoctorSchedule> getSchedule(int crm, DateTime time) async {
+    return await db.doctorScheduleDao.selectDoctorScheduleByPrimaryKey(
+      crm,
+      time,
+    );
   }
 }

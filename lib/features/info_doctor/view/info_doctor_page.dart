@@ -11,7 +11,9 @@ import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.
 class InfoDoctorPage extends StatefulWidget {
   final String CRM;
 
-  const InfoDoctorPage({super.key, required this.CRM});
+  final int uid;
+
+  const InfoDoctorPage({super.key, required this.CRM, required this.uid});
 
   @override
   State<InfoDoctorPage> createState() => _InfoDoctorPageState();
@@ -55,7 +57,7 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                 const SizedBox(height: 20),
                 Center(
                   child: DoctorAvatar(
-                    imageUrl: 'lib/images/profile.jpg',
+                    imageUrl: 'lib/images/default_profile.jpg',
                     radius: 50,
                     width: 190,
                     height: 190,

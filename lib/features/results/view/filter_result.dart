@@ -10,7 +10,9 @@ import 'package:provider/provider.dart';
 class ResultFilter extends StatefulWidget {
   final List<int> doctorsCRMs;
 
-  ResultFilter({super.key, required this.doctorsCRMs});
+  final int uid;
+
+  ResultFilter({super.key, required this.doctorsCRMs, required this.uid});
 
   @override
   State<ResultFilter> createState() => _ResultFilterState();
@@ -49,6 +51,7 @@ class _ResultFilterState extends State<ResultFilter> {
             width: MediaQuery.of(context).size.width,
             height: 250,
             returnHome: true,
+            uid: widget.uid,
           ),
 
           // Espaçamento entre o cabeçalho e a lista de médicos
@@ -75,7 +78,8 @@ class _ResultFilterState extends State<ResultFilter> {
                   doctorName: doctor.name,
                   specialty: 'Especialidade: ${doctor.specialty}',
                   imageUrl: 'lib/images/default_profile.jpg',
-                  //CRM: doctorCRM.toString(),
+                  CRM: (doctor.crm).toString(),
+                  uid: widget.uid,
                 );
               },
             ),
