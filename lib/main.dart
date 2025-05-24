@@ -1,4 +1,5 @@
 //import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
+import 'package:app_mobile_clinica_medica/features/profiles/view/profiles_page.dart';
 import 'package:app_mobile_clinica_medica/features/results/view/filter_result.dart';
 import 'package:app_mobile_clinica_medica/features/dashboard/view/dashboard_user.dart';
 //import 'package:app_mobile_clinica_medica/features/info_doctor/view/info_doctor_page.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
       //home: const DashboardClinic(), // <-- Aqui você define a tela que vai abrir
       home: LoginPage(), // <-- Aqui você define a tela que vai abrir
       //home: DashboardUser(),    // <-- Aqui você define a tela que vai abrir
+      //home: ProfilesPage(uid: 1),
     );
   }
 }
