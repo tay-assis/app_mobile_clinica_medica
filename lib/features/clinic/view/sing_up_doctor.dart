@@ -174,7 +174,7 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
                 height: height * 0.04,
                 onPressed: () async {
                   final crm = await _controller.newDoctor(clinicId);
-                  if (crm != -1) {
+                  if (crm != -1 && crm != -2) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Cadastro realizado com sucesso!'),
@@ -188,12 +188,21 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
                       ),
                     );
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Erro ao realizar cadastro.'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
+                    if (crm != -2) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Erro ao realizar cadastro.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Já existe um médico com esse crm'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   }
                 },
                 styleType: ButtonStyleType.outlined,

@@ -41,7 +41,7 @@ class SingUpDoctorController {
           print('doutor nao existe $doctor, $crm');
           return crm; // means crm is unique
         }
-        return -1;
+        return -2;
       }
     } catch (e) {
       print('CRM nao passou pela checagem: $e');
