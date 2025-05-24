@@ -6,22 +6,54 @@ import '../view/dashboard_clinic.dart';
 import '../../shared/widgets/field_label.dart';
 import '../../shared/widgets/sing_up_client_register.dart';
 import '../../login/view/login_page.dart';
+
 import '../controller/sing_up_doctor_controller.dart';
+import 'package:app_mobile_clinica_medica/sqlite/database.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SingUpDoctor extends StatefulWidget {
-  const SingUpDoctor({super.key});
+  final int uid;
+
+  SingUpDoctor({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<SingUpDoctor> createState() => _SingUpDoctorState();
 }
 
 class _SingUpDoctorState extends State<SingUpDoctor> {
-  final SingUpDoctorController _controller = SingUpDoctorController();
+  late final AppDatabase _db;
+  late final SingUpDoctorController _controller;
+
+  int? clinicId;
+
+  void _loadClinic() async {
+    final cid = await _controller.findCid(
+      widget.uid,
+    ); //finding clinic by userId
+    if (cid != null) {
+      setState(() {
+        clinicId = cid;
+      });
+    }
+  }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _db = Provider.of<AppDatabase>(
+      context,
+      listen: false,
+    ); // agora sempre será a mesma instância
+    _controller = SingUpDoctorController(_db);
+    _loadClinic();
+    //_loadDoctors();
   }
 
   Widget buildInputField({
@@ -63,11 +95,11 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
               alignment: Alignment.centerRight * 0.7,
               child: BackIcon(
                 onTap: () {
-                  //navigateWithSlideTransition(
-                  //  context: context,
-                  //  destination: DashboardClinic(uid: uid),
-                  //  beginOffset: const Offset(-1.0, 0.0),
-                  //);
+                  navigateWithSlideTransition(
+                    context: context,
+                    destination: DashboardClinic(uid: widget.uid),
+                    beginOffset: const Offset(-1.0, 0.0),
+                  );
                 },
               ),
             ),
@@ -97,92 +129,38 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
             // Nome
             Align(
               alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'CRM'),
+            ),
+            Center(
+              child: SingUpClientRegister(
+                controller: _controller.crmController,
+                hintText: 'Digite o CRM do médico',
+                keyboardType: TextInputType.name,
+              ),
+            ),
+
+            // Nome
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
               child: const FieldLabel(text: 'Nome'),
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.nomePController,
-                hintText: 'Digite seu nome completo',
+                controller: _controller.nomeController,
+                hintText: 'Digite o nome completo do médico',
                 keyboardType: TextInputType.name,
               ),
             ),
 
-            // Convênio
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.22,
-              child: const FieldLabel(text: 'Convênio'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.convenioController,
-                hintText: 'Digite o convênio',
-                keyboardType: TextInputType.name,
-              ),
-            ),
-
-            // Endereço
-            SizedBox(height: height * 0.03),
+            // Especialidade
             Align(
               alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Endereço'),
+              child: const FieldLabel(text: 'Especialidade'),
             ),
             Center(
               child: SingUpClientRegister(
-                controller: _controller.enderecoPController,
-                hintText: 'Digite o endereço',
-                keyboardType: TextInputType.name,
-              ),
-            ),
-
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Bairro'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.bairroPController,
-                hintText: 'Digite o bairro',
-                keyboardType: TextInputType.name,
-              ),
-            ),
-
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Cidade'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.cidadePController,
-                hintText: 'Digite a cidade',
-                keyboardType: TextInputType.name,
-              ),
-            ),
-
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Estado'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.estadoPController,
-                hintText: 'Digite o estado',
-                keyboardType: TextInputType.name,
-              ),
-            ),
-
-            SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'CEP'),
-            ),
-            Center(
-              child: SingUpClientRegister(
-                controller: _controller.cepPController,
-                hintText: 'Digite o CEP',
+                controller: _controller.especialidadeController,
+                hintText: 'Digite a especialidade do médico',
                 keyboardType: TextInputType.name,
               ),
             ),
@@ -194,13 +172,38 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
                 text: 'Submeter',
                 width: width * 0.25,
                 height: height * 0.04,
-                onPressed: () {
-                  //Navigator.pushReplacement(
-                  //  context,
-                  //  MaterialPageRoute(
-                  //    builder: (context) => DashboardClinic(),
-                  //  ),
-                  //);
+                onPressed: () async {
+                  final crm = await _controller.newDoctor(clinicId);
+                  if (crm != -1 && crm != -2) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Cadastro realizado com sucesso!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DashboardClinic(uid: widget.uid),
+                      ),
+                    );
+                  } else {
+                    if (crm != -2) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Erro ao realizar cadastro.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Já existe um médico com esse crm'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
                 },
                 styleType: ButtonStyleType.outlined,
                 fontSize: 14,

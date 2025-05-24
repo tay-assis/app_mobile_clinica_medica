@@ -38,7 +38,6 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
     int CRM,
     int CLINICID,
     String NAME,
-    int PHONE,
     String SPECIALTY,
     String? IMAGEURL,
   ) async {
@@ -47,7 +46,6 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
         crm: Value(CRM),
         clinicId: Value(CLINICID),
         name: Value(NAME),
-        phone: Value(PHONE),
         specialty: Value(SPECIALTY),
         imageUrl: Value(IMAGEURL),
       ),
@@ -60,17 +58,15 @@ class DoctorDao extends DatabaseAccessor<AppDatabase> with _$DoctorDaoMixin {
     int CRM,
     int CLINICID,
     String NAME,
-    int PHONE,
     String SPECIALTY,
     String? IMAGEURL,
     int targets,
   ) async {
     final companion = DoctorsCompanion(
-      clinicId: ((targets & 0x10000) != 0) ? Value(CLINICID) : Value.absent(),
-      name: ((targets & 0x01000) != 0) ? Value(NAME) : Value.absent(),
-      phone: ((targets & 0x00100) != 0) ? Value(PHONE) : Value.absent(),
-      specialty: ((targets & 0x00010) != 0) ? Value(SPECIALTY) : Value.absent(),
-      imageUrl: ((targets & 0x00001) != 0) ? Value(IMAGEURL) : Value.absent(),
+      clinicId: ((targets & 0x1000) != 0) ? Value(CLINICID) : Value.absent(),
+      name: ((targets & 0x0100) != 0) ? Value(NAME) : Value.absent(),
+      specialty: ((targets & 0x0010) != 0) ? Value(SPECIALTY) : Value.absent(),
+      imageUrl: ((targets & 0x0001) != 0) ? Value(IMAGEURL) : Value.absent(),
     );
 
     // single update
