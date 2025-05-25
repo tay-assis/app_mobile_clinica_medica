@@ -1,7 +1,8 @@
 import 'package:app_mobile_clinica_medica/features/clinic/controller/dashboard_clinic_controller.dart';
 import 'package:app_mobile_clinica_medica/features/clinic/view/sing_up_doctor.dart';
 import 'package:app_mobile_clinica_medica/features/clinic/widgets/label.dart';
-//import 'package:app_mobile_clinica_medica/features/login/view/login_page.dart';
+import 'package:app_mobile_clinica_medica/features/login/view/login_page.dart';
+import 'package:app_mobile_clinica_medica/features/profiles/view/profiles_page.dart';
 import 'package:app_mobile_clinica_medica/features/results/widgets/doctor_card.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/rectangle.dart';
 //import 'package:app_mobile_clinica_medica/features/shared/widgets/retangle_result.dart';
@@ -9,16 +10,7 @@ import 'package:app_mobile_clinica_medica/features/shared/widgets/bottom_nav_bar
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// Modelo simples do médico
-//class Doctor {
-//  final String name;
-//  final String specialty;
-//  final String imageUrl;
-//
-//  Doctor({required this.name, required this.specialty, required this.imageUrl});
-//}
 
-// Página com a grade de médicos (agora Stateful)
 class DashboardClinic extends StatefulWidget {
   final int uid;
 
@@ -35,29 +27,6 @@ class _DashboardClinicState extends State<DashboardClinic> {
   String? clinicName;
   String? clinicStreet;
   List<Doctor> _doctors = [];
-
-  //final List<Doctor> doctorsList = [
-  //  Doctor(
-  //    name: 'Dr. Kate Rose',
-  //    specialty: 'Pediatra',
-  //    imageUrl: 'lib/images/profile.jpg',
-  //  ),
-  //  Doctor(
-  //    name: 'Dr. Kyle Bush',
-  //    specialty: 'Cardiologista',
-  //    imageUrl: 'https://placehold.co/130x116',
-  //  ),
-  //  Doctor(
-  //    name: 'Dr. Casey Dean',
-  //    specialty: 'Dermatologista',
-  //    imageUrl: 'https://placehold.co/130x116',
-  //  ),
-  //  Doctor(
-  //    name: 'Dr. Simon Le',
-  //    specialty: 'Dermatologista',
-  //    imageUrl: 'https://placehold.co/130x116',
-  //  ),
-  //];
 
   Future<void> _loadClinicData() async {
     final clinic = await _controller.findClinic(widget.uid); //widget.uid
@@ -188,7 +157,9 @@ class _DashboardClinicState extends State<DashboardClinic> {
         onAddTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const SingUpDoctor()),
+            MaterialPageRoute(
+              builder: (context) => SingUpDoctor(uid: widget.uid),
+            ),
           );
         },
         onHomeTap: () {
@@ -198,7 +169,12 @@ class _DashboardClinicState extends State<DashboardClinic> {
           //);
         },
         onProfileTap: () {
-          Navigator.pushNamed(context, '/profile');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilesPage(uid: widget.uid),
+            ),
+          );
         },
       ),
     );

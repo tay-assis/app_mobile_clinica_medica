@@ -1,4 +1,5 @@
 import 'package:app_mobile_clinica_medica/features/dashboard/controller/dashboard_user_controller.dart';
+import 'package:app_mobile_clinica_medica/features/profiles/view/profiles_page.dart';
 import 'package:app_mobile_clinica_medica/features/dashboard/view/widgets/main_rectangle.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/user_header.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
@@ -82,7 +83,12 @@ class _DashboardUserState extends State<DashboardUser> {
           Navigator.pushNamed(context, '/home');
         },
         onProfileTap: () {
-          Navigator.pushNamed(context, '/profile');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilesPage(uid: widget.uid),
+            ),
+          );
         },
       ),
     );

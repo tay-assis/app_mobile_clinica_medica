@@ -11,7 +11,6 @@ class DoctorSeeder {
         123,
         1,
         'Dr. Gregory House',
-        12345634,
         'Casos Impossíveis',
         'https://prodoctor.net/blog/wp-content/uploads/2015/09/seriados-medicos-dr-house.jpg',
       );
@@ -19,7 +18,6 @@ class DoctorSeeder {
         234,
         2,
         'Dra. Meredith Grey',
-        21345637,
         'Cirurgia Geral',
         'https://upload.wikimedia.org/wikipedia/pt/3/36/Meredith_Grey_foto_promocional.webp',
       );
@@ -27,7 +25,6 @@ class DoctorSeeder {
         345,
         2,
         'Dr. Derek Shepherd',
-        43215634,
         'Neurocirurgia',
         'https://rollingstone.com.br/media/uploads/derek-shepherd-patrick-dempsey-greys-anatomy-divulgacao.jpg',
       );
@@ -35,7 +32,6 @@ class DoctorSeeder {
         456,
         1,
         'Dra. Cristina Yang',
-        21345634,
         'Cardiologia',
         'https://s2.glbimg.com/uwtZkUu1jkrPJjsUe8JCGi2zZYI=/e.glbimg.com/og/ed/f/original/2021/05/11/cristina_yang.jpg',
       );
@@ -43,7 +39,6 @@ class DoctorSeeder {
         567,
         3,
         'Dr. Cooper Freedman',
-        21345635,
         'Pediatria',
         'https://static.wikia.nocookie.net/greysanatomy/images/c/c9/CooperFreedmanS1-1.jpg/revision/latest?cb=20081227104023',
       );
@@ -51,7 +46,6 @@ class DoctorSeeder {
         678,
         3,
         'Dra. Addison Montgomery',
-        21345636,
         'Obstetrícia',
         'https://i.pinimg.com/474x/fb/01/88/fb0188d3b4e31bd1e88d1caa097a2d9f.jpg',
       );
