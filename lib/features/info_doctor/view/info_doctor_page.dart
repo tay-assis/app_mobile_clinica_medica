@@ -1,15 +1,17 @@
 // controller and database
 import 'package:app_mobile_clinica_medica/features/info_doctor/controller/infoDoctorController.dart';
+import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/weekday_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:provider/provider.dart';
-import 'package:app_mobile_clinica_medica/features/clinic/controller/dashboard_clinic_controller.dart';
+//import 'package:app_mobile_clinica_medica/features/clinic/controller/dashboard_clinic_controller.dart';
 import 'package:intl/intl.dart';
 
 // Widgets personalizados
 import 'package:app_mobile_clinica_medica/features/shared/widgets/doctor_card_image.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
-import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/retangle_label.dart';
+import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/rectangle_label.dart';
+import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/input_int.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 
@@ -28,11 +30,20 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
   late final AppDatabase _db;
   late final InfoDoctorController _controller;
 
+  // date to show on screen
   DateTime selectedDate = DateTime.now();
+
+  // date to add a week
+  DateTime selectedDate2 = DateTime.now();
+  int initTime = 0;
+  int endTime = 0;
+  List<String> week = [];
 
   String? doctorName;
   String? doctorSpecialty;
   String? clinicName;
+  List<DoctorSchedule>? scheduleList;
+  String? userType;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -48,10 +59,41 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
     }
   }
 
+  Future<void> _newWeek(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate2,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
+    if (pickedDate != null && pickedDate != selectedDate2) {
+
+      final sunday = pickedDate.subtract(Duration(days: pickedDate.weekday % 7));
+
+      print("weekdays: $week");
+      await _controller.addWeek(widget.CRM, sunday, initTime, endTime, week);
+      final freshSchedules = await _controller.getSchedule(widget.CRM);
+
+      setState(() {
+        selectedDate2 = sunday;
+        scheduleList = freshSchedules;
+      });
+    }
+  }
+
+  // modelo "HH:MM"
+  String timeToString(DateTime date) {
+    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  }
+
   Future<void> _loadDoctorData() async {
     print('USER ID: ${widget.uid}');
     final doctor = await _controller.getDoctorFromCrm(widget.CRM);
     final clinic = await _controller.getClinicName(widget.CRM);
+    final List<DoctorSchedule>? schedules = await _controller.getSchedule(widget.CRM);
+    final user_type = await _controller.getUserType(widget.uid);
+
+
     print('INFO PAGE: $doctor');
     if (doctor != null) {
       print('dentro do if');
@@ -68,11 +110,22 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
 
     print('doutor nao  nulo ');
     if (clinic != null) {
-      print('clinica nao nulla');
+      print('clinica nao nula');
       setState(() {
         clinicName = clinic.name;
       });
     }
+
+    if (schedules != null) {
+      print('agenda nao nula');
+      setState(() {
+        scheduleList = schedules;
+      });
+    }
+
+    setState(() {
+      userType = user_type;
+    });
   }
 
   @override
@@ -91,7 +144,81 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
     final String formattedDate = DateFormat(
       'MMMM d, yyyy',
     ).format(selectedDate);
-    ;
+
+    List<Widget> rectList = [];
+
+    // still loading
+    if (scheduleList == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (scheduleList!.isNotEmpty) {
+
+      /// IF CLINIC, SHOW ALL SCHEDULED TIMES AND ALLOW AVAILABILITY INVERSION
+      if(userType == "CLINIC")
+      {
+        // filtered for the selected day
+        final todaySchedules = scheduleList!
+            .where((s) => s.date.year  == selectedDate.year
+            && s.date.month == selectedDate.month
+            && s.date.day   == selectedDate.day)
+            .toList();
+
+        // add results to the Widget List
+        if (todaySchedules.isNotEmpty) {
+          for(int i=0; i<todaySchedules.length;i++)
+          {
+            rectList.add(
+              // this gesture detector should only be applied if user.type == clinic
+              GestureDetector(
+                onTap: () async {
+
+                  await _controller.invertAvailability(todaySchedules[i]);
+
+                  // new value
+                  final freshSchedules = await _controller.getSchedule(widget.CRM);
+                  setState(() {
+                    scheduleList = freshSchedules;
+                  });
+                },
+                child: RectangleLabel(
+                  label: timeToString(todaySchedules[i].date),
+                  isAvailable: (todaySchedules[i].status == "available"),
+                ),
+              ),
+            );
+          }
+        }
+      }
+      else
+      {
+        /// IF PATIENT, SHOW ONLY UNSCHEDULED TIMES AND DENY AVAILABILITY INVERSION
+        if(userType == "PATIENT")
+        {
+          // filtered for the selected day
+          final todaySchedules = scheduleList!
+              .where((s) => s.date.year  == selectedDate.year
+              && s.date.month == selectedDate.month
+              && s.date.day   == selectedDate.day
+              && s.status == "available")
+              .toList();
+
+          // add results to the Widget List
+          if (todaySchedules.isNotEmpty) {
+            for(int i=0; i<todaySchedules.length;i++)
+            {
+              rectList.add(
+                  RectangleLabel(
+                    label: timeToString(todaySchedules[i].date),
+                    isAvailable: (todaySchedules[i].status == "available"),
+                  ),
+              );
+            }
+          }
+        }
+      }
+    }
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -168,14 +295,58 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                         color: Colors.black,
                       ),
                     ),
+                    const SizedBox(width: 8),
+                    InkWell(
+                      onTap: () => _newWeek(context),
+                      child: const Icon(
+                        Icons.add,
+                        size: 22,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    InputInt(
+                      initialValue: initTime,
+                      onChanged: (val) {
+                        setState(() {
+                          initTime = val ?? 0;
+                        });
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    InputInt(
+                      initialValue: endTime,
+                      onChanged: (val) {
+                        setState(() {
+                          endTime = val ?? 0;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const SizedBox(width: 8),
+                    WeekdaySelector(
+                      initialSelected: week,
+                      onChanged: (newSelection) {
+                        setState(() {
+                          week = newSelection;
+                        });
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
+
 
                 // Grid com scroll interno e altura fixa
                 SizedBox(
                   height: 177, // Altura máxima visível do grid
                   child: Scrollbar(
+
+
                     // Adiciona uma barra de rolagem visual
                     child: GridView.count(
                       crossAxisCount: 3,
@@ -183,20 +354,12 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                       crossAxisSpacing: 10,
                       childAspectRatio: 2.3, // Ajusta tamanho horizontal
                       scrollDirection: Axis.vertical,
-                      children: const [
-                        RectangleLabel(label: '9:00 am'),
-                        RectangleLabel(label: '10:30 am'),
-                        RectangleLabel(label: '11:00 am'),
-                        RectangleLabel(label: '12:30 pm'),
-                        RectangleLabel(label: '4:00 pm'),
-                        RectangleLabel(label: '6:00 pm'),
-                        RectangleLabel(label: '6:30 pm'),
-                        RectangleLabel(label: '7:00 pm'),
-                        RectangleLabel(label: '7:30 pm'),
-                        RectangleLabel(label: '8:00 pm'),
-                        RectangleLabel(label: '9:00 pm'),
-                        RectangleLabel(label: '9:30 pm'),
-                      ],
+                      children:
+
+                          /// list with all the available schedules
+                          rectList,
+
+
                     ),
                   ),
                 ),

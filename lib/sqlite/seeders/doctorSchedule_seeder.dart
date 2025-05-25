@@ -12,16 +12,16 @@ class DoctorScheduleSeeder {
 
       await db.doctorScheduleDao.initializeWeek(
           123,
-          DateTime(2025, 5, 4),
+          DateTime(2025, 5, 25),
           14,
           17,
           days
       );
 
-      await db.doctorScheduleDao.occupyAppointment(123, DateTime(2025, 5, 5, 15, 0));
-      await db.doctorScheduleDao.occupyAppointment(123, DateTime(2025, 5, 5, 16, 0));
-      await db.doctorScheduleDao.occupyAppointment(123, DateTime(2025, 5, 7, 14, 0));
-      await db.doctorScheduleDao.occupyAppointment(123, DateTime(2025, 5, 9, 16, 0));
+      await db.doctorScheduleDao.invertAvailability(123, DateTime(2025, 5, 26, 15, 0));
+      await db.doctorScheduleDao.invertAvailability(123, DateTime(2025, 5, 26, 16, 0));
+      await db.doctorScheduleDao.invertAvailability(123, DateTime(2025, 5, 28, 14, 0));
+      await db.doctorScheduleDao.invertAvailability(123, DateTime(2025, 5, 30, 16, 0));
     }
   }
 }

@@ -150,17 +150,19 @@ class DoctorScheduleDao extends DatabaseAccessor<AppDatabase>
   }
 
   // available -> unavailable WHERE(PrimaryKey == PRIMARYKEY)
-  Future<int> occupyAppointment(DOCTORCRM, DATE) async {
+  Future<int> invertAvailability(DOCTORCRM, DATE) async {
     DoctorSchedule TARGET = await selectDoctorScheduleByPrimaryKey(
       DOCTORCRM,
       DATE,
     );
 
     if (TARGET.status == 'unavailable') {
-      return 1; // TARGET IS ALREADY UNAVAILABLE
+      await modifyDoctorSchedule(DOCTORCRM, '', DATE, 'available', 0x0001);
     }
-
-    await modifyDoctorSchedule(DOCTORCRM, '', DATE, 'unavailable', 0x0001);
+    else
+    {
+      await modifyDoctorSchedule(DOCTORCRM, '', DATE, 'unavailable', 0x0001);
+    }
 
     return 0;
   }

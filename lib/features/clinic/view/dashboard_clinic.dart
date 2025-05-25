@@ -5,7 +5,7 @@ import 'package:app_mobile_clinica_medica/features/login/view/login_page.dart';
 import 'package:app_mobile_clinica_medica/features/profiles/view/profiles_page.dart';
 import 'package:app_mobile_clinica_medica/features/results/widgets/doctor_card.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/rectangle.dart';
-import 'package:app_mobile_clinica_medica/features/shared/widgets/retangle_result.dart';
+//import 'package:app_mobile_clinica_medica/features/shared/widgets/retangle_result.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/bottom_nav_bar.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:flutter/material.dart';
@@ -142,8 +142,10 @@ class _DashboardClinicState extends State<DashboardClinic> {
                 final doctor = _doctors[index];
                 return DoctorCard(
                   doctorName: doctor.name,
-                  specialty: doctor.specialty,
+                  specialty: 'Especialidade: ${doctor.specialty}',
                   imageUrl: 'lib/images/default_profile.jpg',
+                  CRM: doctor.crm,
+                  uid: widget.uid,
                 );
               },
             ),
