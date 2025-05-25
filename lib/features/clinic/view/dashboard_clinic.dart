@@ -2,6 +2,7 @@ import 'package:app_mobile_clinica_medica/features/clinic/controller/dashboard_c
 import 'package:app_mobile_clinica_medica/features/clinic/view/sing_up_doctor.dart';
 import 'package:app_mobile_clinica_medica/features/clinic/widgets/label.dart';
 import 'package:app_mobile_clinica_medica/features/login/view/login_page.dart';
+import 'package:app_mobile_clinica_medica/features/profiles/view/profiles_page.dart';
 import 'package:app_mobile_clinica_medica/features/results/widgets/doctor_card.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/rectangle.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/retangle_result.dart';
@@ -166,7 +167,12 @@ class _DashboardClinicState extends State<DashboardClinic> {
           //);
         },
         onProfileTap: () {
-          Navigator.pushNamed(context, '/profile');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilesPage(uid: widget.uid),
+            ),
+          );
         },
       ),
     );
