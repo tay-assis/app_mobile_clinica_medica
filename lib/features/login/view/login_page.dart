@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Espaço para a curva do header
-                    SizedBox(height: height * 0.045),
+                    SizedBox(height: height * 0.065),
 
                     // Logo por cima do header
                     const LogoText(),
@@ -85,7 +85,11 @@ class _LoginPageState extends State<LoginPage> {
 
                     // Email
                     SizedBox(height: height * 0.1),
-                    const FieldLabel(text: 'E-mail'),
+                    const FieldLabel(
+                      text: 'E-mail',
+                      alignment: Alignment.centerLeft,
+                      horizontalPadding: 25, // opcional
+                    ),
                     Center(
                       child: CustomInputField(
                         controller: _controller.emailController,
@@ -96,7 +100,12 @@ class _LoginPageState extends State<LoginPage> {
 
                     // Senha
                     SizedBox(height: height * 0.025),
-                    const FieldLabel(text: 'Senha'),
+                    const FieldLabel(
+                      text: 'Senha',
+                      alignment: Alignment.centerLeft,
+                      horizontalPadding: 25, // opcional
+                    ),
+
                     Center(
                       child: CustomInputField(
                         controller: _controller.passwordController,
@@ -107,24 +116,19 @@ class _LoginPageState extends State<LoginPage> {
 
                     // Link "Cadastre-se agora"
                     SizedBox(height: height * 0.05),
-                    Align(
-                      alignment:
-                          Alignment.centerRight *
-                          0.7, // ou topRight, bottomRight
-                      child: FieldLabel(
-                        text: 'Cadastre-se agora',
-                        isLink: true,
-                        onTap: () {
-                          navigateWithSlideTransition(
-                            context: context,
-                            destination: const SingUpChoose(),
-                            beginOffset: const Offset(
-                              1.0,
-                              0.0,
-                            ), // entrada da direita
-                          );
-                        },
-                      ),
+
+                    FieldLabel(
+                      text: 'Cadastre-se agora',
+                      alignment: Alignment.centerRight,
+                      horizontalPadding: 20, // opcional para afastar da borda
+                      isLink: true,
+                      onTap: () {
+                        navigateWithSlideTransition(
+                          context: context,
+                          destination: const SingUpChoose(),
+                          beginOffset: const Offset(1.0, 0.0),
+                        );
+                      },
                     ),
 
                     // Botão de login
