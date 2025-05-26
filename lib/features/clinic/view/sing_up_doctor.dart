@@ -126,10 +126,13 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
             ),
             SizedBox(height: height * 0.05),
 
-            // Nome
+            // CRM
             Align(
               alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'CRM'),
+              child: const FieldLabel(
+                text: 'CRM',
+                alignment: Alignment.centerLeft,
+              ),
             ),
             Center(
               child: SingUpClientRegister(
@@ -140,9 +143,13 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
             ),
 
             // Nome
+            SizedBox(height: height * 0.04),
             Align(
               alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Nome'),
+              child: const FieldLabel(
+                text: 'Nome',
+                alignment: Alignment.centerLeft,
+              ),
             ),
             Center(
               child: SingUpClientRegister(
@@ -153,9 +160,13 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
             ),
 
             // Especialidade
+            SizedBox(height: height * 0.04),
             Align(
               alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Especialidade'),
+              child: const FieldLabel(
+                text: 'Especialidade',
+                alignment: Alignment.centerLeft,
+              ),
             ),
             Center(
               child: SingUpClientRegister(

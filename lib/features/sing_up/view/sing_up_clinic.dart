@@ -212,10 +212,10 @@ class _SingUpClinicState extends State<SingUpClinic> {
                       ),
                     );
                   }
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
+                  //Navigator.pushReplacement(
+                  //context,
+                  //MaterialPageRoute(builder: (context) => const LoginPage()),
+                  //);
                 },
                 styleType: ButtonStyleType.outlined,
                 fontSize: 14,

@@ -298,11 +298,11 @@ class _SingUpPatientState extends State<SingUpPatient> {
                         backgroundColor: Colors.green,
                       ),
                     );
-                    navigateWithSlideTransition(
-                      context: context,
-                      destination: LoginPage(),
-                      beginOffset: const Offset(1.0, 0.0),
-                    );
+                    //navigateWithSlideTransition(
+                    //context: context,
+                    //destination: LoginPage(),
+                    //beginOffset: const Offset(1.0, 0.0),
+                    //);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
