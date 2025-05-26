@@ -46,7 +46,7 @@ class CustomInputField extends StatelessWidget {
             keyboardType: keyboardType,
             style: TextStyle(
               color: Colors.white,
-              fontSize: width * 0.026,
+              fontSize: 14,
               fontFamily: 'Nunito',
               fontWeight: FontWeight.w600,
             ),
