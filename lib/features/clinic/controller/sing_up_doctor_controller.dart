@@ -60,20 +60,20 @@ class SingUpDoctorController {
 
     try {
       if (crm != -1 && cid != null) {
-        //inserting doctor
+        print('Check if: $crm, $cid');
+
+        print('Tentando inserir médico...');
         await _db.doctorDao.insertDoctor(crm, cid, nome, especialidade, '');
-        //inserting insurances
+        print('Médico inserido com sucesso.');
+
+        print('Tentando adicionar convênios...');
         await addInsurance(nome, input);
-
-        //checking insurances are correct
-        final listInsurance = await _db.doctorInsuranceDao
-            .selectInsurancesByDoctor(nome);
-        print('Lista de convênios do médico $nome : $listInsurance');
+        print('Convênios adicionados com sucesso.');
       }
-    } catch (e) {
-      print('Erro ao adicionar médico');
+    } catch (e, stackTrace) {
+      print('Erro ao adicionar médico: $e');
+      print(stackTrace);
     }
-
     return crm; //if crm is -1 is because the doctor wasn't inserted or already exists on the database
   }
 

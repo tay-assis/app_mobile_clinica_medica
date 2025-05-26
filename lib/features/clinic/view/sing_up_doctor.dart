@@ -273,6 +273,30 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
                 ),
               ],
             ),
+            SizedBox(height: 10),
+            ElevatedButton.icon(
+              onPressed: () {
+                setState(() {
+                  if (_selectedInsurance != null &&
+                      _selectedInsurance!.trim().isNotEmpty &&
+                      !inputedInsurances.contains(_selectedInsurance!.trim())) {
+                    inputedInsurances.add(_selectedInsurance!.trim());
+                    _selectedInsurance = null;
+                    _controller.convenioController.clear();
+                  }
+                });
+              },
+              icon: Icon(Icons.add),
+              label: Text("Adicionar mais convênios"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+
             SizedBox(height: height * 0.05),
             Align(
               alignment: Alignment.centerRight,
