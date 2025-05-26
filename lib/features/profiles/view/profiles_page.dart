@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 // Widgets personalizados
 import 'package:app_mobile_clinica_medica/features/shared/widgets/doctor_card_image.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
-import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/retangle_label.dart';
+//import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/retangle_label.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 import '../../shared/widgets/slide_transition.dart';

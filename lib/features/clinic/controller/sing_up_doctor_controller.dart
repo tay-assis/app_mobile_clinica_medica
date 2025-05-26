@@ -6,6 +6,7 @@ class SingUpDoctorController {
   final TextEditingController crmController = TextEditingController();
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController especialidadeController = TextEditingController();
+  final TextEditingController convenioController = TextEditingController();
 
   final AppDatabase _db;
   SingUpDoctorController(this._db);
@@ -50,7 +51,7 @@ class SingUpDoctorController {
     return -1;
   }
 
-  Future<int> newDoctor(int? cid) async {
+  Future<int> newDoctor(int? cid, List<String> input) async {
     //format every controller to put in the insert method from daos
     final crm =
         await checkCrm(); //making sure crm is unique and telling the user
@@ -59,12 +60,35 @@ class SingUpDoctorController {
 
     try {
       if (crm != -1 && cid != null) {
+        //inserting doctor
         await _db.doctorDao.insertDoctor(crm, cid, nome, especialidade, '');
+        //inserting insurances
+        await addInsurance(nome, input);
+
+        //checking insurances are correct
+        final listInsurance = await _db.doctorInsuranceDao
+            .selectInsurancesByDoctor(nome);
+        print('Lista de convênios do médico $nome : $listInsurance');
       }
     } catch (e) {
       print('Erro ao adicionar médico');
     }
 
     return crm; //if crm is -1 is because the doctor wasn't inserted or already exists on the database
+  }
+
+  Future<void> addInsurance(String name, List<String> input) async {
+    final n = input.length;
+    for (int i = 0; i < n; i++) {
+      await _db.doctorInsuranceDao.insertDoctorInsuranceByNames(name, input[i]);
+    }
+    final check = await _db.doctorInsuranceDao.selectInsurancesByDoctor(name);
+    print('Lista do banco de dados DoctorInsurances: $check');
+  }
+
+  Future<List<String>> getInsurancesName() async {
+    final result = await _db.insuranceDao.selectInsurances();
+
+    return result.map((i) => i.name).toList();
   }
 }

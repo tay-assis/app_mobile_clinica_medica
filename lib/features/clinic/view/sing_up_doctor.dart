@@ -5,7 +5,8 @@ import '../../shared/widgets/slide_transition.dart';
 import '../view/dashboard_clinic.dart';
 import '../../shared/widgets/field_label.dart';
 import '../../shared/widgets/sing_up_client_register.dart';
-import '../../login/view/login_page.dart';
+
+import 'widgets/custom_dropdown.dart';
 
 import '../controller/sing_up_doctor_controller.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
@@ -26,6 +27,11 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
   late final SingUpDoctorController _controller;
 
   int? clinicId;
+  String? _selectedInsurance;
+  bool isOtherInsurance = false;
+  bool isSelected = false;
+  late List<String> loadedInsurances;
+  List<String> inputedInsurances = [];
 
   void _loadClinic() async {
     final cid = await _controller.findCid(
@@ -36,6 +42,14 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
         clinicId = cid;
       });
     }
+  }
+
+  void _loadInsurance() async {
+    final loaded = await _controller.getInsurancesName();
+    setState(() {
+      print('Loaded Insurances: $loaded');
+      loadedInsurances = loaded;
+    });
   }
 
   @override
@@ -53,7 +67,7 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
     ); // agora sempre será a mesma instância
     _controller = SingUpDoctorController(_db);
     _loadClinic();
-    //_loadDoctors();
+    _loadInsurance();
   }
 
   Widget buildInputField({
@@ -165,6 +179,100 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
               ),
             ),
 
+            //Convênio
+            SizedBox(height: height * 0.03),
+            Align(
+              alignment: Alignment.centerLeft * 1.2,
+              child: const FieldLabel(text: 'Convênio'),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomDropdown(
+                  //title: 'Insurance',
+                  label: 'Convênio',
+                  value: isOtherInsurance ? null : _selectedInsurance,
+                  items: loadedInsurances,
+                  onChanged: (value) {
+                    if (!isOtherInsurance) {
+                      setState(() {
+                        _selectedInsurance = value;
+
+                        if (value != null && value.isNotEmpty) {
+                          // adds to the list if not already there
+                          if (!inputedInsurances.contains(value)) {
+                            inputedInsurances.add(value);
+                          }
+                        }
+                      });
+                      print('Convênio selecionado: $_selectedInsurance');
+                      isSelected =
+                          value != null && value.isNotEmpty; //returning true
+                    }
+                  },
+                ),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: isOtherInsurance,
+                      onChanged: (value) {
+                        setState(() {
+                          isOtherInsurance = value ?? false;
+
+                          if (!isOtherInsurance) {
+                            //mudei controller
+                            _controller.convenioController.clear();
+                            isSelected =
+                                _selectedInsurance != null &&
+                                _selectedInsurance!.isNotEmpty;
+                          } else {
+                            //mudei controller
+                            _selectedInsurance =
+                                _controller.convenioController.text;
+                            isSelected = false;
+                          }
+                        });
+                      },
+                    ),
+                    const Text(
+                      'Outro',
+                      style: TextStyle(fontFamily: 'Nunito', fontSize: 16),
+                    ),
+                    SizedBox(height: 10), //acho q aqui pode dar problema
+                    if (isOtherInsurance)
+                      Expanded(
+                        child: TextFormField(
+                          controller: _controller.convenioController,
+                          onChanged: (text) {
+                            setState(() {
+                              _selectedInsurance = text;
+                            });
+                          },
+                          onFieldSubmitted: (text) {
+                            setState(() {
+                              if (text.isNotEmpty &&
+                                  !inputedInsurances.contains(text)) {
+                                inputedInsurances.add(text);
+                                print('Outro convênio adicionado: $text');
+                              }
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Digite o nome do convênio',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
             SizedBox(height: height * 0.05),
             Align(
               alignment: Alignment.centerRight,
@@ -173,7 +281,10 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
                 width: width * 0.25,
                 height: height * 0.04,
                 onPressed: () async {
-                  final crm = await _controller.newDoctor(clinicId);
+                  final crm = await _controller.newDoctor(
+                    clinicId,
+                    inputedInsurances,
+                  );
                   if (crm != -1 && crm != -2) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
