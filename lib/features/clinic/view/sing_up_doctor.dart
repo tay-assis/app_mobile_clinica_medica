@@ -285,6 +285,12 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
                     _controller.convenioController.clear();
                   }
                 });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Convênio cadastrado com sucesso!'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
               },
               icon: Icon(Icons.add),
               label: Text("Adicionar mais convênios"),
