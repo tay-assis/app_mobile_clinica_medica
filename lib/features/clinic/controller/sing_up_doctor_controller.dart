@@ -58,7 +58,7 @@ class SingUpDoctorController {
     final especialidade = especialidadeController.text.trim();
 
     try {
-      if (crm != -1 && cid != null) {
+      if (crm > 0 && cid != null) {
         await _db.doctorDao.insertDoctor(crm, cid, nome, especialidade, '');
       }
     } catch (e) {
