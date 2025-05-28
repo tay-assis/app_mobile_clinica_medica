@@ -106,6 +106,7 @@ class FilterNameController extends ChangeNotifier {
       List<String> insuranceDoctorList = await db.doctorInsuranceDao.selectDoctorsByInsurance(insuranceName);
 
       DoctorsList = DoctorsList.where((d) => insuranceDoctorList.contains(d.name)).toList();
+      print("lista insurance result:$insuranceDoctorList");
     }
 
     // only the Doctors' crm is returned

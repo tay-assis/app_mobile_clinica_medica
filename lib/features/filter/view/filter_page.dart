@@ -117,11 +117,11 @@ class _FilterPageState extends State<FilterPage> {
             ),
             const SizedBox(height: 30),
 
-            CustomAutocompleteInput(
+            CustomDropdown(
               title: 'Convênio',
               label: 'o convênio do Médico',
-              options: insuranceNames,
-              selectedValue: selectedInsurance,
+              value: selectedInsurance,
+              items: insuranceNames,
               onChanged: (v) => setState(() => selectedInsurance = v),
             ),
             const SizedBox(height: 40),
@@ -155,6 +155,7 @@ class _FilterPageState extends State<FilterPage> {
                           clinicName: selectedClinic,
                           location: selectedLocation,
                           doctorName: selectedName,
+                          insuranceName: selectedInsurance,
                         );
 
                     Navigator.push(

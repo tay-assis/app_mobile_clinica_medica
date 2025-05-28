@@ -56,7 +56,9 @@ class _AddSchedulePageState extends State<AddSchedulesPage> {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: selectedDate2,
-      firstDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(
+        Duration(days: DateTime.now().weekday % 7),
+      ),
       lastDate: DateTime(2100),
     );
     if (pickedDate != null && pickedDate != selectedDate2) {
