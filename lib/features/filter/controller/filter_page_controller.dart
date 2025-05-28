@@ -7,12 +7,14 @@ class FilterNameController extends ChangeNotifier {
   List<String> _specialties = [];
   List<String> _clinicNames = [];
   List<String> _addresses = [];
+  List<String> _insurances = [];
   bool _loading = false;
 
   List<String> get names => _names;
   List<String> get specialties => _specialties;
   List<String> get clinicNames => _clinicNames;
   List<String> get addresses => _addresses;
+  List<String> get insurances => _insurances;
   bool get loading => _loading;
 
   FilterNameController(this.db);
@@ -36,6 +38,10 @@ class FilterNameController extends ChangeNotifier {
     // clinic addresses (cities)
     _addresses = addresses;
 
+    final insur = (await db.insuranceDao.selectInsurances()).map((i) => i.name).toList();
+    _insurances = insur;
+
+
     _loading = false;
     notifyListeners();
   }
@@ -46,6 +52,7 @@ class FilterNameController extends ChangeNotifier {
     String? clinicName,
     String? location,
     String? doctorName,
+    String? insuranceName,
   }) async {
 
     // start with all doctors, then start "shaving" it
@@ -91,6 +98,14 @@ class FilterNameController extends ChangeNotifier {
 
       // after discovering which clinics are on the specified location, update the DoctorsList
       DoctorsList = DoctorsList.where((d) => clinicIds.contains(d.clinicId)).toList();
+    }
+
+
+    if(insuranceName != null)
+    {
+      List<String> insuranceDoctorList = await db.doctorInsuranceDao.selectDoctorsByInsurance(insuranceName);
+
+      DoctorsList = DoctorsList.where((d) => insuranceDoctorList.contains(d.name)).toList();
     }
 
     // only the Doctors' crm is returned

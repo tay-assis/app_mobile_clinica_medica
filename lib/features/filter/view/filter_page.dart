@@ -22,6 +22,7 @@ class _FilterPageState extends State<FilterPage> {
   String? selectedClinic;
   String? selectedLocation;
   String? selectedName;
+  String? selectedInsurance;
 
   @override
   void initState() {
@@ -36,6 +37,7 @@ class _FilterPageState extends State<FilterPage> {
         selectedClinic = filters.clinic;
         selectedLocation = filters.location;
         selectedName = filters.doctorName;
+        selectedInsurance = filters.insuranceName;
       });
     });
   }
@@ -46,6 +48,7 @@ class _FilterPageState extends State<FilterPage> {
       selectedClinic = null;
       selectedLocation = null;
       selectedName = null;
+      selectedInsurance = null;
     });
 
     SelectedFilter().clear();
@@ -64,6 +67,7 @@ class _FilterPageState extends State<FilterPage> {
     final doctorSpecialties = controller.specialties;
     final clinicNames = controller.clinicNames;
     final clinicAddresses = controller.addresses;
+    final insuranceNames = controller.insurances;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -110,6 +114,15 @@ class _FilterPageState extends State<FilterPage> {
               options: clinicNames,
               selectedValue: selectedClinic,
               onChanged: (v) => setState(() => selectedClinic = v),
+            ),
+            const SizedBox(height: 30),
+
+            CustomAutocompleteInput(
+              title: 'Convênio',
+              label: 'o convênio do Médico',
+              options: insuranceNames,
+              selectedValue: selectedInsurance,
+              onChanged: (v) => setState(() => selectedInsurance = v),
             ),
             const SizedBox(height: 40),
 

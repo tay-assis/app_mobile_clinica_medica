@@ -12,35 +12,33 @@ import 'seeders/patient_seeder.dart';
 class DatabaseSeeder {
   /// Creates, seeds, and returns a single AppDatabase instance.
   static Future<AppDatabase> seed() async {
-    // 1️⃣ Instantiate DB
     final db = AppDatabase();
 
-    await db.userDao.deleteUsers();
+    //await db.userDao.deleteUsers();
     await UserSeeder.run(db);
 
-    // 2️⃣ Wipe & seed tables (in dev—skip deletes in production)
-    await db.addressDao.deleteAddresses();
+    //await db.addressDao.deleteAddresses();
     await AddressSeeder.run(db);
 
-    await db.insuranceDao.deleteInsurances();
+    //await db.insuranceDao.deleteInsurances();
     await InsuranceSeeder.run(db);
 
-    await db.clinicDao.deleteClinics();
+    //await db.clinicDao.deleteClinics();
     await ClinicSeeder.run(db);
 
-    await db.doctorDao.deleteDoctors();
+    //await db.doctorDao.deleteDoctors();
     await DoctorSeeder.run(db);
 
-    await db.doctorInsuranceDao.deleteDoctorInsurances();
+    //await db.doctorInsuranceDao.deleteDoctorInsurances();
     await DoctorInsuranceSeeder.run(db);
 
-    await db.doctorScheduleDao.deleteDoctorSchedules();
+    //await db.doctorScheduleDao.deleteDoctorSchedules();
     await DoctorScheduleSeeder.run(db);
 
-    await db.patientDao.deletePatients();
+    //await db.patientDao.deletePatients();
     await PatientSeeder.run(db);
 
-    // 3️⃣ Return the seeded database
+
     return db;
   }
 }
