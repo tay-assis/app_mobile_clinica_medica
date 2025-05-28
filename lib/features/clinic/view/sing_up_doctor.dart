@@ -30,7 +30,7 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
   String? _selectedInsurance;
   bool isOtherInsurance = false;
   bool isSelected = false;
-  late List<String> loadedInsurances;
+  List<String> loadedInsurances = [];
   List<String> inputedInsurances = [];
 
   void _loadClinic() async {
