@@ -59,7 +59,7 @@ class SingUpDoctorController {
     final especialidade = especialidadeController.text.trim();
 
     try {
-      if (crm != -1 && cid != null) {
+      if (crm != -1 && crm != -2 && cid != null) {
         print('Check if: $crm, $cid');
 
         print('Tentando inserir médico...');
@@ -79,8 +79,14 @@ class SingUpDoctorController {
 
   Future<void> addInsurance(String name, List<String> input) async {
     final n = input.length;
+    final List<String> currentInsurances = (await _db.insuranceDao.selectInsurances()).map((i) => i.name).toList();
+
     for (int i = 0; i < n; i++) {
+      if(!(currentInsurances.contains(input[i]))){
+        await _db.insuranceDao.insertInsurance(input[i]);
+      }
       await _db.doctorInsuranceDao.insertDoctorInsuranceByNames(name, input[i]);
+
     }
     final check = await _db.doctorInsuranceDao.selectInsurancesByDoctor(name);
     print('Lista do banco de dados DoctorInsurances: $check');
