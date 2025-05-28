@@ -44,7 +44,7 @@ dependencies:
   firebase_auth: ^5.5.3
   provider: ^6.1.1
 
-  intl: ^0.18.1
+  intl: ^0.20.2
 
 dev_dependencies:
   drift_dev: ^2.26.0
@@ -73,6 +73,7 @@ flutter:
   uses-material-design: true
   assets:
     - lib/images/default_profile.jpg
+    - lib/images/sing_up_choose_image.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

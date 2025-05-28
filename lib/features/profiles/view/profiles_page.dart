@@ -95,6 +95,11 @@ class _ProfilesPageState extends State<ProfilesPage> {
                   isCloseButton: false,
                   iconColor: Color(0xFF0089FF),
                 ),
+                //
+                //
+                //
+
+                //Imagem
                 const SizedBox(height: 20),
                 Center(
                   child: DoctorAvatar(
@@ -105,91 +110,126 @@ class _ProfilesPageState extends State<ProfilesPage> {
                   ),
                 ),
 
-                //name
-                const SizedBox(height: 20),
-                Center(
-                  child: Text(
-                    '$name',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w700,
-                    ),
+                // Nome
+                const SizedBox(height: 30),
+                Card(
+                  color: Colors.grey[100],
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
                   ),
-                ),
-                const SizedBox(height: 8),
-
-                //email
-                const SizedBox(height: 20),
-                Center(
-                  child: Text(
-                    '$email',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w700,
-                    ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ),
-                const SizedBox(height: 8),
-
-                //password
-                //const SizedBox(height: 20),
-                //Center(
-                //  child: Text(
-                //    '$name',
-                //    style: const TextStyle(
-                //      color: Colors.black,
-                //      fontSize: 25,
-                //      fontFamily: 'Nunito',
-                //      fontWeight: FontWeight.w700,
-                //    ),
-                //  ),
-                //),
-                //const SizedBox(height: 8),
-
-                //address
-                const SizedBox(height: 20),
-                Center(
-                  child: Text(
-                    '$street',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w700,
+                  elevation: 2,
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.person,
+                      color: Color.fromARGB(255, 55, 135, 255),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                //phone?
-                if (type == 'CLINIC') ...[
-                  const SizedBox(height: 20),
-                  Center(
-                    child: Text(
-                      '$phone',
+                    title: Text(
+                      '$name',
                       style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
+                        fontSize: 18,
                         fontFamily: 'Nunito',
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                ] else
-                  ...[],
+                ),
+
+                // Email
+                Card(
+                  color: Colors.grey[100],
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  elevation: 2,
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.email,
+                      color: Color.fromARGB(255, 55, 135, 255),
+                    ),
+                    title: Text(
+                      '$email',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Nunito',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Endereço
+                Card(
+                  color: Colors.grey[100],
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  elevation: 2,
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.home,
+                      color: Color.fromARGB(255, 55, 135, 255),
+                    ),
+                    title: Text(
+                      '$street',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Nunito',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Telefone (se clínica)
+                if (type == 'CLINIC') ...[
+                  Card(
+                    color: Colors.grey[100],
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 2,
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.phone,
+                        color: Color.fromARGB(255, 55, 135, 255),
+                      ),
+                      title: Text(
+                        '$phone',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+
+                // Botão "Sair"
+                const SizedBox(height: 100),
 
                 Center(
                   child: CustomButton(
-                    text: 'Sair',
+                    text: 'Logout',
                     width: 200,
                     height: 50,
                     onPressed: () async {
-                      // ação de sair da conta
                       await _controller.signOutUser();
                       navigateWithSlideTransition(
                         context: context,
@@ -197,11 +237,11 @@ class _ProfilesPageState extends State<ProfilesPage> {
                         beginOffset: const Offset(1.0, 0.0),
                       );
                     },
-
-                    styleType: ButtonStyleType.filled,
+                    styleType: ButtonStyleType.outlined,
+                    fontSize: 14,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
               ],
             ),
           ),

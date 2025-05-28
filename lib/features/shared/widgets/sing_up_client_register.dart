@@ -32,7 +32,7 @@ class SingUpClientRegister extends StatelessWidget {
         keyboardType: keyboardType,
         style: TextStyle(
           color: Colors.black,
-          fontSize: width * 0.03,
+          fontSize: 15,
           fontFamily: 'Nunito',
           fontWeight: FontWeight.w500,
         ),

@@ -45,29 +45,21 @@ class _SingUpChooseState extends State<SingUpChoose> {
     final height = size.height;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SizedBox(
         width: width,
         height: height,
         child: Stack(
           children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Transform(
-                alignment: Alignment.center,
-                transform:
-                    Matrix4.identity()
-                      ..rotateX(3.1416)
-                      ..rotateY(3.1416),
-                child: const CurvedHeader(),
-              ),
-            ),
             SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: height * 0.045),
+                    // Distancia do topo ate o icone
+                    SizedBox(height: height * 0.065),
+                    // Icone
                     Align(
                       alignment: Alignment.centerRight * 0.7,
                       child: BackIcon(
@@ -80,6 +72,8 @@ class _SingUpChooseState extends State<SingUpChoose> {
                         },
                       ),
                     ),
+
+                    // Titulo
                     SizedBox(height: height * 0.03),
                     Text(
                       'Bem vindo ao\nDoctor On',
@@ -91,27 +85,39 @@ class _SingUpChooseState extends State<SingUpChoose> {
                         height: 1.24,
                       ),
                     ),
-                    SizedBox(height: height * 0.1),
-                    const FieldLabel(text: 'E-mail'),
-                    Center(
-                      child: CustomInputField(
-                        controller: _controller.emailController,
-                        hintText: 'Digite seu e-mail',
-                        keyboardType: TextInputType.emailAddress,
-                      ),
+
+                    // Inputs
+
+                    // Email
+                    SizedBox(height: height * 0.05),
+                    const FieldLabel(
+                      text: 'E-mail',
+                      alignment: Alignment.centerLeft,
+                      horizontalPadding: 10, // opcional
                     ),
+                    CustomInputField(
+                      controller: _controller.emailController,
+                      hintText: 'Digite seu e-mail',
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+
+                    //Senha
                     SizedBox(height: height * 0.025),
-                    const FieldLabel(text: 'Senha'),
-                    Center(
-                      child: CustomInputField(
-                        controller: _controller.passwordController,
-                        hintText: 'Digite sua senha',
-                        obscureText: true,
-                      ),
+                    const FieldLabel(
+                      text: 'Senha',
+                      alignment: Alignment.centerLeft,
+                      horizontalPadding: 10, // opcional
                     ),
-                    SizedBox(height: height * 0.02),
+                    CustomInputField(
+                      controller: _controller.passwordController,
+                      hintText: 'Digite sua senha',
+                      obscureText: true,
+                    ),
+
+                    // Texto
+                    SizedBox(height: height * 0.05),
                     Text(
-                      'Escolha o que você deseja cadastrar',
+                      '  Escolha o que você deseja cadastrar',
                       style: TextStyle(
                         color: Colors.black.withAlpha(153),
                         fontSize: 17,
@@ -119,7 +125,7 @@ class _SingUpChooseState extends State<SingUpChoose> {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    SizedBox(height: height * 0.07),
+                    SizedBox(height: height * 0.02),
                     Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -148,7 +154,9 @@ class _SingUpChooseState extends State<SingUpChoose> {
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Erro ao realizar cadastro.'),
+                                    content: Text(
+                                      'Verifique as credenciais do email e da senha.',
+                                    ),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
@@ -186,7 +194,9 @@ class _SingUpChooseState extends State<SingUpChoose> {
                                 if (!_controller.isValidEmail(email)) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text('Email inválido'),
+                                      content: Text(
+                                        'Verifique as credenciais do email e da senha.',
+                                      ),
                                       backgroundColor: Colors.red,
                                     ),
                                   );
@@ -206,6 +216,7 @@ class _SingUpChooseState extends State<SingUpChoose> {
                         ],
                       ),
                     ),
+                    // Imagem
                     SizedBox(height: height * 0.03),
                     Center(
                       child: Image.asset(

@@ -109,9 +109,9 @@ class _SingUpClinicState extends State<SingUpClinic> {
             SizedBox(height: height * 0.05),
 
             // Nome
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Nome Clínica'),
+            const FieldLabel(
+              text: 'Nome da Clinica',
+              alignment: Alignment.centerLeft,
             ),
             Center(
               child: SingUpClientRegister(
@@ -123,10 +123,7 @@ class _SingUpClinicState extends State<SingUpClinic> {
 
             // Endereço
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Endereço'),
-            ),
+            const FieldLabel(text: 'Endereço', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.enderecoCController,
@@ -136,10 +133,7 @@ class _SingUpClinicState extends State<SingUpClinic> {
             ),
 
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Bairro'),
-            ),
+            const FieldLabel(text: 'Bairro', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.bairroCController,
@@ -149,10 +143,7 @@ class _SingUpClinicState extends State<SingUpClinic> {
             ),
 
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Cidade'),
-            ),
+            const FieldLabel(text: 'Cidade', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.cidadeCController,
@@ -162,10 +153,7 @@ class _SingUpClinicState extends State<SingUpClinic> {
             ),
 
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Estado'),
-            ),
+            const FieldLabel(text: 'Estado', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.estadoCController,
@@ -175,10 +163,7 @@ class _SingUpClinicState extends State<SingUpClinic> {
             ),
 
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'CEP'),
-            ),
+            const FieldLabel(text: 'CEP', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.cepCController,
@@ -188,10 +173,7 @@ class _SingUpClinicState extends State<SingUpClinic> {
             ),
 
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Telefone'),
-            ),
+            const FieldLabel(text: 'Telefone', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.phoneCController,
@@ -230,10 +212,10 @@ class _SingUpClinicState extends State<SingUpClinic> {
                       ),
                     );
                   }
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
+                  //Navigator.pushReplacement(
+                  //context,
+                  //MaterialPageRoute(builder: (context) => const LoginPage()),
+                  //);
                 },
                 styleType: ButtonStyleType.outlined,
                 fontSize: 14,

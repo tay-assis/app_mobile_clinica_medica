@@ -76,7 +76,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+        padding: EdgeInsets.symmetric(horizontal: width * 0.055),
         child: ListView(
           children: [
             // Seta para
@@ -117,10 +117,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
             SizedBox(height: height * 0.05),
 
             // Nome
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Nome'),
-            ),
+            const FieldLabel(text: 'Nome', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.nomePController,
@@ -131,10 +128,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
 
             //Convênio
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Convênio'),
-            ),
+            const FieldLabel(text: 'Convênio', alignment: Alignment.centerLeft),
             FutureBuilder<List<String>>(
               future: _controller.getInsurancesName(),
               builder: (context, snapshot) {
@@ -176,7 +170,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
                         }
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 4),
                     Row(
                       children: [
                         Checkbox(
@@ -202,7 +196,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
                         ),
                         const Text(
                           'Outro',
-                          style: TextStyle(fontFamily: 'Nunito', fontSize: 16),
+                          style: TextStyle(fontFamily: 'Nunito', fontSize: 14),
                         ),
                         const SizedBox(width: 10),
                         if (isOtherInsurance)
@@ -234,10 +228,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
 
             // Endereço
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Endereço'),
-            ),
+            const FieldLabel(text: 'Endereço', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.enderecoPController,
@@ -247,10 +238,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
             ),
 
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Bairro'),
-            ),
+            const FieldLabel(text: 'Bairro', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.bairroPController,
@@ -260,10 +248,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
             ),
 
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Cidade'),
-            ),
+            const FieldLabel(text: 'Cidade', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.cidadePController,
@@ -273,10 +258,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
             ),
 
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Estado'),
-            ),
+            const FieldLabel(text: 'Estado', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.estadoPController,
@@ -286,10 +268,7 @@ class _SingUpPatientState extends State<SingUpPatient> {
             ),
 
             SizedBox(height: height * 0.03),
-            Align(
-              alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'CEP'),
-            ),
+            const FieldLabel(text: 'CEP', alignment: Alignment.centerLeft),
             Center(
               child: SingUpClientRegister(
                 controller: _controller.cepPController,
@@ -319,11 +298,11 @@ class _SingUpPatientState extends State<SingUpPatient> {
                         backgroundColor: Colors.green,
                       ),
                     );
-                    navigateWithSlideTransition(
-                      context: context,
-                      destination: LoginPage(),
-                      beginOffset: const Offset(1.0, 0.0),
-                    );
+                    //navigateWithSlideTransition(
+                    //context: context,
+                    //destination: LoginPage(),
+                    //beginOffset: const Offset(1.0, 0.0),
+                    //);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
