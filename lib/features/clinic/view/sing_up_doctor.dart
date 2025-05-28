@@ -1,3 +1,4 @@
+import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/back_icon.dart';
 import '../../shared/widgets/custom_button.dart';
@@ -107,14 +108,9 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
             SizedBox(height: height * 0.001),
             Align(
               alignment: Alignment.centerRight * 0.7,
-              child: BackIcon(
-                onTap: () {
-                  navigateWithSlideTransition(
-                    context: context,
-                    destination: DashboardClinic(uid: widget.uid),
-                    beginOffset: const Offset(-1.0, 0.0),
-                  );
-                },
+              child: CustomHeader(
+                isCloseButton: false,
+                iconColor: const Color(0xFF0089FF),
               ),
             ),
             SizedBox(height: height * 0.03),
@@ -194,7 +190,10 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
             SizedBox(height: height * 0.03),
             Align(
               alignment: Alignment.centerLeft * 1.2,
-              child: const FieldLabel(text: 'Convênio'),
+              child: const FieldLabel(
+                text: 'Convênio',
+                alignment: Alignment.centerLeft,
+              ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,31 +284,40 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
               ],
             ),
             SizedBox(height: 10),
-            ElevatedButton.icon(
-              onPressed: () {
-                setState(() {
-                  if (_selectedInsurance != null &&
-                      _selectedInsurance!.trim().isNotEmpty &&
-                      !inputedInsurances.contains(_selectedInsurance!.trim())) {
-                    inputedInsurances.add(_selectedInsurance!.trim());
-                    _selectedInsurance = null;
-                    _controller.convenioController.clear();
-                  }
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Convênio cadastrado com sucesso!'),
-                    backgroundColor: Colors.green,
+            SizedBox(
+              width: 200, // Largura desejada
+              height: 50, // Altura desejada
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  setState(() {
+                    if (_selectedInsurance != null &&
+                        _selectedInsurance!.trim().isNotEmpty &&
+                        !inputedInsurances.contains(
+                          _selectedInsurance!.trim(),
+                        )) {
+                      inputedInsurances.add(_selectedInsurance!.trim());
+                      _selectedInsurance = null;
+                      _controller.convenioController.clear();
+                    }
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Convênio cadastrado com sucesso!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                },
+                icon: Icon(Icons.add),
+                label: Text(
+                  "Adicionar mais convênios",
+                  style: TextStyle(fontSize: 17),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                );
-              },
-              icon: Icon(Icons.add),
-              label: Text("Adicionar mais convênios"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
             ),
@@ -319,8 +327,8 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
               alignment: Alignment.centerRight,
               child: CustomButton(
                 text: 'Submeter',
-                width: width * 0.25,
-                height: height * 0.04,
+                width: 150,
+                height: 50,
                 onPressed: () async {
                   final crm = await _controller.newDoctor(
                     clinicId,
@@ -358,7 +366,7 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
                   }
                 },
                 styleType: ButtonStyleType.outlined,
-                fontSize: 14,
+                fontSize: 17,
               ),
             ),
             SizedBox(height: 24),
