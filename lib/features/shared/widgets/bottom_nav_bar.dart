@@ -42,6 +42,7 @@ class BottomNavBar extends StatelessWidget {
                     child: Icon(Icons.add, color: Colors.black54, size: 30),
                   ),
                 ),
+                const SizedBox(width: 30),
               ],
               InkWell(
                 onTap: selectedIndex == 0 ? null : onHomeTap,
