@@ -6,6 +6,7 @@ class BottomNavBar extends StatelessWidget {
   final VoidCallback onHomeTap;
   final VoidCallback onProfileTap;
   final int selectedIndex;
+  final bool isDashboardUser;
 
   const BottomNavBar({
     super.key,
@@ -14,6 +15,7 @@ class BottomNavBar extends StatelessWidget {
     required this.onHomeTap,
     required this.onProfileTap,
     required this.selectedIndex,
+    this.isDashboardUser = false,
   });
 
   @override
@@ -30,7 +32,7 @@ class BottomNavBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (showAddIcon) ...[
+              if (showAddIcon && !isDashboardUser) ...[
                 InkWell(
                   onTap: selectedIndex == 1 ? null : onAddTap,
                   borderRadius: BorderRadius.circular(30),
@@ -40,7 +42,6 @@ class BottomNavBar extends StatelessWidget {
                     child: Icon(Icons.add, color: Colors.black54, size: 30),
                   ),
                 ),
-                const SizedBox(width: 30),
               ],
               InkWell(
                 onTap: selectedIndex == 0 ? null : onHomeTap,
