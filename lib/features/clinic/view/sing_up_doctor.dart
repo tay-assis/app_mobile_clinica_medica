@@ -113,7 +113,7 @@ class _SingUpDoctorState extends State<SingUpDoctor> {
                 iconColor: const Color(0xFF0089FF),
               ),
             ),
-            SizedBox(height: height * 0.03),
+            SizedBox(height: 10),
             const Text(
               'Cadastre um novo médico',
               style: TextStyle(
