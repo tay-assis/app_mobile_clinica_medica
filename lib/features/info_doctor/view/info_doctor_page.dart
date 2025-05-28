@@ -1,6 +1,8 @@
 // controller and database
 import 'package:app_mobile_clinica_medica/features/info_doctor/controller/infoDoctorController.dart';
-import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/weekday_selector.dart';
+import 'package:app_mobile_clinica_medica/features/info_doctor/view/add_schedules_page.dart';
+import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
+//import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/weekday_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:provider/provider.dart';
@@ -11,13 +13,9 @@ import 'package:intl/intl.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/doctor_card_image.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
 import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/rectangle_label.dart';
-import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/input_int.dart';
-import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
-import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 
 class InfoDoctorPage extends StatefulWidget {
   final int CRM;
-
   final int uid;
 
   const InfoDoctorPage({super.key, required this.CRM, required this.uid});
@@ -32,12 +30,6 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
 
   // date to show on screen
   DateTime selectedDate = DateTime.now();
-
-  // date to add a week
-  DateTime selectedDate2 = DateTime.now();
-  int initTime = 0;
-  int endTime = 0;
-  List<String> week = [];
 
   String? doctorName;
   String? doctorSpecialty;
@@ -59,51 +51,24 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
     }
   }
 
-  Future<void> _newWeek(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDate2,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    );
-    if (pickedDate != null && pickedDate != selectedDate2) {
-
-      final sunday = pickedDate.subtract(Duration(days: pickedDate.weekday % 7));
-
-      print("weekdays: $week");
-      await _controller.addWeek(widget.CRM, sunday, initTime, endTime, week);
-      final freshSchedules = await _controller.getSchedule(widget.CRM);
-
-      setState(() {
-        selectedDate2 = sunday;
-        scheduleList = freshSchedules;
-      });
-    }
-  }
-
   // modelo "HH:MM"
   String timeToString(DateTime date) {
     return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
   }
 
   Future<void> _loadDoctorData() async {
-    print('USER ID: ${widget.uid}');
     final doctor = await _controller.getDoctorFromCrm(widget.CRM);
     final clinic = await _controller.getClinicName(widget.CRM);
-    final List<DoctorSchedule>? schedules = await _controller.getSchedule(widget.CRM);
+    final List<DoctorSchedule>? schedules = await _controller.getSchedule(
+      widget.CRM,
+    );
     final user_type = await _controller.getUserType(widget.uid);
 
-
-    print('INFO PAGE: $doctor');
     if (doctor != null) {
-      print('dentro do if');
       setState(() {
-        print('dentro do setstate');
         doctorName = doctor.name;
         doctorSpecialty = doctor.specialty;
-        print('TESTE FINAL 0:$doctorName');
       });
-      print('TESTE FINAL:$doctorName');
     } else {
       print('Doutor não encontrado');
     }
@@ -208,16 +173,18 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
             for(int i=0; i<todaySchedules.length;i++)
             {
               rectList.add(
-                  RectangleLabel(
-                    label: timeToString(todaySchedules[i].date),
-                    isAvailable: (todaySchedules[i].status == "available"),
-                  ),
+                RectangleLabel(
+                  label: timeToString(todaySchedules[i].date),
+                  isAvailable: (todaySchedules[i].status == "available"),
+                ),
               );
             }
           }
         }
       }
     }
+
+
 
     return Scaffold(
       body: SafeArea(
@@ -227,9 +194,12 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CustomHeader(
+                CustomHeader( // removed const for uid
                   isCloseButton: false,
-                  iconColor: Color(0xFF0089FF),
+                  iconColor: const Color(0xFF0089FF),
+                  returnHome: true,
+                  uid: widget.uid,
+                  isClinic: userType=="CLINIC",
                 ),
                 const SizedBox(height: 20),
                 Center(
@@ -274,8 +244,9 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       formattedDate,
@@ -295,58 +266,13 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                         color: Colors.black,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    InkWell(
-                      onTap: () => _newWeek(context),
-                      child: const Icon(
-                        Icons.add,
-                        size: 22,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    InputInt(
-                      initialValue: initTime,
-                      onChanged: (val) {
-                        setState(() {
-                          initTime = val ?? 0;
-                        });
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    InputInt(
-                      initialValue: endTime,
-                      onChanged: (val) {
-                        setState(() {
-                          endTime = val ?? 0;
-                        });
-                      },
-                    ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const SizedBox(width: 8),
-                    WeekdaySelector(
-                      initialSelected: week,
-                      onChanged: (newSelection) {
-                        setState(() {
-                          week = newSelection;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-
+                const SizedBox(height: 16),
                 // Grid com scroll interno e altura fixa
                 SizedBox(
                   height: 177, // Altura máxima visível do grid
                   child: Scrollbar(
-
-
                     // Adiciona uma barra de rolagem visual
                     child: GridView.count(
                       crossAxisCount: 3,
@@ -355,48 +281,38 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                       childAspectRatio: 2.3, // Ajusta tamanho horizontal
                       scrollDirection: Axis.vertical,
                       children:
-
                           /// list with all the available schedules
                           rectList,
-
-
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                Center(
-                  child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center, // Para centralizar os ícones
-                    children: const [
-                      CircleIcon(
-                        icon: Icons.email,
-                        color: Colors.white,
+                if(userType == "CLINIC")...[
+                  Center(
+                    child: IconButton(
+                      icon: CircleIcon(
+                        icon: Icons.add,
+                        color: Color(0xFFFFFFFF),
                         backgroundColor: Color(0xFF0089FF),
                       ),
-                      SizedBox(width: 16), // Espaçamento entre os ícones
-                      CircleIcon(
-                        icon: Icons.phone,
-                        color: Colors.white,
-                        backgroundColor: Color(0xFF0089FF),
-                      ),
-                    ],
+                      onPressed: () {
+                        // ação para navegar para a página de agendamento
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => AddSchedulesPage(
+                              CRM: widget.CRM,
+                              uid: widget.uid,
+                            ),
+                          ),
+                        );
+                      },
+                      color: Color(0xFF0089FF),
+                      iconSize: 30,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-
-                Center(
-                  child: CustomButton(
-                    text: 'Set Location',
-                    width: 200,
-                    height: 50,
-                    onPressed: () {
-                      // ação de localização
-                    },
-                    styleType: ButtonStyleType.filled,
-                  ),
-                ),
+                ],
                 const SizedBox(height: 20),
               ],
             ),

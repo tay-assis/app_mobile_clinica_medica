@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-  // selects weekdays and returns as a list that DoctorSchedule can use
+// selects weekdays and returns as a list that DoctorSchedule can use
 class WeekdaySelector extends StatefulWidget {
   /// Day codes must be one of these:
-  static const _dayCodes = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+  static const _dayCodes = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   final List<String>? initialSelected;
   final ValueChanged<List<String>> onChanged;
@@ -26,9 +26,8 @@ class _WeekdaySelectorState extends State<WeekdaySelector> {
     super.initState();
     // initialize selection from initialSelected (if any)
     final init = widget.initialSelected ?? [];
-    _isSelected = WeekdaySelector._dayCodes
-        .map((code) => init.contains(code))
-        .toList();
+    _isSelected =
+        WeekdaySelector._dayCodes.map((code) => init.contains(code)).toList();
   }
 
   void _onButtonPressed(int index) {
@@ -48,15 +47,16 @@ class _WeekdaySelectorState extends State<WeekdaySelector> {
     return ToggleButtons(
       isSelected: _isSelected,
       onPressed: _onButtonPressed,
-      borderRadius: BorderRadius.circular(8),
-      selectedBorderColor: Theme.of(context).primaryColor,
+      borderRadius: BorderRadius.circular(50),
+      selectedBorderColor: Color(0xFF0089FF),
       selectedColor: Colors.white,
-      fillColor: Theme.of(context).primaryColor,
+      fillColor: Color(0xFF0089FF), // Primary color
       color: Colors.black87,
-      constraints: const BoxConstraints(minWidth: 40, minHeight: 36),
-      children: WeekdaySelector._dayCodes.map((code) {
-        return Text(code, style: const TextStyle(fontSize: 12));
-      }).toList(),
+      constraints: const BoxConstraints(minWidth: 43, minHeight: 43),
+      children:
+          WeekdaySelector._dayCodes.map((code) {
+            return Text(code, style: const TextStyle(fontSize: 12));
+          }).toList(),
     );
   }
 }

@@ -5,11 +5,8 @@ class InputInt extends StatefulWidget {
   final int? initialValue;
   final ValueChanged<int?>? onChanged;
 
-  const InputInt({
-    Key? key,
-    this.initialValue,
-    this.onChanged,
-  }) : super(key: key);
+  const InputInt({Key? key, this.initialValue, this.onChanged})
+    : super(key: key);
 
   @override
   _InputIntState createState() => _InputIntState();
@@ -32,7 +29,7 @@ class _InputIntState extends State<InputInt> {
     super.dispose();
   }
 
-  void _onSubmitted(String text) {
+  void _onChanged(String text) {
     final int? value = int.tryParse(text);
     widget.onChanged?.call(value);
   }
@@ -44,15 +41,13 @@ class _InputIntState extends State<InputInt> {
       child: TextField(
         controller: _controller,
         keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         decoration: const InputDecoration(
           isDense: true,
           contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
           border: OutlineInputBorder(),
         ),
-        onSubmitted: _onSubmitted,
+        onChanged: _onChanged,
       ),
     );
   }

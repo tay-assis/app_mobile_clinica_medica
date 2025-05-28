@@ -18,8 +18,7 @@ class DoctorInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 160,
-      height: 130,
+      width: 160, // largura fixa
       decoration: ShapeDecoration(
         color: const Color(0xFFEAF8FF),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -27,6 +26,7 @@ class DoctorInfoCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(top: 30, left: 10, right: 10, bottom: 8),
         child: Column(
+          mainAxisSize: MainAxisSize.min, // <- permite altura variável
           children: [
             Text(
               doctorName,
@@ -37,6 +37,8 @@ class DoctorInfoCard extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.center,
+              softWrap: true, // quebra se necessário
+              overflow: TextOverflow.visible, // permite expandir altura
             ),
             const SizedBox(height: 4),
             Text(
@@ -49,7 +51,7 @@ class DoctorInfoCard extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const Spacer(),
+            const SizedBox(height: 8),
             IconButton(
               icon: const Icon(
                 Icons.arrow_forward_ios,
