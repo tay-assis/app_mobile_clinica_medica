@@ -157,7 +157,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                     title: Text(
                       '$email',
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontFamily: 'Nunito',
                         fontWeight: FontWeight.w600,
                       ),
@@ -227,7 +227,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                 Center(
                   child: CustomButton(
                     text: 'Logout',
-                    width: 200,
+                    width: 150,
                     height: 50,
                     onPressed: () async {
                       await _controller.signOutUser();
@@ -238,7 +238,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                       );
                     },
                     styleType: ButtonStyleType.outlined,
-                    fontSize: 14,
+                    fontSize: 18,
                   ),
                 ),
                 const SizedBox(height: 30),
