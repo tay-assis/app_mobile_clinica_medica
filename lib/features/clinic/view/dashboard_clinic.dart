@@ -117,7 +117,7 @@ class _DashboardClinicState extends State<DashboardClinic> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 35),
+                    SizedBox(height: 20),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: SearchInputField(),
@@ -135,7 +135,7 @@ class _DashboardClinicState extends State<DashboardClinic> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 20,
-                childAspectRatio: 0.8,
+                childAspectRatio: 0.6,
               ),
               itemCount: _doctors.length,
               itemBuilder: (context, index) {

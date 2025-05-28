@@ -217,7 +217,7 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                 const SizedBox(height: 20),
                 Center(
                   child: Text(
-                    '$doctorName: (${widget.CRM})',
+                    '$doctorName',
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 25,
@@ -232,7 +232,7 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                     '$doctorSpecialty',
                     style: TextStyle(
                       color: Color(0xFF0089FF),
-                      fontSize: 15,
+                      fontSize: 16,
                       fontFamily: 'Nunito',
                       fontWeight: FontWeight.w400,
                     ),
@@ -243,7 +243,7 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                   '$clinicName',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 20,
+                    fontSize: 18,
                     fontFamily: 'Nunito',
                     fontWeight: FontWeight.w700,
                   ),
@@ -268,7 +268,7 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                       formattedDate,
                       style: const TextStyle(
                         color: Colors.black,
-                        fontSize: 15,
+                        fontSize: 17,
                         fontFamily: 'Nunito',
                         fontWeight: FontWeight.w600,
                       ),

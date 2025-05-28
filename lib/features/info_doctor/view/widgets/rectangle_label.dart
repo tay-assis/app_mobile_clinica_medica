@@ -4,16 +4,16 @@ class RectangleLabel extends StatelessWidget {
   final String label;
   final bool isAvailable;
 
-  const RectangleLabel({super.key, required this.label, required this.isAvailable});
+  const RectangleLabel({
+    super.key,
+    required this.label,
+    required this.isAvailable,
+  });
 
-  List<Color> getColor()
-  {
-    if(isAvailable)
-    {
+  List<Color> getColor() {
+    if (isAvailable) {
       return [Color(0xFF00A9FF), Color(0xFF78D1FF)];
-    }
-    else
-    {
+    } else {
       return [Color(0xFFBDBDBD), Color(0xFFE0E0E0)];
     }
   }
@@ -35,7 +35,7 @@ class RectangleLabel extends StatelessWidget {
           label,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 12,
+            fontSize: 17,
             fontFamily: 'Nunito',
             fontWeight: FontWeight.w700,
           ),

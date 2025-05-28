@@ -32,7 +32,7 @@ class DoctorInfoCard extends StatelessWidget {
               doctorName,
               style: const TextStyle(
                 color: Colors.black,
-                fontSize: 15,
+                fontSize: 16,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w700,
               ),
@@ -45,13 +45,13 @@ class DoctorInfoCard extends StatelessWidget {
               specialty,
               style: const TextStyle(
                 color: Color(0xFF0089FF),
-                fontSize: 10,
+                fontSize: 12,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             IconButton(
               icon: const Icon(
                 Icons.arrow_forward_ios,

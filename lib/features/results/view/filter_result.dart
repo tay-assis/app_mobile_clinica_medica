@@ -67,7 +67,7 @@ class _ResultFilterState extends State<ResultFilter> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 20,
-                childAspectRatio: 0.8,
+                childAspectRatio: 0.65,
               ),
               // Exibe o widgets com a foto e a informação do médico
               // de acordo com a quantidade de médicos na lista
