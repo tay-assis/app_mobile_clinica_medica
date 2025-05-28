@@ -1,6 +1,5 @@
 import 'package:app_mobile_clinica_medica/features/info_doctor/controller/infoDoctorController.dart';
 import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/input_int.dart';
-import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/rectangle_label.dart';
 import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/weekday_selector.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
@@ -8,11 +7,13 @@ import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:app_mobile_clinica_medica/features/info_doctor/view/info_doctor_page.dart';
+
 class AddSchedulesPage extends StatefulWidget {
   final int CRM;
-  //final int uid;
+  final int uid;
 
-  const AddSchedulesPage({super.key, required this.CRM});
+  const AddSchedulesPage({super.key, required this.CRM, required this.uid});
 
   @override
   State<AddSchedulesPage> createState() => _AddSchedulePageState();
@@ -22,11 +23,10 @@ class _AddSchedulePageState extends State<AddSchedulesPage> {
   late AppDatabase _db;
   late InfoDoctorController _controller;
 
-  // date to show on screen
-  DateTime selectedDate = DateTime.now();
-
   // date to add a week
-  DateTime selectedDate2 = DateTime.now();
+  DateTime selectedDate2 = DateTime.now().subtract(
+    Duration(days: DateTime.now().weekday % 7),
+  );
   int initTime = 0;
   int endTime = 0;
   List<String> week = [];
@@ -50,20 +50,6 @@ class _AddSchedulePageState extends State<AddSchedulesPage> {
     setState(() {
       scheduleList = schedules;
     });
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    );
-    if (pickedDate != null && pickedDate != selectedDate) {
-      setState(() {
-        selectedDate = pickedDate;
-      });
-    }
   }
 
   Future<void> _newWeek(BuildContext context) async {
@@ -94,53 +80,7 @@ class _AddSchedulePageState extends State<AddSchedulesPage> {
   Widget build(BuildContext context) {
     final String formattedDate = DateFormat(
       'MMMM d, yyyy',
-    ).format(selectedDate);
-
-    List<Widget> rectList = [];
-
-    // still loading
-    if (scheduleList == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (scheduleList!.isNotEmpty) {
-      // filtered for the selected day
-      final todaySchedules =
-          scheduleList!
-              .where(
-                (s) =>
-                    s.date.year == selectedDate.year &&
-                    s.date.month == selectedDate.month &&
-                    s.date.day == selectedDate.day,
-              )
-              .toList();
-
-      // add results to the Widget List
-      if (todaySchedules.isNotEmpty) {
-        for (int i = 0; i < todaySchedules.length; i++) {
-          rectList.add(
-            // this gesture detector should only be applied if user.type == clinic
-            GestureDetector(
-              onTap: () async {
-                await _controller.invertAvailability(todaySchedules[i]);
-
-                // new value
-                final freshSchedules = await _controller.getSchedule(
-                  widget.CRM,
-                );
-                setState(() {
-                  scheduleList = freshSchedules;
-                });
-              },
-              child: RectangleLabel(
-                label: timeToString(todaySchedules[i].date),
-                isAvailable: (todaySchedules[i].status == "available"),
-              ),
-            ),
-          );
-        }
-      }
-    }
+    ).format(selectedDate2);
 
     return Scaffold(
       body: SafeArea(
@@ -265,25 +205,6 @@ class _AddSchedulePageState extends State<AddSchedulesPage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-
-                // Grid com scroll interno e altura fixa
-                SizedBox(
-                  height: 177, // Altura máxima visível do grid
-                  child: Scrollbar(
-                    // Adiciona uma barra de rolagem visual
-                    child: GridView.count(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 2.3, // Ajusta tamanho horizontal
-                      scrollDirection: Axis.vertical,
-                      children:
-                          /// list with all the available schedules
-                          rectList,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
                 Center(
                   child: CustomButton(
                     text: 'Adicionar Horários',
@@ -291,7 +212,6 @@ class _AddSchedulePageState extends State<AddSchedulesPage> {
                     height: 50,
                     onPressed: () async {
                       // ação de submeter os horários
-                      //_newWeek(context);
                       await _controller.addWeek(
                         widget.CRM,
                         selectedDate2,
@@ -299,13 +219,18 @@ class _AddSchedulePageState extends State<AddSchedulesPage> {
                         endTime,
                         week,
                       );
-                      final freshSchedules = await _controller.getSchedule(
-                        widget.CRM,
+
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => InfoDoctorPage(
+                            CRM: widget.CRM,
+                            uid: widget.uid,
+                          ),
+                        ),
                       );
 
-                      setState(() {
-                        scheduleList = freshSchedules;
-                      });
                     },
                     styleType: ButtonStyleType.filled,
                   ),

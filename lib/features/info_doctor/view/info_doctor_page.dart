@@ -13,13 +13,9 @@ import 'package:intl/intl.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/doctor_card_image.dart';
 import 'package:app_mobile_clinica_medica/features/shared/widgets/header_close_back.dart';
 import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/rectangle_label.dart';
-//import 'package:app_mobile_clinica_medica/features/info_doctor/view/widgets/input_int.dart';
-import 'package:app_mobile_clinica_medica/features/shared/widgets/circle_icon.dart';
-//import 'package:app_mobile_clinica_medica/features/shared/widgets/custom_button.dart';
 
 class InfoDoctorPage extends StatefulWidget {
   final int CRM;
-
   final int uid;
 
   const InfoDoctorPage({super.key, required this.CRM, required this.uid});
@@ -61,7 +57,6 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
   }
 
   Future<void> _loadDoctorData() async {
-    print('USER ID: ${widget.uid}');
     final doctor = await _controller.getDoctorFromCrm(widget.CRM);
     final clinic = await _controller.getClinicName(widget.CRM);
     final List<DoctorSchedule>? schedules = await _controller.getSchedule(
@@ -69,16 +64,11 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
     );
     final user_type = await _controller.getUserType(widget.uid);
 
-    print('INFO PAGE: $doctor');
     if (doctor != null) {
-      print('dentro do if');
       setState(() {
-        print('dentro do setstate');
         doctorName = doctor.name;
         doctorSpecialty = doctor.specialty;
-        print('TESTE FINAL 0:$doctorName');
       });
-      print('TESTE FINAL:$doctorName');
     } else {
       print('Doutor não encontrado');
     }
@@ -127,74 +117,74 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    // if (scheduleList!.isNotEmpty) {
-    //   /// IF CLINIC, SHOW ALL SCHEDULED TIMES AND ALLOW AVAILABILITY INVERSION
-    //   if (userType == "CLINIC") {
-    //     // filtered for the selected day
-    //     final todaySchedules =
-    //         scheduleList!
-    //             .where(
-    //               (s) =>
-    //                   s.date.year == selectedDate.year &&
-    //                   s.date.month == selectedDate.month &&
-    //                   s.date.day == selectedDate.day,
-    //             )
-    //             .toList();
+    if (scheduleList!.isNotEmpty) {
 
-    //     // add results to the Widget List
-    //     if (todaySchedules.isNotEmpty) {
-    //       for (int i = 0; i < todaySchedules.length; i++) {
-    //         rectList.add(
-    //           // this gesture detector should only be applied if user.type == clinic
-    //           GestureDetector(
-    //             onTap: () async {
-    //               await _controller.invertAvailability(todaySchedules[i]);
-
-    //               // new value
-    //               final freshSchedules = await _controller.getSchedule(
-    //                 widget.CRM,
-    //               );
-    //               setState(() {
-    //                 scheduleList = freshSchedules;
-    //               });
-    //             },
-    //             child: RectangleLabel(
-    //               label: timeToString(todaySchedules[i].date),
-    //               isAvailable: (todaySchedules[i].status == "available"),
-    //             ),
-    //           ),
-    //         );
-    //       }
-    //     }
-    // } else {
-    /// IF PATIENT, SHOW ONLY UNSCHEDULED TIMES AND DENY AVAILABILITY INVERSION
-    //if (userType == "PATIENT") {
-    // filtered for the selected day
-    final todaySchedules =
-        scheduleList!
-            .where(
-              (s) =>
-                  s.date.year == selectedDate.year &&
-                  s.date.month == selectedDate.month &&
-                  s.date.day == selectedDate.day &&
-                  s.status == "available",
-            )
+      /// IF CLINIC, SHOW ALL SCHEDULED TIMES AND ALLOW AVAILABILITY INVERSION
+      if(userType == "CLINIC")
+      {
+        // filtered for the selected day
+        final todaySchedules = scheduleList!
+            .where((s) => s.date.year  == selectedDate.year
+            && s.date.month == selectedDate.month
+            && s.date.day   == selectedDate.day)
             .toList();
 
-    // add results to the Widget List
-    if (todaySchedules.isNotEmpty) {
-      for (int i = 0; i < todaySchedules.length; i++) {
-        rectList.add(
-          RectangleLabel(
-            label: timeToString(todaySchedules[i].date),
-            isAvailable: (todaySchedules[i].status == "available"),
-          ),
-        );
+        // add results to the Widget List
+        if (todaySchedules.isNotEmpty) {
+          for(int i=0; i<todaySchedules.length;i++)
+          {
+            rectList.add(
+              // this gesture detector should only be applied if user.type == clinic
+              GestureDetector(
+                onTap: () async {
+
+                  await _controller.invertAvailability(todaySchedules[i]);
+
+                  // new value
+                  final freshSchedules = await _controller.getSchedule(widget.CRM);
+                  setState(() {
+                    scheduleList = freshSchedules;
+                  });
+                },
+                child: RectangleLabel(
+                  label: timeToString(todaySchedules[i].date),
+                  isAvailable: (todaySchedules[i].status == "available"),
+                ),
+              ),
+            );
+          }
+        }
+      }
+      else
+      {
+        /// IF PATIENT, SHOW ONLY UNSCHEDULED TIMES AND DENY AVAILABILITY INVERSION
+        if(userType == "PATIENT")
+        {
+          // filtered for the selected day
+          final todaySchedules = scheduleList!
+              .where((s) => s.date.year  == selectedDate.year
+              && s.date.month == selectedDate.month
+              && s.date.day   == selectedDate.day
+              && s.status == "available")
+              .toList();
+
+          // add results to the Widget List
+          if (todaySchedules.isNotEmpty) {
+            for(int i=0; i<todaySchedules.length;i++)
+            {
+              rectList.add(
+                RectangleLabel(
+                  label: timeToString(todaySchedules[i].date),
+                  isAvailable: (todaySchedules[i].status == "available"),
+                ),
+              );
+            }
+          }
+        }
       }
     }
-    //}
-    //}
-    //}
+
+
 
     return Scaffold(
       body: SafeArea(
@@ -204,9 +194,12 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CustomHeader(
+                CustomHeader( // removed const for uid
                   isCloseButton: false,
-                  iconColor: Color(0xFF0089FF),
+                  iconColor: const Color(0xFF0089FF),
+                  returnHome: true,
+                  uid: widget.uid,
+                  isClinic: userType=="CLINIC",
                 ),
                 const SizedBox(height: 20),
                 Center(
@@ -294,42 +287,32 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Center(
-                //   child: CustomButton(
-                //     text: 'Submit',
-                //     width: 200,
-                //     height: 50,
-                //     onPressed: () {
-                //       // ação de submeter os horários
-                //       _newWeek(context);
-                //     },
-                //     styleType: ButtonStyleType.filled,
-                //   ),
-                // ),
-                Center(
-                  child: IconButton(
-                    icon: CircleIcon(
-                      icon: Icons.add,
-                      color: Color(0xFFFFFFFF),
-                      backgroundColor: Color(0xFF0089FF),
+                if(userType == "CLINIC")...[
+                  Center(
+                    child: IconButton(
+                      icon: CircleIcon(
+                        icon: Icons.add,
+                        color: Color(0xFFFFFFFF),
+                        backgroundColor: Color(0xFF0089FF),
+                      ),
+                      onPressed: () {
+                        // ação para navegar para a página de agendamento
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => AddSchedulesPage(
+                              CRM: widget.CRM,
+                              uid: widget.uid,
+                            ),
+                          ),
+                        );
+                      },
+                      color: Color(0xFF0089FF),
+                      iconSize: 30,
                     ),
-                    onPressed: () {
-                      // ação para navegar para a página de agendamento
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (_) => AddSchedulesPage(
-                                CRM: widget.CRM,
-                                //uid: widget.uid,
-                              ),
-                        ),
-                      );
-                    },
-                    color: Color(0xFF0089FF),
-                    iconSize: 30,
                   ),
-                ),
+                ],
                 const SizedBox(height: 20),
               ],
             ),
