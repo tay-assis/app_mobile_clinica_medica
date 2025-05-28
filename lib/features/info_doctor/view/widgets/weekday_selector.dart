@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class WeekdaySelector extends StatefulWidget {
   /// Day codes must be one of these:
   static const _dayCodes = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  static const _ptbrdayCodes = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
 
   final List<String>? initialSelected;
   final ValueChanged<List<String>> onChanged;
@@ -54,7 +55,7 @@ class _WeekdaySelectorState extends State<WeekdaySelector> {
       color: Colors.black87,
       constraints: const BoxConstraints(minWidth: 43, minHeight: 43),
       children:
-          WeekdaySelector._dayCodes.map((code) {
+          WeekdaySelector._ptbrdayCodes.map((code) {
             return Text(code, style: const TextStyle(fontSize: 12));
           }).toList(),
     );

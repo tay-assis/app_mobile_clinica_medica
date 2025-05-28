@@ -9,17 +9,20 @@ class SelectedFilter {
   String? clinic;
   String? location;
   String? doctorName;
+  String? insuranceName;
 
   void clear() {
     specialty = null;
     clinic = null;
     location = null;
     doctorName = null;
+    insuranceName = null;
   }
 
   bool get hasFilters =>
       specialty != null ||
       clinic != null ||
       location != null ||
-      doctorName != null;
+      doctorName != null ||
+      insuranceName != null;
 }
