@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app_mobile_clinica_medica/sqlite/database.dart';
 
 class InfoDoctorController {
@@ -17,6 +19,15 @@ class InfoDoctorController {
     return null;
   }
 
+  Future<List<String>> getInsurancesFromDoctor(String doctorName) async {
+    final doctorInsurances = await _db.doctorInsuranceDao
+        .selectInsurancesByDoctor(doctorName);
+
+    print('$doctorInsurances');
+
+    return doctorInsurances;
+  }
+
   Future<Clinic?> getClinicName(int crm) async {
     final cid = (await _db.doctorDao.selectDoctorByCRM(crm))!.clinicId;
     try {
@@ -30,13 +41,10 @@ class InfoDoctorController {
   }
 
   Future<List<DoctorSchedule>> getSchedule(int crm) async {
-    return await _db.doctorScheduleDao.selectDoctorSchedulesByDoctorCRM(
-      crm,
-    );
+    return await _db.doctorScheduleDao.selectDoctorSchedulesByDoctorCRM(crm);
   }
 
- Future<void> invertAvailability(DoctorSchedule sched) async
-  {
+  Future<void> invertAvailability(DoctorSchedule sched) async {
     // changes on db
     await _db.doctorScheduleDao.invertAvailability(sched.doctorCrm, sched.date);
 
@@ -49,9 +57,20 @@ class InfoDoctorController {
     return user.tipo;
   }
 
-  Future<void> addWeek(int CRM, DateTime sunday, int startHour, endHour, List<String> WEEKDAYLIST) async
-  {
-    await _db.doctorScheduleDao.initializeWeek(CRM, sunday, startHour, endHour, WEEKDAYLIST);
+  Future<void> addWeek(
+    int CRM,
+    DateTime sunday,
+    int startHour,
+    endHour,
+    List<String> WEEKDAYLIST,
+  ) async {
+    await _db.doctorScheduleDao.initializeWeek(
+      CRM,
+      sunday,
+      startHour,
+      endHour,
+      WEEKDAYLIST,
+    );
 
     return;
   }

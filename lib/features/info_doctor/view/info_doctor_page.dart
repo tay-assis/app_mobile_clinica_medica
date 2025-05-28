@@ -36,6 +36,7 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
   String? clinicName;
   List<DoctorSchedule>? scheduleList;
   String? userType;
+  List<String> doctorInsurances = [];
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -65,9 +66,11 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
     final user_type = await _controller.getUserType(widget.uid);
 
     if (doctor != null) {
+      final insurance = await _controller.getInsurancesFromDoctor(doctor.name);
       setState(() {
         doctorName = doctor.name;
         doctorSpecialty = doctor.specialty;
+        doctorInsurances = insurance;
       });
     } else {
       print('Doutor não encontrado');
@@ -118,30 +121,32 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
     }
 
     if (scheduleList!.isNotEmpty) {
-
       /// IF CLINIC, SHOW ALL SCHEDULED TIMES AND ALLOW AVAILABILITY INVERSION
-      if(userType == "CLINIC")
-      {
+      if (userType == "CLINIC") {
         // filtered for the selected day
-        final todaySchedules = scheduleList!
-            .where((s) => s.date.year  == selectedDate.year
-            && s.date.month == selectedDate.month
-            && s.date.day   == selectedDate.day)
-            .toList();
+        final todaySchedules =
+            scheduleList!
+                .where(
+                  (s) =>
+                      s.date.year == selectedDate.year &&
+                      s.date.month == selectedDate.month &&
+                      s.date.day == selectedDate.day,
+                )
+                .toList();
 
         // add results to the Widget List
         if (todaySchedules.isNotEmpty) {
-          for(int i=0; i<todaySchedules.length;i++)
-          {
+          for (int i = 0; i < todaySchedules.length; i++) {
             rectList.add(
               // this gesture detector should only be applied if user.type == clinic
               GestureDetector(
                 onTap: () async {
-
                   await _controller.invertAvailability(todaySchedules[i]);
 
                   // new value
-                  final freshSchedules = await _controller.getSchedule(widget.CRM);
+                  final freshSchedules = await _controller.getSchedule(
+                    widget.CRM,
+                  );
                   setState(() {
                     scheduleList = freshSchedules;
                   });
@@ -154,24 +159,24 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
             );
           }
         }
-      }
-      else
-      {
+      } else {
         /// IF PATIENT, SHOW ONLY UNSCHEDULED TIMES AND DENY AVAILABILITY INVERSION
-        if(userType == "PATIENT")
-        {
+        if (userType == "PATIENT") {
           // filtered for the selected day
-          final todaySchedules = scheduleList!
-              .where((s) => s.date.year  == selectedDate.year
-              && s.date.month == selectedDate.month
-              && s.date.day   == selectedDate.day
-              && s.status == "available")
-              .toList();
+          final todaySchedules =
+              scheduleList!
+                  .where(
+                    (s) =>
+                        s.date.year == selectedDate.year &&
+                        s.date.month == selectedDate.month &&
+                        s.date.day == selectedDate.day &&
+                        s.status == "available",
+                  )
+                  .toList();
 
           // add results to the Widget List
           if (todaySchedules.isNotEmpty) {
-            for(int i=0; i<todaySchedules.length;i++)
-            {
+            for (int i = 0; i < todaySchedules.length; i++) {
               rectList.add(
                 RectangleLabel(
                   label: timeToString(todaySchedules[i].date),
@@ -184,8 +189,6 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
       }
     }
 
-
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -194,12 +197,13 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomHeader( // removed const for uid
+                CustomHeader(
+                  // removed const for uid
                   isCloseButton: false,
                   iconColor: const Color(0xFF0089FF),
                   returnHome: true,
                   uid: widget.uid,
-                  isClinic: userType=="CLINIC",
+                  isClinic: userType == "CLINIC",
                 ),
                 const SizedBox(height: 20),
                 Center(
@@ -242,6 +246,18 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                     fontSize: 20,
                     fontFamily: 'Nunito',
                     fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    '$doctorInsurances',
+                    style: TextStyle(
+                      color: Color(0xFF0089FF),
+                      fontSize: 17,
+                      fontFamily: 'Nunito',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -287,7 +303,7 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                if(userType == "CLINIC")...[
+                if (userType == "CLINIC") ...[
                   Center(
                     child: IconButton(
                       icon: CircleIcon(
@@ -302,9 +318,9 @@ class _InfoDoctorPageState extends State<InfoDoctorPage> {
                           MaterialPageRoute(
                             builder:
                                 (_) => AddSchedulesPage(
-                              CRM: widget.CRM,
-                              uid: widget.uid,
-                            ),
+                                  CRM: widget.CRM,
+                                  uid: widget.uid,
+                                ),
                           ),
                         );
                       },
