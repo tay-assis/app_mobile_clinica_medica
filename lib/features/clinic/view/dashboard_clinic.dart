@@ -117,7 +117,7 @@ class _DashboardClinicState extends State<DashboardClinic> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 35),
+                    SizedBox(height: 20),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: SearchInputField(),
