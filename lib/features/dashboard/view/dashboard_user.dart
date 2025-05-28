@@ -76,6 +76,7 @@ class _DashboardUserState extends State<DashboardUser> {
       ),
       bottomNavigationBar: BottomNavBar(
         showAddIcon: true,
+        selectedIndex: 0, // This is home page, so index is 0
         onAddTap: () {
           Navigator.pushNamed(context, '/add');
         },

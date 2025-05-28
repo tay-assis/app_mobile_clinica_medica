@@ -5,6 +5,7 @@ class BottomNavBar extends StatelessWidget {
   final VoidCallback? onAddTap;
   final VoidCallback onHomeTap;
   final VoidCallback onProfileTap;
+  final int selectedIndex;
 
   const BottomNavBar({
     super.key,
@@ -12,6 +13,7 @@ class BottomNavBar extends StatelessWidget {
     this.onAddTap,
     required this.onHomeTap,
     required this.onProfileTap,
+    required this.selectedIndex,
   });
 
   @override
@@ -30,7 +32,7 @@ class BottomNavBar extends StatelessWidget {
             children: [
               if (showAddIcon) ...[
                 InkWell(
-                  onTap: onAddTap,
+                  onTap: selectedIndex == 1 ? null : onAddTap,
                   borderRadius: BorderRadius.circular(30),
                   splashColor: Colors.blue.withOpacity(0.3),
                   child: const Padding(
@@ -41,7 +43,7 @@ class BottomNavBar extends StatelessWidget {
                 const SizedBox(width: 30),
               ],
               InkWell(
-                onTap: onHomeTap,
+                onTap: selectedIndex == 0 ? null : onHomeTap,
                 borderRadius: BorderRadius.circular(30),
                 splashColor: Colors.blue.withOpacity(0.3),
                 child: const Padding(
@@ -51,7 +53,7 @@ class BottomNavBar extends StatelessWidget {
               ),
               const SizedBox(width: 30),
               InkWell(
-                onTap: onProfileTap,
+                onTap: selectedIndex == 2 ? null : onProfileTap,
                 borderRadius: BorderRadius.circular(30),
                 splashColor: Colors.blue.withOpacity(0.3),
                 child: const Padding(
